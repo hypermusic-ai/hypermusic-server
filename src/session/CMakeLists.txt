@@ -1,4 +1,4 @@
-set(MODULE_NAME "Server")
+set(MODULE_NAME "Session")
 
 file(GLOB_RECURSE INCLUDE_SOURCES "include/*.h*")
 file(GLOB_RECURSE SOURCES "src/*.c*")
@@ -20,8 +20,8 @@ target_link_libraries("${MODULE_NAME}"
     PUBLIC 
         spdlog::spdlog
         asio
+        CURL::libcurl
         "${PROJECT_PREFIX}::Native"
-        "${PROJECT_PREFIX}::Session"
 )
 
 set_target_properties("${MODULE_NAME}" PROPERTIES CXX_STANDARD 23)

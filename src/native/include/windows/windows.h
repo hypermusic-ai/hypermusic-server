@@ -6,5 +6,8 @@
 #ifdef UNICODE
   #undef UNICODE
 #endif
+
+#define NOMINMAX
+
 #include <winsock2.h>
 #include <windows.h>

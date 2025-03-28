@@ -2,6 +2,8 @@
 
 int main(int argc, char* argv[])
 {    
+    spdlog::set_level(spdlog::level::debug);
+
     asio::io_context io_context;
     hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
 
