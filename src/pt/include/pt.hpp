@@ -1,5 +1,7 @@
 #pragma once
 
+#include "native.h"
+
 #include <spdlog/spdlog.h>
 #include <asio.hpp>
 #include <asio/experimental/awaitable_operators.hpp>

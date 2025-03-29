@@ -14,10 +14,15 @@ namespace hm
 
     asio::awaitable<void> Session::start(std::chrono::steady_clock::time_point & deadline)
     {
-        spdlog::info("Session started");
         co_await doRead(deadline);
-        spdlog::info("Session ended");
-
+        co_return;
+    }
+    asio::awaitable<void> Session::stop()
+    {
+        if(co_await _session_mgr.destroySession(_session_id))
+        {
+            spdlog::info("Session {} ended", _session_id);
+        }
         co_return;
     }
 
@@ -32,8 +37,18 @@ namespace hm
 
         for (;;)
         {
-            deadline = std::chrono::steady_clock::now() + std::chrono::seconds(10);
-            std::size_t bytes_transferred = co_await _socket.async_read_some(asio::buffer(read_buffer), asio::use_awaitable);
+            deadline = std::chrono::steady_clock::now() + std::chrono::seconds(30);
+            std::size_t bytes_transferred = 0;
+            try
+            {
+                bytes_transferred = co_await _socket.async_read_some(asio::buffer(read_buffer), asio::use_awaitable);
+            }
+            catch(...)
+            {
+                spdlog::debug("client disconected");
+                co_return;
+            }
+
             if(bytes_transferred == 0)continue;
             
             std::string_view read_message(read_buffer, bytes_transferred);
@@ -42,11 +57,12 @@ namespace hm
             spdlog::debug("Received bytes [{}]", bytes_transferred);
 
             HTTPRequest request = co_await parseHTTPRequest(std::string(read_message));
+            std::string request_str = std::format("{}", request);
+            spdlog::debug("Received request:\n{}\n", request_str);
 
             HTTPResponse response = co_await handleCommand(request.body);
-
             std::string response_str = std::format("{}", response);
-            spdlog::debug("Send response:\n{}", response_str);
+            spdlog::debug("Send response:\n{}\n", response_str);
 
             co_await doWrite(response_str);
         }
@@ -61,35 +77,22 @@ namespace hm
         request_stream >> http_request.method >> http_request.path >> http_request.version;
         request_stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        spdlog::debug("Method: {}, Path: {}, HTTP Version: {}", http_request.method, http_request.path, http_request.version);
-
         std::string header_buffer;
         while (std::getline(request_stream, header_buffer) && header_buffer != "\r") 
         {            
             http_request.headers.emplace_back(header_buffer);
-        }
-        
-        spdlog::debug("Found {} headers", http_request.headers.size());
-        for(const auto& header : http_request.headers)
-        {
-            spdlog::debug("Header: {}", header);
         }
 
         std::string body_buffer;
         while (std::getline(request_stream, body_buffer)) {
             http_request.body += body_buffer;
         }
-        
-        spdlog::debug("Body: {}", http_request.body);
-
         co_return http_request;
     }
 
 
     asio::awaitable<HTTPResponse> Session::handleCommand(std::string_view command)
     {
-        spdlog::debug("command {}", command);
-
         HTTPResponse http_response;
 
         http_response.version = "HTTP/1.1";
@@ -98,21 +101,24 @@ namespace hm
 
         if (command.starts_with("LOGIN ")) 
         {
-            spdlog::info("LOGIN");
-
             UserID user_id{command.substr(6)};
 
-            std::optional<SessionID> session_id_result = co_await _session_mgr.createSession(user_id);
+            spdlog::info("Command LOGIN, user id : {}", user_id);
 
+            std::optional<SessionID> session_id_result = co_await _session_mgr.createSession(user_id);
+            
             if(session_id_result.has_value())
             {
                 _session_id = session_id_result.value();
-                spdlog::info("Session logged, session id :  {}", _session_id);
+                spdlog::info("Session started, session id :  {}", _session_id);
 
                 http_response.status = "200";
                 http_response.reason = "OK";
                 http_response.headers.emplace_back("Connection: keep-alive");
                 http_response.body = "SESSION " + _session_id;
+
+                // keep alive
+                //keepAlive(std::chrono::steady_clock::now() + std::chrono::seconds(60));
             }
             else
             {
@@ -125,9 +131,9 @@ namespace hm
         } 
         else if (command.starts_with("AUTH ")) 
         {
-            spdlog::info("AUTH");
-
             SessionID received_session{command.substr(5)};
+
+            spdlog::info("Command AUTH, session id : {}", received_session);
 
             std::optional<UserID> user_id_result  = co_await _session_mgr.validateSession(received_session);
 
@@ -158,6 +164,8 @@ namespace hm
             http_response.headers.emplace_back("Connection: close");
             http_response.body = "UNKNOWN COMMAND";
         }
+
+        http_response.headers.emplace_back(std::format("Content-Length: {}", http_response.body.size())); 
         co_return http_response;
     }
 }

@@ -59,8 +59,13 @@ namespace hm
     asio::awaitable<bool> SessionManager::destroySession(const SessionID & session_id)
     {
         co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
-        spdlog::debug("Destroying session {}", session_id);
 
-        co_return _sessions.erase(session_id) > 0;
+        bool res = _sessions.erase(session_id) > 0;
+        if(res)
+        {
+            spdlog::debug("Destroyed session {}", session_id);
+        }
+
+        co_return res;
     }
 }

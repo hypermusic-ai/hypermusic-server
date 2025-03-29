@@ -1,11 +1,9 @@
 include("${PROJECT_SOURCE_DIR}/cmake/add_module.cmake")
 
-add_module(NAME "Server"
+add_module(NAME "HTTP"
     DEPENDENCIES
         "${PROJECT_PREFIX}::Native"
-        "${PROJECT_PREFIX}::Session"
         spdlog::spdlog
         asio
         CURL::libcurl
 )
-

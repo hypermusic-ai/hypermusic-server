@@ -37,6 +37,12 @@ if(HYPERMUSIC_DEPS_PATH)
         set(CURL_DIR "${HYPERMUSIC_DEPS_PATH}/curl/8.12.1/lib/cmake/CURL")
         find_package(CURL REQUIRED NO_DEFAULT_PATH)
 
+        set(evmc_DIR "${HYPERMUSIC_DEPS_PATH}/evmc/12.1.0/lib/cmake/evmc")
+        find_package(evmc REQUIRED NO_DEFAULT_PATH)
+
+        set(evmone_DIR "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/lib/cmake/evmone")
+        find_package(evmone REQUIRED NO_DEFAULT_PATH)
+
         if(BUILD_TESTING)
             set(GTest_DIR "${HYPERMUSIC_DEPS_PATH}/GTest/1.16.0/lib/cmake/GTest")
             find_package(GTest REQUIRED NO_DEFAULT_PATH)
@@ -65,6 +71,7 @@ target_link_libraries("${PROJECT_NAME}"
     PRIVATE
         "${PROJECT_PREFIX}::Native"
         "${PROJECT_PREFIX}::Server"
+        "${PROJECT_PREFIX}::HTTP"
         "${PROJECT_PREFIX}::Session"
         "${PROJECT_PREFIX}::PT"
         "${PROJECT_PREFIX}::EVM"

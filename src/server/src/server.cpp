@@ -5,7 +5,6 @@ namespace hm
     Server::Server(asio::io_context & io_context, asio::ip::tcp::endpoint endpoint)
     : _io_context(io_context), _acceptor(io_context, std::move(endpoint)), _session_mgr(io_context)
     {
-        spdlog::debug("Hypermusic server constructed");
     }
 
     asio::awaitable<void> Server::listen()
@@ -53,7 +52,8 @@ namespace hm
             co_await timer.async_wait(asio::use_awaitable);
             now = std::chrono::steady_clock::now();
         }
-        throw std::system_error(std::make_error_code(std::errc::timed_out));
+        spdlog::warn("Timeout");
+        co_return;
     }
 
     asio::awaitable<void> Server::handleConnection(asio::ip::tcp::socket sock)
@@ -65,6 +65,7 @@ namespace hm
 
         co_await (session.start(deadline) && watchdog(deadline));
 
+        co_await session.stop();
         spdlog::info("Connection ended");
     }
 }
