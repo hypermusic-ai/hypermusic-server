@@ -1,10 +1,3 @@
-add_module(NAME "PT"
-    DEPENDENCIES
-        "${PROJECT_PREFIX}::Native"
-        spdlog::spdlog
-        asio
-)
-
 # Generate .pb.cc and .pb.h files using protoc
 message(STATUS "Protobuf Compiler: ${Protobuf_PROTOC}")
 
@@ -37,7 +30,7 @@ foreach(PROTO_FILE ${PROTO_FILES})
 endforeach()
 
 # create target from generated files
-add_library("PT_proto_gen" STATIC ${PROTO_GEN_SRCS} ${PROTO_GEN_HDRS})
+add_library("PT_proto_gen" OBJECT ${PROTO_GEN_SRCS} ${PROTO_GEN_HDRS})
 target_include_directories("PT_proto_gen" PUBLIC 
     ${Protobuf_INCLUDE_DIR} 
     "$<BUILD_INTERFACE:${PROTO_DST_DIR}>"
@@ -52,5 +45,11 @@ install(DIRECTORY ${PROTO_DST_DIR}/
     FILES_MATCHING PATTERN "*.h*"  # Only install .h* files
 )
 
-# link to PT target
-target_link_libraries("PT" PUBLIC PT_proto_gen)
+# Create PT target
+add_module(NAME "PT"
+    DEPENDENCIES
+        "${PROJECT_PREFIX}::Native"
+        spdlog::spdlog
+        asio
+        PT_proto_gen
+)

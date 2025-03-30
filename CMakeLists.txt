@@ -70,6 +70,7 @@ target_link_libraries("${PROJECT_NAME}Lib"
         "${PROJECT_PREFIX}::HTTP"
         "${PROJECT_PREFIX}::Session"
         "${PROJECT_PREFIX}::PT"
+        PT_proto_gen
         "${PROJECT_PREFIX}::EVM"
 )
 set_target_properties("${PROJECT_NAME}Lib" PROPERTIES CXX_STANDARD 23)
@@ -108,6 +109,25 @@ install(TARGETS ${PROJECT_NAME}Exe
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(FILES "$<TARGET_PDB_FILE:${PROJECT_NAME}Exe>"
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    OPTIONAL
+)
+
+# Configure the Config file
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/HypermusicServer/HypermusicServerConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake/HypermusicServer/HypermusicServerConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/HypermusicServer
+)
+# Install the generated config file
+install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/HypermusicServer/HypermusicServerTargets.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake/HypermusicServer/HypermusicServerConfig.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/HypermusicServer
 )
 
 # build tests

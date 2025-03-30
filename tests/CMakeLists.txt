@@ -31,13 +31,7 @@ target_link_libraries("${PROJECT_NAME}"
     PRIVATE
         GTest::gtest_main
         spdlog::spdlog
-
-        #"HypermusicServer::Native"
-        #"HypermusicServer::Server"
-        #"HypermusicServer::HTTP"
-        #"HypermusicServer::Session"
-        #"HypermusicServer::PT"
-        "HypermusicServerLib"
+        HypermusicServerLib
 )
 
 set_target_properties("${PROJECT_NAME}" PROPERTIES CXX_STANDARD 23)
