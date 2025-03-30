@@ -8,6 +8,7 @@ This project requires the following libraries:
 - [**spdlog**](https://github.com/gabime/spdlog)
 - [**cURL**](https://curl.se/)
 - [**Protobuf**](https://protobuf.dev/)
+- [**evmone**](https://github.com/ethereum/evmone)
 
 🔗 **[Dependencies repository](https://github.com/hypermusic-ai/hypermusic-server-deps)** – Prebuilt dependencies and setup instructions can be found here.
 
