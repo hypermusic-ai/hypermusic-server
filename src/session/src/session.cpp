@@ -1,9 +1,5 @@
 #include "session.hpp"
 
-#include <sstream>
-#include <limits>
-#include <ios>
-
 namespace hm
 {
     Session::Session(asio::ip::tcp::socket & socket, SessionManager & session_mgr)
@@ -56,7 +52,7 @@ namespace hm
             _data.erase(0, bytes_transferred);
             spdlog::debug("Received bytes [{}]", bytes_transferred);
 
-            HTTPRequest request = co_await parseHTTPRequest(std::string(read_message));
+            HTTPRequest request = parseHTTPRequest(std::string(read_message));
             std::string request_str = std::format("{}", request);
             spdlog::debug("Received request:\n{}\n", request_str);
 
@@ -67,29 +63,6 @@ namespace hm
             co_await doWrite(response_str);
         }
     }
-
-    asio::awaitable<HTTPRequest> Session::parseHTTPRequest(const std::string & request)
-    {
-        HTTPRequest http_request;
-
-        std::istringstream request_stream(request);
-
-        request_stream >> http_request.method >> http_request.path >> http_request.version;
-        request_stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        std::string header_buffer;
-        while (std::getline(request_stream, header_buffer) && header_buffer != "\r") 
-        {            
-            http_request.headers.emplace_back(header_buffer);
-        }
-
-        std::string body_buffer;
-        while (std::getline(request_stream, body_buffer)) {
-            http_request.body += body_buffer;
-        }
-        co_return http_request;
-    }
-
 
     asio::awaitable<HTTPResponse> Session::handleCommand(std::string_view command)
     {
@@ -116,9 +89,6 @@ namespace hm
                 http_response.reason = "OK";
                 http_response.headers.emplace_back("Connection: keep-alive");
                 http_response.body = "SESSION " + _session_id;
-
-                // keep alive
-                //keepAlive(std::chrono::steady_clock::now() + std::chrono::seconds(60));
             }
             else
             {

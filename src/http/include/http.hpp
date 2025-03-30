@@ -2,14 +2,17 @@
 #include <format>
 #include <string>
 #include <vector>
+#include <sstream>
+#include <limits>
+#include <ios>
 
 namespace hm
 {
     struct HTTPRequest
     {
+        std::string version;
         std::string method;
         std::string path;
-        std::string version;
         std::vector<std::string> headers;
         std::string body;
     };
@@ -22,6 +25,8 @@ namespace hm
         std::vector<std::string> headers;
         std::string body;
     };
+
+    HTTPRequest parseHTTPRequest(const std::string & request);
 }
 
 template <>

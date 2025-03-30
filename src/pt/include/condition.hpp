@@ -2,17 +2,9 @@
 
 #include <spdlog/spdlog.h>
 
+#include "condition.pb.h"
+
 namespace hm
 {
-    class Condition
-    {
-        public:
-            Condition() = default;
-            ~Condition() = default;
-            
-        protected:
 
-        private:
-
-    };
 }

@@ -19,33 +19,25 @@ if(HYPERMUSIC_DEPS_PATH)
     if(NOT EXISTS "${HYPERMUSIC_DEPS_PATH}")
         message(FATAL_ERROR "Dependencies path does not exist")
     else()
-        set(spdlog_DIR "${HYPERMUSIC_DEPS_PATH}/spdlog/1.15.1/lib/cmake/spdlog")
-        find_package(spdlog REQUIRED NO_DEFAULT_PATH)
+        find_package(spdlog REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/spdlog/1.15.1/lib/cmake/spdlog")
 
-        set(absl_DIR "${HYPERMUSIC_DEPS_PATH}/abseil/20250127.1/lib/cmake/absl")
-        find_package(absl REQUIRED NO_DEFAULT_PATH)
+        find_package(absl REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/abseil/20250127.1/lib/cmake/absl")
 
-        set(utf8_range_DIR "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/lib/cmake/utf8_range")
-        find_package(utf8_range REQUIRED NO_DEFAULT_PATH)
+        find_package(utf8_range REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/lib/cmake/utf8_range")
 
-        set(protobuf_DIR "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/lib/cmake/protobuf")
-        find_package(protobuf REQUIRED NO_DEFAULT_PATH)
+        find_package(Protobuf REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/lib/cmake/protobuf")
+        find_program(Protobuf_PROTOC NAMES protoc PATHS "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/bin" NO_DEFAULT_PATH)
 
-        set(asio_DIR "${HYPERMUSIC_DEPS_PATH}/asio/1.34.0/lib/cmake/asio")
-        find_package(asio REQUIRED NO_DEFAULT_PATH)
+        find_package(asio REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/asio/1.34.0/lib/cmake/asio")
 
-        set(CURL_DIR "${HYPERMUSIC_DEPS_PATH}/curl/8.12.1/lib/cmake/CURL")
-        find_package(CURL REQUIRED NO_DEFAULT_PATH)
+        find_package(CURL REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/curl/8.12.1/lib/cmake/CURL")
 
-        set(evmc_DIR "${HYPERMUSIC_DEPS_PATH}/evmc/12.1.0/lib/cmake/evmc")
-        find_package(evmc REQUIRED NO_DEFAULT_PATH)
+        find_package(evmc REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/evmc/12.1.0/lib/cmake/evmc")
 
-        set(evmone_DIR "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/lib/cmake/evmone")
-        find_package(evmone REQUIRED NO_DEFAULT_PATH)
+        find_package(evmone REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/lib/cmake/evmone")
 
         if(BUILD_TESTING)
-            set(GTest_DIR "${HYPERMUSIC_DEPS_PATH}/GTest/1.16.0/lib/cmake/GTest")
-            find_package(GTest REQUIRED NO_DEFAULT_PATH)
+            find_package(GTest REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/GTest/1.16.0/lib/cmake/GTest")
         endif()
 
     endif()

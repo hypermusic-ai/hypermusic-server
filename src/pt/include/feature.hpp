@@ -2,17 +2,9 @@
 
 #include <spdlog/spdlog.h>
 
+#include "feature.pb.h"
+
 namespace hm
 {
-    class Feature
-    {
-        public:
-            Feature() = default;
-            ~Feature() = default;
-            
-        protected:
 
-        private:
-
-    };
 }

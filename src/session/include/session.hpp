@@ -1,12 +1,11 @@
 #pragma once
 
-#include "session_manager.hpp"
-
 #include "native.h"
 #include <asio.hpp>
 #include <spdlog/spdlog.h>
 #include <curl/curl.h>
 
+#include "session_manager.hpp"
 #include "http.hpp"
 
 namespace hm
@@ -23,7 +22,6 @@ namespace hm
         protected:
             asio::awaitable<void> doRead(std::chrono::steady_clock::time_point & deadline);
             asio::awaitable<void> doWrite(const std::string& message);
-            asio::awaitable<HTTPRequest> parseHTTPRequest(const std::string & request);
             asio::awaitable<HTTPResponse> handleCommand(std::string_view command);
 
         private:
