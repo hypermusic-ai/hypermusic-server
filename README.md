@@ -17,12 +17,13 @@ This project requires the following libraries:
 To configure the project using CMake, run the following command:
 
 ```sh
-cmake -S . -B build -DBUILD_TESTING=ON -DHYPERMUSIC_DEPS_PATH="..."
+cmake -S . -B build -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=install -DHYPERMUSIC_DEPS_PATH="..."
 ```
 
 - `-S .`: Specifies the source directory.
 - `-B build`: Specifies the build directory.
 - `-DBUILD_TESTING=ON`: Enables tests.
+- `-DCMAKE_INSTALL_PREFIX=install`: Specifies install directory.
 - `-DHYPERMUSIC_DEPS_PATH="..."`: Specifies the dependencies path.
 
 ## 🛠️ Building the Project (Debug Mode)
@@ -34,6 +35,16 @@ cmake --build build --config Debug
 ```
 
 This will compile the project with debugging enabled.
+
+## 🛠️ Installing the Project (Debug Mode)
+
+To install project in **Debug Mode**, use:
+
+```sh
+cmake --build build --config Debug --target install
+```
+
+This will install the project with debugging enabled.
 
 ## 🖥️ Start the server
 

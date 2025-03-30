@@ -14,6 +14,14 @@ include("cmake/compile_options.cmake")
 option(HYPERMUSIC_ENABLE_INSTALL "Enable install rule" OFF)
 option(HYPERMUSIC_DEPS_PATH "Path to dependencies" "")
 
+message(STATUS "Install directory ${CMAKE_INSTALL_PREFIX}")
+set(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
+set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_BINDIR "${CMAKE_INSTALL_PREFIX}/bin")
+message(STATUS "include directory ${CMAKE_INSTALL_INCLUDEDIR}")
+message(STATUS "lib directory ${CMAKE_INSTALL_LIBDIR}")
+message(STATUS "bin directory ${CMAKE_INSTALL_BINDIR}")
+
 if(HYPERMUSIC_DEPS_PATH)
     message(STATUS "Dependencies path specified to ${HYPERMUSIC_DEPS_PATH}")
     if(NOT EXISTS "${HYPERMUSIC_DEPS_PATH}")
@@ -66,6 +74,23 @@ target_link_libraries("${PROJECT_NAME}Lib"
 )
 set_target_properties("${PROJECT_NAME}Lib" PROPERTIES CXX_STANDARD 23)
 
+target_sources("${PROJECT_NAME}Lib" PUBLIC
+    FILE_SET public_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES "include/hypermusic.hpp"
+)
+
+# static library install target
+install(TARGETS ${PROJECT_NAME}Lib
+    EXPORT ${PROJECT_NAME}LibTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILE_SET public_headers
+)
+
 # create executable target
 add_executable("${PROJECT_NAME}Exe" src/main.cpp)
 
@@ -75,6 +100,15 @@ target_link_libraries("${PROJECT_NAME}Exe"
 )
 
 set_target_properties("${PROJECT_NAME}Exe" PROPERTIES CXX_STANDARD 23)
+
+# executable install target
+install(TARGETS ${PROJECT_NAME}Exe
+    EXPORT ${PROJECT_NAME}ExeTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 # build tests
 if(BUILD_TESTING)

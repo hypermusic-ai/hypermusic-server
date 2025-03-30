@@ -9,8 +9,15 @@ function(add_module)
 
     add_library("${add_module_NAME}"  
         OBJECT
-            ${INCLUDE_SOURCES}
             ${SOURCES}
+            ${INCLUDE_SOURCES}
+    )
+
+    target_sources("${add_module_NAME}" PUBLIC
+        FILE_SET public_headers
+        TYPE HEADERS
+        BASE_DIRS include
+        FILES  ${INCLUDE_SOURCES}
     )
 
     add_library("${PROJECT_PREFIX}::${add_module_NAME}" ALIAS "${add_module_NAME}")
@@ -28,11 +35,14 @@ function(add_module)
 
     set_target_properties("${add_module_NAME}" PROPERTIES CXX_STANDARD 23)
 
-    install(TARGETS "${add_module_NAME}"
-        EXPORT "${PROJECT_PREFIX}Targets"
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+    # Install target
+    install(TARGETS ${add_module_NAME}
+        EXPORT ${add_module_NAME}Targets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILE_SET public_headers
+    )
 
 endfunction()

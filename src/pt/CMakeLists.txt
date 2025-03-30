@@ -38,8 +38,19 @@ endforeach()
 
 # create target from generated files
 add_library("PT_proto_gen" STATIC ${PROTO_GEN_SRCS} ${PROTO_GEN_HDRS})
-target_include_directories("PT_proto_gen" PUBLIC ${PROTO_DST_DIR} ${Protobuf_INCLUDE_DIR})
+target_include_directories("PT_proto_gen" PUBLIC 
+    ${Protobuf_INCLUDE_DIR} 
+    "$<BUILD_INTERFACE:${PROTO_DST_DIR}>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include/generated>"
+)
+
 target_link_libraries("PT_proto_gen" PUBLIC protobuf::libprotobuf)
+
+# create install target for generated files
+install(DIRECTORY ${PROTO_DST_DIR}/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/generated
+    FILES_MATCHING PATTERN "*.h*"  # Only install .h* files
+)
 
 # link to PT target
 target_link_libraries("PT" PUBLIC PT_proto_gen)
