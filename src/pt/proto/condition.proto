@@ -1,7 +1,8 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package hm;
 
 message Condition {
-
+    string name = 1;
+    string sol_src = 2;
 }

@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include "hypermusic.hpp"
+
 namespace hm::tests
 {
     class BaseUnitTest : public testing::Test

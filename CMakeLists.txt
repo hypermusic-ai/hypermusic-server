@@ -45,22 +45,18 @@ else()
     message(STATUS "Dependencies path not specified, try to find it automatically")
 endif()
 
-
 add_subdirectory(src)
-if(BUILD_TESTING)
-    add_subdirectory(tests)
-endif()
 
-add_executable("${PROJECT_NAME}"    
-    src/main.cpp)
+# create static library target
+add_library("${PROJECT_NAME}Lib" STATIC "include/hypermusic.hpp")
 
-target_include_directories("${PROJECT_NAME}"     
+target_include_directories("${PROJECT_NAME}Lib"     
     PUBLIC 
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>")
 
-target_link_libraries("${PROJECT_NAME}"
-    PRIVATE
+target_link_libraries("${PROJECT_NAME}Lib"
+    PUBLIC
         "${PROJECT_PREFIX}::Native"
         "${PROJECT_PREFIX}::Server"
         "${PROJECT_PREFIX}::HTTP"
@@ -68,5 +64,19 @@ target_link_libraries("${PROJECT_NAME}"
         "${PROJECT_PREFIX}::PT"
         "${PROJECT_PREFIX}::EVM"
 )
+set_target_properties("${PROJECT_NAME}Lib" PROPERTIES CXX_STANDARD 23)
 
-set_target_properties("${PROJECT_NAME}" PROPERTIES CXX_STANDARD 23)
+# create executable target
+add_executable("${PROJECT_NAME}Exe" src/main.cpp)
+
+target_link_libraries("${PROJECT_NAME}Exe"
+    PRIVATE
+        "${PROJECT_NAME}Lib"
+)
+
+set_target_properties("${PROJECT_NAME}Exe" PROPERTIES CXX_STANDARD 23)
+
+# build tests
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()

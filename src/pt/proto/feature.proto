@@ -1,7 +1,15 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package hm;
 
-message Feature {
+message Dimension
+{
+    string feature_name = 1;
+    repeated string transformation_name = 2;
+}
 
+message Feature 
+{
+    string name = 1;
+    repeated Dimension dimensions = 2;
 }

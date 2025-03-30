@@ -37,7 +37,7 @@ foreach(PROTO_FILE ${PROTO_FILES})
 endforeach()
 
 # create target from generated files
-add_library("PT_proto_gen" OBJECT ${PROTO_GEN_SRCS} ${PROTO_GEN_HDRS})
+add_library("PT_proto_gen" STATIC ${PROTO_GEN_SRCS} ${PROTO_GEN_HDRS})
 target_include_directories("PT_proto_gen" PUBLIC ${PROTO_DST_DIR} ${Protobuf_INCLUDE_DIR})
 target_link_libraries("PT_proto_gen" PUBLIC protobuf::libprotobuf)
 
