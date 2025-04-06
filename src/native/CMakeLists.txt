@@ -41,6 +41,7 @@ target_include_directories("${MODULE_NAME}"
 
 target_link_libraries("${MODULE_NAME}" 
     PUBLIC 
+    spdlog::spdlog
 )
 
 set_target_properties("${MODULE_NAME}" PROPERTIES CXX_STANDARD 23)
