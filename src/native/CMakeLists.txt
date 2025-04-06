@@ -10,13 +10,22 @@ if(WIN32)
 
     list(APPEND INCLUDE_SOURCES ${WINDOWS_INCLUDE_SOURCES})
     list(APPEND SOURCES ${WINDOWS_SOURCES})
-elseif(UNIX)
+elseif(UNIX AND NOT APPLE)
     message(STATUS "Configuring module Native for Unix")
-    file(GLOB_RECURSE UNIX_INCLUDE_SOURCES "include/windows/*.h*")
+    file(GLOB_RECURSE UNIX_INCLUDE_SOURCES "include/unix/*.h*")
     file(GLOB_RECURSE UNIX_SOURCES "src/unix/*.c*")
 
     list(APPEND INCLUDE_SOURCES ${UNIX_INCLUDE_SOURCES})
     list(APPEND SOURCES ${UNIX_SOURCES})
+elseif(APPLE)
+    message(STATUS "Configuring module Native for macOS")
+    file(GLOB_RECURSE MAC_INCLUDE_SOURCES "include/mac/*.h*")
+    file(GLOB_RECURSE MAC_SOURCES "src/mac/*.c*")
+
+    list(APPEND INCLUDE_SOURCES ${MAC_INCLUDE_SOURCES})
+    list(APPEND SOURCES ${MAC_SOURCES})
+else()
+    message(FATAL_ERROR "Unsupported platform")
 endif()
 
 add_library("${MODULE_NAME}"  

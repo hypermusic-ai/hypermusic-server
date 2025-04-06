@@ -2,8 +2,10 @@
 #include "windows/windows.h"
 #elif defined(UNIX)
 #include "unix/unix.h"
+#elif defined(__APPLE__)
+#include "mac/mac.h"
 #else
-#   error "Error, both can't be undefined same time"
+#   error "Error, unsupported platform"
 #endif
 
 #include <string>
