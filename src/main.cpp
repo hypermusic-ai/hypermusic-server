@@ -14,6 +14,14 @@ int main(int argc, char* argv[])
     asio::io_context io_context;
     hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
 
+    server.addRoute("GET", "/feature", [](const std::string&) { return "GET /feature"; });
+    server.addRoute("POST", "/feature", [](const std::string& body) { return "POST /feature: " + body; });
+    server.addRoute("GET", "/transformation", [](const std::string&) { return "GET /transformation"; });
+    server.addRoute("POST", "/transformation", [](const std::string& body) { return "POST /transformation: " + body; });
+    server.addRoute("GET", "/condition", [](const std::string&) { return "GET /condition"; });
+    server.addRoute("POST", "/condition", [](const std::string& body) { return "POST /condition: " + body; });
+
+
     asio::co_spawn(io_context, server.listen(), asio::detached);
 
     try

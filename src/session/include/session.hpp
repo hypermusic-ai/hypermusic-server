@@ -16,19 +16,15 @@ namespace hm
             Session(asio::ip::tcp::socket & socket, SessionManager & session_mgr);
 
             virtual ~Session() = default;
-            asio::awaitable<void> start(std::chrono::steady_clock::time_point & deadline);
             asio::awaitable<void> stop();
 
         protected:
-            asio::awaitable<void> doRead(std::chrono::steady_clock::time_point & deadline);
-            asio::awaitable<void> doWrite(const std::string& message);
-            asio::awaitable<HTTPResponse> handleCommand(std::string_view command);
 
         private:
-
             asio::ip::tcp::socket & _socket;
-            std::string _data;
-            SessionID _session_id;
             SessionManager& _session_mgr;
+            SessionID _session_id;
+
+            std::string _data;
     };
 }

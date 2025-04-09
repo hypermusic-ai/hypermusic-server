@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
 #include <optional>
 
 
@@ -9,6 +8,7 @@
 #include <asio.hpp>
 
 #include <spdlog/spdlog.h>
+#include <absl/container/flat_hash_map.h>
 
 namespace hm
 {
@@ -31,6 +31,6 @@ namespace hm
 
         private:    
             asio::strand<asio::io_context::executor_type> _strand;
-            std::unordered_map<SessionID, UserID> _sessions;
+            absl::flat_hash_map<SessionID, UserID> _sessions;
     };
 }

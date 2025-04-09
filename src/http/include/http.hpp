@@ -6,6 +6,8 @@
 #include <limits>
 #include <ios>
 
+#include "http_codes.hpp"
+
 namespace hm
 {
     struct HTTPRequest
@@ -20,8 +22,7 @@ namespace hm
     struct HTTPResponse
     {
         std::string version;
-        std::string status;
-        std::string reason;
+        HTTPCode code;
         std::vector<std::string> headers;
         std::string body;
     };
@@ -38,7 +39,7 @@ struct std::formatter<hm::HTTPResponse> : std::formatter<std::string> {
         headers_str += header + "\n";
     }
     return formatter<string>::format(
-      std::format("{} {} {}\n{}\r\n{}", res.version, res.status, res.reason, headers_str, res.body), ctx);
+      std::format("{} {}\n{}\r\n{}", res.version, res.code, headers_str, res.body), ctx);
   }
 };
 

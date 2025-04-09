@@ -5,9 +5,12 @@
 
 #include <asio/experimental/awaitable_operators.hpp>
 #include <spdlog/spdlog.h>
+#include <absl/container/flat_hash_map.h>
 
 #include "session_manager.hpp"
 #include "session.hpp"
+#include "http.hpp"
+#include "route.hpp"
 
 using namespace asio::experimental::awaitable_operators;
 
@@ -25,6 +28,8 @@ namespace hm
         
           	asio::awaitable<void> listen();
 
+            void addRoute(const std::string& method, const std::string& path, RouteHandlerFunc handler);
+
         protected:
           	asio::awaitable<void> echo(asio::ip::tcp::socket& sock, std::chrono::steady_clock::time_point & deadline);
 
@@ -32,9 +37,14 @@ namespace hm
 
             asio::awaitable<void> handleConnection(asio::ip::tcp::socket sock);
 
+            asio::awaitable<void> readData(asio::ip::tcp::socket & sock, std::chrono::steady_clock::time_point & deadline);
+
+            asio::awaitable<void> writeData(asio::ip::tcp::socket & sock, std::string message);
+
         private:
             asio::io_context & _io_context;
             asio::ip::tcp::acceptor _acceptor;
+            absl::flat_hash_map<RouteKey, RouteHandlerFunc> _routes;
 
             SessionManager _session_mgr;
     };

@@ -56,16 +56,80 @@ namespace hm
         co_return;
     }
 
+    void Server::addRoute(const std::string& method, const std::string& path, RouteHandlerFunc handler)
+    {
+        _routes.try_emplace(RouteKey{method, path}, std::move(handler));
+    }
+
     asio::awaitable<void> Server::handleConnection(asio::ip::tcp::socket sock)
     {
         spdlog::info("New connection started");
-
         std::chrono::steady_clock::time_point deadline{};
-        Session session(sock, _session_mgr);
 
-        co_await (session.start(deadline) && watchdog(deadline));
+        // read data
+        co_await (readData(sock, deadline) || watchdog(deadline));
 
-        co_await session.stop();
         spdlog::info("Connection ended");
+    }
+
+    asio::awaitable<void> Server::readData(asio::ip::tcp::socket & sock, std::chrono::steady_clock::time_point & deadline)
+    {
+        std::size_t bytes_transferred = 0;
+        char read_buffer[4196];
+        std::string_view read_message;
+
+        HTTPRequest request;
+        
+        HTTPResponse response;
+        response.headers.resize(3);
+        response.version = "HTTP/1.1";
+        response.headers[0] = "Content-Type: text/plain";
+
+        for(;;)
+        {
+            deadline = std::chrono::steady_clock::now() + std::chrono::seconds(30);
+            try
+            {
+                bytes_transferred = co_await sock.async_read_some(asio::buffer(read_buffer), asio::use_awaitable);
+            }
+            catch(...)
+            {
+                spdlog::debug("client disconected");
+                co_return;
+            }
+
+            if(bytes_transferred == 0)co_return;
+            
+            read_message = std::string_view(read_buffer, bytes_transferred);
+
+            spdlog::debug("Received bytes [{}]", bytes_transferred);
+
+            request = parseHTTPRequest(std::string(read_message));
+
+            auto it = _routes.find({request.method, request.path});
+            if (it != _routes.end()) 
+            {
+                response.code = HTTPCode::OK;
+                response.headers[1] = "Connection: keep-alive";
+                response.body = it->second(request.body);
+            } 
+            else 
+            {
+                response.code = HTTPCode::NOT_FOUND;
+                response.headers[1] = "Connection: close";
+                response.body = "404 Not Found";
+            }
+
+            response.headers[2] = std::format("Content-Length: {}", std::to_string(response.body.size()));
+
+            spdlog::debug("Send response\n{}\n", std::format("{}", response));
+
+            co_await writeData(sock, std::format("{}", response));
+        }
+    }
+
+    asio::awaitable<void> Server::writeData(asio::ip::tcp::socket & sock, std::string message)
+    {
+        co_await asio::async_write(sock, asio::buffer(message), asio::use_awaitable);
     }
 }
