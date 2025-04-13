@@ -37,7 +37,10 @@ target_include_directories("PT_proto_gen" PUBLIC
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include/generated>"
 )
 
-target_link_libraries("PT_proto_gen" PUBLIC protobuf::libprotobuf)
+target_link_libraries("PT_proto_gen"    
+    PUBLIC
+    protobuf::libprotobuf
+    )
 
 # create install target for generated files
 install(DIRECTORY ${PROTO_DST_DIR}/
@@ -49,6 +52,9 @@ install(DIRECTORY ${PROTO_DST_DIR}/
 add_module(NAME "PT"
     DEPENDENCIES
         "${PROJECT_PREFIX}::Native"
+        "${PROJECT_PREFIX}::Session"
+        "${PROJECT_PREFIX}::HTTP"
+        absl::hash
         spdlog::spdlog
         asio
         PT_proto_gen

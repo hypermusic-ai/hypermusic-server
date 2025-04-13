@@ -7,6 +7,7 @@
 #include <spdlog/spdlog.h>
 #include <absl/container/flat_hash_map.h>
 
+#include "utils.hpp"
 #include "session_manager.hpp"
 #include "session.hpp"
 #include "http.hpp"
@@ -30,10 +31,10 @@ namespace hm
 
             void addRoute(const std::string& method, const std::string& path, RouteHandlerFunc handler);
 
+            asio::awaitable<void> close();
+
         protected:
           	asio::awaitable<void> echo(asio::ip::tcp::socket& sock, std::chrono::steady_clock::time_point & deadline);
-
-          	asio::awaitable<void> watchdog(std::chrono::steady_clock::time_point& deadline);
 
             asio::awaitable<void> handleConnection(asio::ip::tcp::socket sock);
 
@@ -43,6 +44,9 @@ namespace hm
 
         private:
             asio::io_context & _io_context;
+            asio::strand<asio::io_context::executor_type> _strand;
+            bool _close;
+
             asio::ip::tcp::acceptor _acceptor;
             absl::flat_hash_map<RouteKey, RouteHandlerFunc> _routes;
 

@@ -3,19 +3,45 @@
 namespace hm
 {
     Server::Server(asio::io_context & io_context, asio::ip::tcp::endpoint endpoint)
-    : _io_context(io_context), _acceptor(io_context, std::move(endpoint)), _session_mgr(io_context)
+    :   _io_context(io_context),
+        _session_mgr(io_context), 
+        _strand(asio::make_strand(io_context)),
+        _close(false),
+        _acceptor(_strand, std::move(endpoint))
     {
+    }
+
+    asio::awaitable<void> Server::close()
+    {
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        spdlog::debug("Hypermusic server request close");
+        _close = true;
+        co_return;
     }
 
     asio::awaitable<void> Server::listen()
     {
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
         spdlog::debug("Hypermusic server listening on port {}", _acceptor.local_endpoint().port());
-        for (;;)
+        std::chrono::steady_clock::time_point listen_deadline{};
+
+        while (_close == false)
         {
-            asio::co_spawn(_acceptor.get_executor(),
-                handleConnection(co_await _acceptor.async_accept(asio::use_awaitable)),
-                asio::detached);
+            spdlog::debug("Start new listening session");
+
+            listen_deadline = std::chrono::steady_clock::now() + std::chrono::seconds(10);
+            auto socket_result = co_await (_acceptor.async_accept(asio::use_awaitable) || watchdog(listen_deadline));
+            if(std::holds_alternative<asio::ip::tcp::socket>(socket_result))
+            {
+                // spawn handleConnection to _io_context - not use server strand
+                asio::co_spawn(_io_context, handleConnection(std::move(std::get<asio::ip::tcp::socket>(socket_result))), asio::detached);
+            }
+            else
+            {
+                spdlog::debug("listening timeout");
+            }
         }
+        co_return;
     }
     asio::awaitable<void> Server::echo(asio::ip::tcp::socket& sock, std::chrono::steady_clock::time_point & deadline)
     {
@@ -40,20 +66,6 @@ namespace hm
 
             co_await asio::async_write(sock, asio::buffer(http_response), asio::use_awaitable);
         }
-    }
-
-    asio::awaitable<void> Server::watchdog(std::chrono::steady_clock::time_point& deadline)
-    {
-        asio::steady_timer timer(co_await asio::this_coro::executor);
-        auto now = std::chrono::steady_clock::now();
-        while (deadline > now)
-        {
-            timer.expires_at(deadline);
-            co_await timer.async_wait(asio::use_awaitable);
-            now = std::chrono::steady_clock::now();
-        }
-        spdlog::warn("Timeout");
-        co_return;
     }
 
     void Server::addRoute(const std::string& method, const std::string& path, RouteHandlerFunc handler)
@@ -106,18 +118,19 @@ namespace hm
 
             request = parseHTTPRequest(std::string(read_message));
 
-            auto it = _routes.find({request.method, request.path});
-            if (it != _routes.end()) 
+            auto route_it = _routes.find({request.method, request.path});
+            if (route_it != _routes.end()) 
             {
-                response.code = HTTPCode::OK;
+                auto [code, body] = route_it->second(_session_mgr, request.body);
+                response.code = code;
+                response.body = body;
                 response.headers[1] = "Connection: keep-alive";
-                response.body = it->second(request.body);
             } 
             else 
             {
                 response.code = HTTPCode::NOT_FOUND;
-                response.headers[1] = "Connection: close";
                 response.body = "404 Not Found";
+                response.headers[1] = "Connection: close";
             }
 
             response.headers[2] = std::format("Content-Length: {}", std::to_string(response.body.size()));

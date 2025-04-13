@@ -4,6 +4,8 @@
 
 #include "hypermusic.hpp"
 
+using namespace std::chrono_literals;
+
 namespace hm::tests
 {
     class BaseUnitTest : public testing::Test

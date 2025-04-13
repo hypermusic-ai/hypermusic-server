@@ -66,6 +66,7 @@ target_include_directories("${PROJECT_NAME}Lib"
 target_link_libraries("${PROJECT_NAME}Lib"
     PUBLIC
         "${PROJECT_PREFIX}::Native"
+        "${PROJECT_PREFIX}::Utils"
         "${PROJECT_PREFIX}::Server"
         "${PROJECT_PREFIX}::HTTP"
         "${PROJECT_PREFIX}::Session"

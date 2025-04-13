@@ -12,14 +12,18 @@ int main(int argc, char* argv[])
     }
 
     asio::io_context io_context;
+
+    hm::Registry registry(io_context);
+
     hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
 
-    server.addRoute("GET", "/feature", [](const std::string&) { return "GET /feature"; });
-    server.addRoute("POST", "/feature", [](const std::string& body) { return "POST /feature: " + body; });
-    server.addRoute("GET", "/transformation", [](const std::string&) { return "GET /transformation"; });
-    server.addRoute("POST", "/transformation", [](const std::string& body) { return "POST /transformation: " + body; });
-    server.addRoute("GET", "/condition", [](const std::string&) { return "GET /condition"; });
-    server.addRoute("POST", "/condition", [](const std::string& body) { return "POST /condition: " + body; });
+    server.addRoute("GET", "/feature",          hm::GET_feature);
+    server.addRoute("POST", "/feature",         hm::POST_feature);
+    server.addRoute("GET", "/transformation",   hm::GET_transformation);
+    server.addRoute("POST", "/transformation",  hm::POST_transformation);
+    server.addRoute("GET", "/condition",        hm::GET_condition);
+    server.addRoute("POST", "/condition",       hm::POST_condition);
+
 
 
     asio::co_spawn(io_context, server.listen(), asio::detached);

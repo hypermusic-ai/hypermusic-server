@@ -6,6 +6,7 @@
 #include <asio.hpp>
 #include <asio/experimental/awaitable_operators.hpp>
 
+#include "registry.hpp"
 #include "condition.hpp"
 #include "transformation.hpp"
 #include "feature.hpp"
@@ -22,7 +23,7 @@ namespace hm
     {
       public:
         PT() = default;
-        ~PT() = default;	
+        ~PT() = default;
 
       protected:
 
