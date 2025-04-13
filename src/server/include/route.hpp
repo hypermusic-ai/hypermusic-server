@@ -2,15 +2,19 @@
 #include <string>
 #include <functional>
 #include <utility>
+#include <regex>
 
+#include "native.h"
+#include <asio.hpp>
 #include <absl/hash/hash.h>
 
 #include "http.hpp"
 #include "session_manager.hpp"
+#include "registry.hpp"
 
 namespace hm
 {
-    using RouteHandlerFunc = std::function<std::tuple<HTTPCode, std::string>(SessionManager &, const std::string&)>;
+    using RouteHandlerFunc = std::function<asio::awaitable<std::pair<HTTPCode, std::string>>(SessionManager &, Registry &, const std::smatch &, const std::string&)>;
 
     struct RouteKey {
         std::string method;

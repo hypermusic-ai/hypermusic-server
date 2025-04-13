@@ -7,7 +7,8 @@ namespace hm
         _session_mgr(io_context), 
         _strand(asio::make_strand(io_context)),
         _close(false),
-        _acceptor(_strand, std::move(endpoint))
+        _acceptor(_strand, std::move(endpoint)),
+        _registry(io_context)
     {
     }
 
@@ -68,9 +69,9 @@ namespace hm
         }
     }
 
-    void Server::addRoute(const std::string& method, const std::string& path, RouteHandlerFunc handler)
+    void Server::addRoute(RouteKey route, RouteHandlerFunc handler)
     {
-        _routes.try_emplace(RouteKey{method, path}, std::move(handler));
+        _routes.try_emplace(std::move(route), std::move(handler));
     }
 
     asio::awaitable<void> Server::handleConnection(asio::ip::tcp::socket sock)
@@ -95,9 +96,9 @@ namespace hm
         HTTPResponse response;
         response.headers.resize(3);
         response.version = "HTTP/1.1";
-        response.headers[0] = "Content-Type: text/plain";
+        response.headers[0] = "Content-Type: application/json";
 
-        for(;;)
+        while(_close == false)
         {
             deadline = std::chrono::steady_clock::now() + std::chrono::seconds(30);
             try
@@ -118,10 +119,24 @@ namespace hm
 
             request = parseHTTPRequest(std::string(read_message));
 
-            auto route_it = _routes.find({request.method, request.path});
-            if (route_it != _routes.end()) 
+            RouteHandlerFunc handler;
+            std::regex regex;
+            std::smatch matches;
+            for(const auto & [route_key, h] : _routes)
             {
-                auto [code, body] = route_it->second(_session_mgr, request.body);
+                if(route_key.method != request.method)continue;
+                regex = std::regex(route_key.path);
+                if (std::regex_search(request.path, matches, regex))
+                {
+                    spdlog::debug("Matched route {}, matches {}", route_key.path, matches.str());
+                    handler = h;
+                    break;
+                }
+            }
+            
+            if (handler) 
+            {
+                auto [code, body] = co_await handler(_session_mgr, _registry, matches, request.body);
                 response.code = code;
                 response.body = body;
                 response.headers[1] = "Connection: keep-alive";

@@ -12,6 +12,7 @@
 #include "session.hpp"
 #include "http.hpp"
 #include "route.hpp"
+#include "registry.hpp"
 
 using namespace asio::experimental::awaitable_operators;
 
@@ -29,7 +30,7 @@ namespace hm
         
           	asio::awaitable<void> listen();
 
-            void addRoute(const std::string& method, const std::string& path, RouteHandlerFunc handler);
+            void addRoute(RouteKey route, RouteHandlerFunc handler);
 
             asio::awaitable<void> close();
 
@@ -51,5 +52,6 @@ namespace hm
             absl::flat_hash_map<RouteKey, RouteHandlerFunc> _routes;
 
             SessionManager _session_mgr;
+            Registry _registry;
     };
 }

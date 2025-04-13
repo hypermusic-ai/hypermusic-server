@@ -1,15 +1,16 @@
 #pragma once
 
-#include "native.h"
+#include <regex>
+#include <cstdlib>
 
-#include <spdlog/spdlog.h>
+#include "native.h"
 #include <asio.hpp>
 #include <asio/experimental/awaitable_operators.hpp>
+#include <spdlog/spdlog.h>
+#include <google/protobuf/util/json_util.h>
 
 #include "registry.hpp"
-#include "condition.hpp"
-#include "transformation.hpp"
-#include "feature.hpp"
+#include "session.hpp"
 
 using namespace asio::experimental::awaitable_operators;
 
@@ -30,4 +31,16 @@ namespace hm
       private:
 
     };
+
+    asio::awaitable<std::pair<hm::HTTPCode, std::string>> GET_feature(hm::SessionManager & session_mgr, Registry & registry, const std::smatch &, const std::string & body);
+
+    asio::awaitable<std::pair<hm::HTTPCode, std::string>> POST_feature(hm::SessionManager & session_mgr, Registry & registry, const std::smatch &, const std::string & body);
+
+    asio::awaitable<std::pair<hm::HTTPCode, std::string>> GET_condition(hm::SessionManager & session_mgr, Registry & registry, const std::smatch &, const std::string & body);
+
+    asio::awaitable<std::pair<hm::HTTPCode, std::string>> POST_condition(hm::SessionManager & session_mgr, Registry & registry, const std::smatch &, const std::string & body);
+
+    asio::awaitable<std::pair<hm::HTTPCode, std::string>> GET_transformation(hm::SessionManager & session_mgr, Registry & registry, const std::smatch &, const std::string & body);
+
+    asio::awaitable<std::pair<hm::HTTPCode, std::string>> POST_transformation(hm::SessionManager & session_mgr, Registry & registry, const std::smatch &, const std::string & body);
 }

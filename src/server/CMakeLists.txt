@@ -6,6 +6,7 @@ add_module(NAME "Server"
         "${PROJECT_PREFIX}::Utils"
         "${PROJECT_PREFIX}::Session"
         "${PROJECT_PREFIX}::HTTP"
+        "${PROJECT_PREFIX}::PT"
         absl::hash
         spdlog::spdlog
         asio

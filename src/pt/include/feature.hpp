@@ -1,15 +1,26 @@
 #pragma once
-
-#include <spdlog/spdlog.h>
-#include <google/protobuf/util/json_util.h>
+#include <absl/hash/hash.h>
 
 #include "feature.pb.h"
-#include "session.hpp"
-#include "http.hpp"
 
 namespace hm
 {
-    std::pair<hm::HTTPCode, std::string> GET_feature(hm::SessionManager & session_mgr, const std::string & body);
+    template <typename H>
+    inline H AbslHashValue(H h, const Dimension& d) 
+    {
+        h = H::combine(std::move(h), d.feature_name());
+        for (const std::string & t : d.transformation_name()) {
+            h = H::combine(std::move(h), t);
+        }
+        return h;
+    }
 
-    std::pair<hm::HTTPCode, std::string> POST_feature(hm::SessionManager & session_mgr, const std::string & body);
+    template <typename H>
+    inline H AbslHashValue(H h, const Feature& f) {
+        h = H::combine(std::move(h), f.name());
+        for (const Dimension & d : f.dimensions()) {
+            h = H::combine(std::move(h), d);
+        }
+        return h;
+    }
 }

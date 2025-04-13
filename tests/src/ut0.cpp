@@ -31,12 +31,7 @@ TEST_F(UnitTest, ut2)
     asio::io_context io_context;
     hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
 
-    server.addRoute("GET", "/feature", hm::GET_feature);
-    server.addRoute("POST", "/feature", hm::POST_feature);
-    server.addRoute("GET", "/transformation", hm::GET_transformation);
-    server.addRoute("POST", "/transformation", hm::POST_transformation);
-    server.addRoute("GET", "/condition", hm::GET_condition);
-    server.addRoute("POST", "/condition", hm::POST_condition);
+    server.addRoute({"POST", "/feature"}, hm::POST_feature);
 
     std::string url = "localhost:54321/feature";
     std::string request_json = R"json(
