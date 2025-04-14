@@ -27,6 +27,9 @@ foreach(PROTO_FILE ${PROTO_FILES})
         DEPENDS "${PROTO_SRC_DIR}/${PROTO_FILE}"
         COMMENT "Generating C++ files from ${PROTO_FILE}"
     )
+
+    set_source_files_properties(${GEN_SRC} PROPERTIES COMPILE_FLAGS "/wd4100")
+
 endforeach()
 
 # create target from generated files
