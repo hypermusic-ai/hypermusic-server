@@ -5,26 +5,62 @@
 #include <sstream>
 #include <limits>
 #include <ios>
+#include <algorithm>
 
 #include "http_codes.hpp"
+#include "http_headers.hpp"
 
 namespace hm
 {
-    struct HTTPRequest
+    class HTTPBase
     {
-        std::string version;
-        std::string method;
-        std::string path;
-        std::vector<std::string> headers;
-        std::string body;
+        public:
+            HTTPBase() = default;
+            virtual ~HTTPBase() = default;
+
+            void setVersion(const std::string & version);
+            void setBody(const std::string & body);
+            void addHeader(HTTPHeader header, const std::string & value);
+            void setHeader(HTTPHeader header, const std::string & value);
+
+            const std::string & getVersion() const;
+            const HeadersList & getHeaders() const;
+            const std::string & getBody() const;
+
+        private:
+            std::string _version;
+            HeadersList _headers;
+            std::string _body;
     };
 
-    struct HTTPResponse
+    class HTTPRequest : public HTTPBase
     {
-        std::string version;
-        HTTPCode code;
-        std::vector<std::string> headers;
-        std::string body;
+        public:
+            HTTPRequest() = default;
+            ~HTTPRequest() = default;
+
+            void setMethod(const std::string & method);
+            void setPath(const std::string & path);
+
+            const std::string & getMethod() const;
+            const std::string & getPath() const;
+
+        private:
+            std::string _method;
+            std::string _path;
+    };
+
+    class HTTPResponse : public HTTPBase
+    {
+        public:
+            HTTPResponse() = default;
+            ~HTTPResponse() = default;
+
+            void setCode(HTTPCode code);
+            const HTTPCode & getCode() const;
+            
+        private:
+            HTTPCode _code;
     };
 
     HTTPRequest parseHTTPRequest(const std::string & request);
@@ -33,13 +69,8 @@ namespace hm
 template <>
 struct std::formatter<hm::HTTPResponse> : std::formatter<std::string> {
   auto format(hm::HTTPResponse res, format_context& ctx) const {
-    std::string headers_str = "";
-    for(auto& header : res.headers)
-    {
-        headers_str += header + "\n";
-    }
     return formatter<string>::format(
-      std::format("{} {}\n{}\r\n{}", res.version, res.code, headers_str, res.body), ctx);
+      std::format("{} {}\n{}\r\n{}", res.getVersion(), res.getCode(), res.getHeaders(), res.getBody()), ctx);
   }
 };
 
@@ -47,12 +78,7 @@ template <>
 struct std::formatter<hm::HTTPRequest> : std::formatter<std::string> {
 
   auto format(hm::HTTPRequest req, format_context& ctx) const {
-    std::string headers_str = "";
-    for(auto& header : req.headers)
-    {
-        headers_str += header + "\n";
-    }
     return formatter<string>::format(
-      std::format("{} {} {}\n{}\r\n{}", req.version, req.method, req.path, headers_str, req.body), ctx);
+      std::format("{} {} {}\n{}\r\n{}", req.getVersion(), req.getMethod(), req.getPath(), req.getHeaders(), req.getBody()), ctx);
   }
 };

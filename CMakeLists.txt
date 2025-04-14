@@ -71,6 +71,7 @@ target_link_libraries("${PROJECT_NAME}Lib"
         "${PROJECT_PREFIX}::HTTP"
         "${PROJECT_PREFIX}::Session"
         "${PROJECT_PREFIX}::PT"
+        "${PROJECT_PREFIX}::Runner"
         PT_proto_gen
         "${PROJECT_PREFIX}::EVM"
 )

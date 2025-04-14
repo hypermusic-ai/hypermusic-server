@@ -7,13 +7,21 @@ namespace hm
         spdlog::debug("GET_feature {}: {}", matches.size(), matches.str());
         if(matches.size() != 3)
         {
-            co_return std::make_pair(hm::HTTPCode::BAD_REQUEST, "invalid url");
+            co_return std::make_pair(hm::HTTPCode::BadRequest, "invalid url");
         }
+
+        std::string json_output;
+        google::protobuf::util::JsonPrintOptions options;
+        options.add_whitespace = true; // Pretty print
+        options.preserve_proto_field_names = true; // Use snake_case from proto
+        options.always_print_fields_with_no_presence = true;
+
+        std::string feature_name;
 
         if(matches[1].length() > 0 && matches[2].length() > 0)
         {
 
-            auto feature_name = matches[1].str();
+            feature_name = matches[1].str();
             auto feature_id_str = matches[2].str();
             spdlog::debug("GET_feature feature name: {},feature id: {}", feature_name, feature_id_str);
 
@@ -26,18 +34,13 @@ namespace hm
             {
                 spdlog::error("Cannot parse feature id : {}", feature_id_str);
 
-                co_return std::make_pair(hm::HTTPCode::BAD_REQUEST, "invalid url");
+                co_return std::make_pair(hm::HTTPCode::BadRequest, "invalid url");
             }
 
             auto feature_res = co_await registry.getFeature(feature_name, feature_id);
             if(!feature_res) {
-                co_return std::make_pair(hm::HTTPCode::NOT_FOUND, "feature not found");
+                co_return std::make_pair(hm::HTTPCode::NotFound, "feature not found");
             }
-
-            std::string json_output;
-            google::protobuf::util::JsonPrintOptions options;
-            options.add_whitespace = true; // Pretty print
-            options.preserve_proto_field_names = true; // Use snake_case from proto
 
             auto status = google::protobuf::util::MessageToJsonString(*feature_res, &json_output, options);
 
@@ -45,23 +48,18 @@ namespace hm
         }
         else if(matches[1].length() > 0)
         {
-            auto feature_name = matches[1].str();
+            feature_name = matches[1].str();
             auto feature_res = co_await registry.getNewestFeature(feature_name);
             if(!feature_res) {
-                co_return std::make_pair(hm::HTTPCode::NOT_FOUND, "feature not found");
+                co_return std::make_pair(hm::HTTPCode::NotFound, "feature not found");
             }
-
-            std::string json_output;
-            google::protobuf::util::JsonPrintOptions options;
-            options.add_whitespace = true; // Pretty print
-            options.preserve_proto_field_names = true; // Use snake_case from proto
 
             auto status = google::protobuf::util::MessageToJsonString(*feature_res, &json_output, options);
 
             co_return std::make_pair(hm::HTTPCode::OK, json_output);
         }
 
-        co_return std::make_pair(hm::HTTPCode::BAD_REQUEST, "invalid url");
+        co_return std::make_pair(hm::HTTPCode::BadRequest, "invalid url");
     }
 
     asio::awaitable<std::pair<hm::HTTPCode, std::string>> POST_feature(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & json_string)
@@ -69,7 +67,7 @@ namespace hm
         spdlog::debug("POST_feature {}: {}", matches.size(), matches.str());
         if(matches.size() != 1)
         {
-            co_return std::make_pair(hm::HTTPCode::BAD_REQUEST, "invalid url");
+            co_return std::make_pair(hm::HTTPCode::BadRequest, "invalid url");
         }
 
         // parse feature from json_string
@@ -78,12 +76,12 @@ namespace hm
         auto status = google::protobuf::util::JsonStringToMessage(json_string, &feature, options);
 
         if(!status.ok()) {
-            co_return std::make_pair(hm::HTTPCode::BAD_REQUEST, "failed to parse feature");
+            co_return std::make_pair(hm::HTTPCode::BadRequest, "failed to parse feature");
         }
 
         auto version_res = co_await registry.addFeature(feature);
         if(!version_res) {
-            co_return std::make_pair(hm::HTTPCode::BAD_REQUEST, "failed to add feature");
+            co_return std::make_pair(hm::HTTPCode::BadRequest, "failed to add feature");
         }
 
         auto version = *version_res;

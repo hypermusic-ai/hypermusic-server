@@ -6,6 +6,7 @@
 #include "session.hpp"
 #include "evm.hpp"
 #include "pt.hpp"
+#include "runner.hpp"
 
 namespace hm
 {

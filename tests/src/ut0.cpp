@@ -39,7 +39,7 @@ TEST_F(UnitTest, ut2)
       "name": "my_feature",
       "dimensions": [
         {
-          "feature_name": "dim1",
+          "feature_name": "dim1", 
           "transformation_name": ["scale", "normalize"]
         },
         {
@@ -51,7 +51,7 @@ TEST_F(UnitTest, ut2)
     )json";
 
     CURLcode res;
-    auto send_req = [&url, &request_json, &res]() -> asio::awaitable<void>
+    auto send_req = [&io_context, &url, &request_json, &res]() -> asio::awaitable<void>
     {
         CURL* curl = curl_easy_init();
         if(!curl)
@@ -72,6 +72,11 @@ TEST_F(UnitTest, ut2)
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, request_json.c_str());
 
         res = curl_easy_perform(curl);
+
+        asio::steady_timer timer(io_context, std::chrono::seconds(5));
+        co_await timer.async_wait(asio::use_awaitable);
+
+        spdlog::debug("request sent");
 
         curl_easy_cleanup(curl);
         co_return;

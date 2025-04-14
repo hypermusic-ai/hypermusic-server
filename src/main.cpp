@@ -15,6 +15,9 @@ int main(int argc, char* argv[])
 
     hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
 
+    server.setIdleInterval(5000ms);
+
+    server.addRoute({"GET", "/run"},                hm::GET_feature);
     server.addRoute({"POST", "/feature"},           hm::POST_feature);
     server.addRoute({"GET", "/feature/(?:(\\w+)(?:/(\\d+))\?)"},     hm::GET_feature);
     server.addRoute({"GET", "/transformation"},     hm::GET_transformation);
