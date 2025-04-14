@@ -12,5 +12,11 @@
 
 namespace hm::native
 {
+    /**
+    * Spawns a new process with the given command.
+    * The command must be a valid shell command.
+    *
+    * @param command The command to execute in the new process
+    */
     void spawnProcess(const std::string & command);
 }

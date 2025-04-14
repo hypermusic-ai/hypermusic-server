@@ -19,6 +19,7 @@ namespace hm
         return _features.at(name).empty();
     }
 
+
     asio::awaitable<std::optional<std::size_t>> Registry::addFeature(Feature feature)
     {
         co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
@@ -48,6 +49,7 @@ namespace hm
 
         co_return hash_version;
     }
+
 
     asio::awaitable<std::optional<Feature>> Registry::getNewestFeature(const std::string& name) const
     {

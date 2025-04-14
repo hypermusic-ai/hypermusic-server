@@ -4,10 +4,18 @@
 #include <string>
 #include <vector>
 
-namespace hm
+namespace hm::http
 {
-    enum class HTTPHeader
+    /**
+    * @brief Enum of HTTP headers as defined by the standard
+    *      This enum contains the most commonly used HTTP headers.
+    * @see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+    */
+    enum class Header
     {
+        // Unknown, specially reserved
+        Unknown = 0,
+
         Accept,
         Connection,
         ContentEncoding,
@@ -15,46 +23,53 @@ namespace hm
         ContentType,
         Cookie,
         Date,
-        Expect,
-
-        //
-        Unknown
+        Expect
     };
 
-    using HeadersList = std::vector<std::pair<HTTPHeader, std::string>>;
-
-    HTTPHeader headerFromString(const std::string & header_str);
+    /**
+    * @brief A list of headers
+    *      A HeadersList is a vector of pairs, where the first element of the pair is a Header enum value and the second element is the value of the header.
+    *      The index of the Header enum value is used as the key in the vector.
+    */
+    using HeadersList = std::vector<std::pair<Header, std::string>>;
+    
+    /**
+    * @brief Parse a header string to a Header enum
+    * @param[in] header_str The header string to parse
+    * @return The parsed Header enum
+    */
+    Header parseHeader(const std::string & header_str);
 }
 
 template <>
-struct std::formatter<hm::HTTPHeader> : std::formatter<std::string> {
-  auto format(hm::HTTPHeader header, format_context& ctx) const {
+struct std::formatter<hm::http::Header> : std::formatter<std::string> {
+  auto format(hm::http::Header header, format_context& ctx) const {
     switch(header)
     {
         // A
-        case hm::HTTPHeader::Accept:            return formatter<string>::format("Accept", ctx);
+        case hm::http::Header::Accept:            return formatter<string>::format("Accept", ctx);
         // B
 
         // C
-        case hm::HTTPHeader::Connection:        return formatter<string>::format("Connection", ctx);
-        case hm::HTTPHeader::ContentEncoding:   return formatter<string>::format("Content-Encoding", ctx);
-        case hm::HTTPHeader::ContentLength:     return formatter<string>::format("Content-Length", ctx);
-        case hm::HTTPHeader::ContentType:       return formatter<string>::format("Content-Type", ctx);
-        case hm::HTTPHeader::Cookie:            return formatter<string>::format("Cookie", ctx);
+        case hm::http::Header::Connection:        return formatter<string>::format("Connection", ctx);
+        case hm::http::Header::ContentEncoding:   return formatter<string>::format("Content-Encoding", ctx);
+        case hm::http::Header::ContentLength:     return formatter<string>::format("Content-Length", ctx);
+        case hm::http::Header::ContentType:       return formatter<string>::format("Content-Type", ctx);
+        case hm::http::Header::Cookie:            return formatter<string>::format("Cookie", ctx);
 
         // D
-        case hm::HTTPHeader::Date:              return formatter<string>::format("Date", ctx);
+        case hm::http::Header::Date:              return formatter<string>::format("Date", ctx);
 
         // Unknown
-        case hm::HTTPHeader::Unknown:           return formatter<string>::format("Unknown", ctx);
+        case hm::http::Header::Unknown:           return formatter<string>::format("Unknown", ctx);
     }
     return formatter<string>::format("", ctx);
   }
 };
 
 template <>
-struct std::formatter<hm::HeadersList> : std::formatter<std::string> {
-  auto format(hm::HeadersList headers_list, format_context& ctx) const {
+struct std::formatter<hm::http::HeadersList> : std::formatter<std::string> {
+  auto format(hm::http::HeadersList headers_list, format_context& ctx) const {
     std::string headers_str = "";
     for(const auto& [header, header_value] : headers_list)
     {

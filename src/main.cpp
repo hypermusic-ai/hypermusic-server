@@ -17,13 +17,13 @@ int main(int argc, char* argv[])
 
     server.setIdleInterval(5000ms);
 
-    server.addRoute({"GET", "/run"},                hm::GET_feature);
-    server.addRoute({"POST", "/feature"},           hm::POST_feature);
-    server.addRoute({"GET", "/feature/(?:(\\w+)(?:/(\\d+))\?)"},     hm::GET_feature);
-    server.addRoute({"GET", "/transformation"},     hm::GET_transformation);
-    server.addRoute({"POST", "/transformation"},    hm::POST_transformation);
-    server.addRoute({"GET", "/condition"},          hm::GET_condition);
-    server.addRoute({"POST", "/condition"},         hm::POST_condition);
+    server.addRoute({hm::http::Method::GET, "/run"},                hm::GET_feature);
+    server.addRoute({hm::http::Method::POST, "/feature"},           hm::POST_feature);
+    server.addRoute({hm::http::Method::GET, "/feature/(?:(\\w+)(?:/(\\d+))\?)"},     hm::GET_feature);
+    server.addRoute({hm::http::Method::GET, "/transformation"},     hm::GET_transformation);
+    server.addRoute({hm::http::Method::POST, "/transformation"},    hm::POST_transformation);
+    server.addRoute({hm::http::Method::GET, "/condition"},          hm::GET_condition);
+    server.addRoute({hm::http::Method::POST, "/condition"},         hm::POST_condition);
 
     asio::co_spawn(io_context, server.listen(), asio::detached);
 

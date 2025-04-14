@@ -1,18 +1,18 @@
 #include "http_headers.hpp"
 
-namespace hm
+namespace hm::http
 {
-    HTTPHeader headerFromString(const std::string & header_str)
+    Header parseHeader(const std::string & header_str)
     {
-        if (header_str == "Accept")return HTTPHeader::Accept;
-        if (header_str == "Connection")return HTTPHeader::Connection;
-        if (header_str == "Content-Encoding")return HTTPHeader::ContentEncoding;
-        if (header_str == "Content-Length")return HTTPHeader::ContentLength;
-        if (header_str == "Content-Type")return HTTPHeader::ContentType;
-        if (header_str == "Cookie")return HTTPHeader::Cookie;
-        if (header_str == "Date")return HTTPHeader::Date;
-        if (header_str == "Expect")return HTTPHeader::Expect;
+        if (header_str == "Accept")return Header::Accept;
+        if (header_str == "Connection")return Header::Connection;
+        if (header_str == "Content-Encoding")return Header::ContentEncoding;
+        if (header_str == "Content-Length")return Header::ContentLength;
+        if (header_str == "Content-Type")return Header::ContentType;
+        if (header_str == "Cookie")return Header::Cookie;
+        if (header_str == "Date")return Header::Date;
+        if (header_str == "Expect")return Header::Expect;
         
-        return HTTPHeader::Unknown;
+        return Header::Unknown;
     }
 }

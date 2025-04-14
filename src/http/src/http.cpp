@@ -1,25 +1,26 @@
 #include "http.hpp"
 
-namespace hm
+namespace hm::http
 {
-    void HTTPBase::setVersion(const std::string & version) 
+
+    void MessageBase::setVersion(const std::string & version) 
     { 
         _version = version; 
     }
 
-    void HTTPBase::setBody(const std::string & body)
+    void MessageBase::setBody(const std::string & body)
     {
         _body = body;
 
-        setHeader(HTTPHeader::ContentLength, std::to_string(_body.size()));
+        setHeader(Header::ContentLength, std::to_string(_body.size()));
     }
 
-    void HTTPBase::addHeader(HTTPHeader header, const std::string & value)
+    void MessageBase::addHeader(Header header, const std::string & value)
     {
         _headers.emplace_back(std::make_pair(header, value));
     }
 
-    void HTTPBase::setHeader(HTTPHeader header, const std::string & value)
+    void MessageBase::setHeader(Header header, const std::string & value)
     {
         auto result = std::ranges::find_if(_headers, [&](const auto & h) { return h.first == header; });
         if(result == _headers.end())
@@ -30,54 +31,54 @@ namespace hm
         result->second = value; 
     }
 
-    const std::string & HTTPBase::getVersion() const
+    const std::string & MessageBase::getVersion() const
     {
         return _version;
     }
 
-    const HeadersList & HTTPBase::getHeaders() const
+    const HeadersList & MessageBase::getHeaders() const
     {
         return _headers;
     }
 
-    const std::string & HTTPBase::getBody() const
+    const std::string & MessageBase::getBody() const
     {
         return _body;
     }
 
-    void HTTPRequest::setMethod(const std::string & method)
+    void Request::setMethod(const Method & method)
     {
         _method = method;
     }
 
-    void HTTPRequest::setPath(const std::string & path)
+    void Request::setPath(const std::string & path)
     {
         _path = path;
     }
 
-    const std::string & HTTPRequest::getMethod() const
+    const Method & Request::getMethod() const
     {
         return _method;
     }
 
-    const std::string & HTTPRequest::getPath() const
+    const std::string & Request::getPath() const
     {
         return _path;
     }
 
-    void HTTPResponse::setCode(HTTPCode code)
+    void Response::setCode(Code code)
     {
         _code = code;
     }
 
-    const HTTPCode & HTTPResponse::getCode() const
+    const Code & Response::getCode() const
     {
         return _code;
     }
 
-    HTTPRequest parseHTTPRequest(const std::string & request)
+    Request parseRequest(const std::string & request)
     {
-        HTTPRequest http_request;
+        Request http_request;
 
         std::istringstream request_stream(request);
 
@@ -88,7 +89,7 @@ namespace hm
         request_stream >> method_str >> path_str >> version_str;
         request_stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        http_request.setMethod(method_str);
+        http_request.setMethod(parseMethod(method_str));
         http_request.setPath(path_str);
         http_request.setVersion(version_str);
 
@@ -110,7 +111,7 @@ namespace hm
                 header_value = "";
             }
             
-            http_request.addHeader(headerFromString(header_key), header_value);
+            http_request.addHeader(parseHeader(header_key), header_value);
 
         }
         std::string body_line;

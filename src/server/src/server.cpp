@@ -50,6 +50,7 @@ namespace hm
         _idle_interval = idle_interval;
     }
 
+
     asio::awaitable<void> Server::handleConnection(asio::ip::tcp::socket sock)
     {
         spdlog::info("New connection started");
@@ -61,7 +62,8 @@ namespace hm
         spdlog::info("Connection ended");
     }
 
-    std::pair<RouteHandlerFunc, std::smatch> Server::findRoute(const HTTPRequest & request) const
+
+    std::pair<RouteHandlerFunc, std::smatch> Server::findRoute(const http::Request & request) const
     {
         RouteHandlerFunc handler;
         std::smatch matches;
@@ -84,11 +86,11 @@ namespace hm
         char read_buffer[4196];
         std::string_view read_message;
 
-        HTTPRequest request;
+        http::Request request;
         
-        HTTPResponse response;
+        http::Response response;
         response.setVersion("HTTP/1.1");
-        response.addHeader(HTTPHeader::ContentType, "application/json");
+        response.addHeader(http::Header::ContentType, "application/json");
 
         while(_close == false)
         {
@@ -109,7 +111,7 @@ namespace hm
 
             spdlog::debug("Received bytes [{}]", bytes_transferred);
 
-            request = parseHTTPRequest(std::string(read_message));
+            request = http::parseRequest(std::string(read_message));
 
             const auto [handler, matches] = findRoute(request);
             
@@ -118,13 +120,13 @@ namespace hm
                 auto [code, body] = co_await handler(_session_mgr, _registry, matches, request.getBody());
                 response.setCode(code);
                 response.setBody(body);
-                response.setHeader(HTTPHeader::Connection, "keep-alive");
+                response.setHeader(http::Header::Connection, "keep-alive");
             } 
             else 
             {
-                response.setCode(HTTPCode::NotFound);
+                response.setCode(http::Code::NotFound);
                 response.setBody("404 Not Found");
-                response.setHeader(HTTPHeader::Connection, "close");
+                response.setHeader(http::Header::Connection, "close");
             }
             
             spdlog::debug("Send response\n{}\n", std::format("{}", response));

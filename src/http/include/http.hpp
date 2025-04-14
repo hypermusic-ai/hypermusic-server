@@ -9,22 +9,54 @@
 
 #include "http_codes.hpp"
 #include "http_headers.hpp"
+#include "http_method.hpp"
 
-namespace hm
+namespace hm::http
 {
-    class HTTPBase
+    class MessageBase
     {
         public:
-            HTTPBase() = default;
-            virtual ~HTTPBase() = default;
-
+            MessageBase() = default;
+            virtual ~MessageBase() = default;
+            
+            /**
+            * @brief Sets the HTTP version of the message.
+            * @param[in] version The version to set.
+            */
             void setVersion(const std::string & version);
+
+            /**
+            * @brief Sets the body of the message.
+            *
+            * This function sets the body of the message to the provided string and updates the Content-Length header
+            * to reflect the size of the new body.
+            *
+            * @param[in] body The body content to set.
+            */
             void setBody(const std::string & body);
-            void addHeader(HTTPHeader header, const std::string & value);
-            void setHeader(HTTPHeader header, const std::string & value);
+
+            /**
+            * @brief Adds a header to the message.
+            *
+            * If the header does not exist, it is added. Even If the header of the same key already exists.
+            * @param[in] header The header to add.
+            * @param[in] value The value of the header.
+            */
+            void addHeader(Header header, const std::string & value);
+            
+            /**
+            * @brief Set a header in the message.
+            * @param[in] header The header to set.
+            * @param[in] value The value of the header.
+            *
+            * If the header does not exist, it is added. If the header already exists, its value is replaced.
+            */
+            void setHeader(Header header, const std::string & value);
 
             const std::string & getVersion() const;
+
             const HeadersList & getHeaders() const;
+            
             const std::string & getBody() const;
 
         private:
@@ -33,51 +65,74 @@ namespace hm
             std::string _body;
     };
 
-    class HTTPRequest : public HTTPBase
+    class Request : public MessageBase
     {
         public:
-            HTTPRequest() = default;
-            ~HTTPRequest() = default;
+            Request() = default;
+            ~Request() = default;
 
-            void setMethod(const std::string & method);
+            /**
+            * @brief Sets the HTTP method of the request.
+            * @param[in] method The method to set.
+            */
+            void setMethod(const Method & method);
+
+            /**
+            * @brief Sets the path of the request.
+            * @param[in] path The path to set.
+            */
             void setPath(const std::string & path);
 
-            const std::string & getMethod() const;
+            const Method & getMethod() const;
+
             const std::string & getPath() const;
 
         private:
-            std::string _method;
+            Method _method;
             std::string _path;
     };
 
-    class HTTPResponse : public HTTPBase
+    /**
+    * @brief Parse the given string to a `http::Request`.
+    * 
+    * @param request The string to be parsed.
+    * 
+    * @return The parsed `Request`.
+    */
+    Request parseRequest(const std::string & request);
+
+    class Response : public MessageBase
     {
         public:
-            HTTPResponse() = default;
-            ~HTTPResponse() = default;
+            Response() = default;
+            ~Response() = default;
 
-            void setCode(HTTPCode code);
-            const HTTPCode & getCode() const;
+            /**
+            * @brief Sets the HTTP response code of the message.
+            * @param[in] code The response code to set.
+            */
+            void setCode(Code code);
+
+            const Code & getCode() const;
             
         private:
-            HTTPCode _code;
+            Code _code;
     };
 
-    HTTPRequest parseHTTPRequest(const std::string & request);
 }
 
 template <>
-struct std::formatter<hm::HTTPResponse> : std::formatter<std::string> {
-  auto format(hm::HTTPResponse res, format_context& ctx) const {
+struct std::formatter<hm::http::Response> : std::formatter<std::string> {
+  auto format(hm::http::Response res, format_context& ctx) const {
     return formatter<string>::format(
       std::format("{} {}\n{}\r\n{}", res.getVersion(), res.getCode(), res.getHeaders(), res.getBody()), ctx);
   }
 };
 
 template <>
-struct std::formatter<hm::HTTPRequest> : std::formatter<std::string> {
+struct std::formatter<hm::http::Request> : std::formatter<std::string> {
 
-  auto format(hm::HTTPRequest req, format_context& ctx) const {
+  auto format(hm::http::Request req, format_context& ctx) const {
     return formatter<string>::format(
       std::format("{} {} {}\n{}\r\n{}", req.getVersion(), req.getMethod(), req.getPath(), req.getHeaders(), req.getBody()), ctx);
   }

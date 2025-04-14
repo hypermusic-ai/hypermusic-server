@@ -2,12 +2,12 @@
 
 namespace hm
 {
-    asio::awaitable<std::pair<hm::HTTPCode, std::string>> GET_feature(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<std::pair<hm::http::Code, std::string>> GET_feature(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
     {
         spdlog::debug("GET_feature {}: {}", matches.size(), matches.str());
         if(matches.size() != 3)
         {
-            co_return std::make_pair(hm::HTTPCode::BadRequest, "invalid url");
+            co_return std::make_pair(hm::http::Code::BadRequest, "invalid url");
         }
 
         std::string json_output;
@@ -34,40 +34,40 @@ namespace hm
             {
                 spdlog::error("Cannot parse feature id : {}", feature_id_str);
 
-                co_return std::make_pair(hm::HTTPCode::BadRequest, "invalid url");
+                co_return std::make_pair(hm::http::Code::BadRequest, "invalid url");
             }
 
             auto feature_res = co_await registry.getFeature(feature_name, feature_id);
             if(!feature_res) {
-                co_return std::make_pair(hm::HTTPCode::NotFound, "feature not found");
+                co_return std::make_pair(hm::http::Code::NotFound, "feature not found");
             }
 
             auto status = google::protobuf::util::MessageToJsonString(*feature_res, &json_output, options);
 
-            co_return std::make_pair(hm::HTTPCode::OK, json_output);
+            co_return std::make_pair(hm::http::Code::OK, json_output);
         }
         else if(matches[1].length() > 0)
         {
             feature_name = matches[1].str();
             auto feature_res = co_await registry.getNewestFeature(feature_name);
             if(!feature_res) {
-                co_return std::make_pair(hm::HTTPCode::NotFound, "feature not found");
+                co_return std::make_pair(hm::http::Code::NotFound, "feature not found");
             }
 
             auto status = google::protobuf::util::MessageToJsonString(*feature_res, &json_output, options);
 
-            co_return std::make_pair(hm::HTTPCode::OK, json_output);
+            co_return std::make_pair(hm::http::Code::OK, json_output);
         }
 
-        co_return std::make_pair(hm::HTTPCode::BadRequest, "invalid url");
+        co_return std::make_pair(hm::http::Code::BadRequest, "invalid url");
     }
 
-    asio::awaitable<std::pair<hm::HTTPCode, std::string>> POST_feature(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & json_string)
+    asio::awaitable<std::pair<hm::http::Code, std::string>> POST_feature(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & json_string)
     {
         spdlog::debug("POST_feature {}: {}", matches.size(), matches.str());
         if(matches.size() != 1)
         {
-            co_return std::make_pair(hm::HTTPCode::BadRequest, "invalid url");
+            co_return std::make_pair(hm::http::Code::BadRequest, "invalid url");
         }
 
         // parse feature from json_string
@@ -76,12 +76,12 @@ namespace hm
         auto status = google::protobuf::util::JsonStringToMessage(json_string, &feature, options);
 
         if(!status.ok()) {
-            co_return std::make_pair(hm::HTTPCode::BadRequest, "failed to parse feature");
+            co_return std::make_pair(hm::http::Code::BadRequest, "failed to parse feature");
         }
 
         auto version_res = co_await registry.addFeature(feature);
         if(!version_res) {
-            co_return std::make_pair(hm::HTTPCode::BadRequest, "failed to add feature");
+            co_return std::make_pair(hm::http::Code::BadRequest, "failed to add feature");
         }
 
         auto version = *version_res;
@@ -89,7 +89,7 @@ namespace hm
         spdlog::debug("feature '{}' added with hash : {}", feature.name(), std::to_string(version));
 
         // return debug string
-        co_return std::make_pair(hm::HTTPCode::OK, std::format(
+        co_return std::make_pair(hm::http::Code::OK, std::format(
             "{{"
             "\"name\":\"{}\","
             "\"version\":\"{}\""
@@ -97,23 +97,23 @@ namespace hm
             feature.name(), std::to_string(version)));
     }
 
-    asio::awaitable<std::pair<hm::HTTPCode, std::string>> GET_transformation(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<std::pair<hm::http::Code, std::string>> GET_transformation(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
     {
-        co_return std::make_pair(hm::HTTPCode::OK, "");
+        co_return std::make_pair(hm::http::Code::OK, "");
     }
 
-    asio::awaitable<std::pair<hm::HTTPCode, std::string>> POST_transformation(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<std::pair<hm::http::Code, std::string>> POST_transformation(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
     {
-        co_return std::make_pair(hm::HTTPCode::OK, "");
+        co_return std::make_pair(hm::http::Code::OK, "");
     }
 
-    asio::awaitable<std::pair<hm::HTTPCode, std::string>> GET_condition(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<std::pair<hm::http::Code, std::string>> GET_condition(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
     {
-        co_return std::make_pair(hm::HTTPCode::OK, "");
+        co_return std::make_pair(hm::http::Code::OK, "");
     }
 
-    asio::awaitable<std::pair<hm::HTTPCode, std::string>> POST_condition(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<std::pair<hm::http::Code, std::string>> POST_condition(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
     {
-        co_return std::make_pair(hm::HTTPCode::OK, "");
+        co_return std::make_pair(hm::http::Code::OK, "");
     }
 }

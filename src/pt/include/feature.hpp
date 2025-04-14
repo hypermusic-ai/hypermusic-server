@@ -5,6 +5,14 @@
 
 namespace hm
 {
+    /**
+    * @brief Combines hash values for a Dimension object.
+    *
+    * @tparam H The hash state type.
+    * @param h The initial hash state.
+    * @param d The Dimension object whose attributes will be hashed.
+    * @return A combined hash state incorporating the feature name and all transformation names of the Dimension.
+    */
     template <typename H>
     inline H AbslHashValue(H h, const Dimension& d) 
     {
@@ -15,6 +23,14 @@ namespace hm
         return h;
     }
 
+    /**
+    * @brief Combines hash values for a Feature object.
+    *
+    * @tparam H The hash state type.
+    * @param h The initial hash state.
+    * @param f The Feature object whose attributes will be hashed.
+    * @return A combined hash state incorporating the name and dimensions of the Feature.
+    */
     template <typename H>
     inline H AbslHashValue(H h, const Feature& f) {
         h = H::combine(std::move(h), f.name());

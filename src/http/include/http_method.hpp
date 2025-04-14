@@ -1,0 +1,63 @@
+#pragma once
+
+#include <format>
+#include <string>
+
+namespace hm::http
+{
+    /**
+    * @brief Enum to represent the request method.
+    * 
+    * This enum represents the possible methods of an HTTP request.
+    * 
+    * The values of the enum are:
+    * 
+    * - `Unknown`: The request method is not recognized or not supported.
+    * 
+    * - `GET`: method requests a representation of the specified resource.
+    * 
+    * - `PUT`: replaces all current representations of the target resource with the request payload.
+    * 
+    * - `DEL`: Tdeletes the specified resource.
+    * 
+    * - `POST`: sends data to the server to create a new resource.
+    * 
+    */
+    enum class Method
+    {
+        //Unknown, specially reserved
+        Unknown = 0,
+
+        GET,
+        PUT,
+        DEL, //DELETE collides with macro definition in winnt.h ... 
+        POST
+    };
+
+    /**
+    * @brief Parse the given string to a `http::Method`.
+    * 
+    * @param method The string to be parsed.
+    * 
+    * @return The parsed `Method` or `Method::Unknown` if the string doesn't match any of the methods.
+    */
+    Method parseMethod(const std::string & method);
+}
+
+template <>
+struct std::formatter<hm::http::Method> : std::formatter<std::string> {
+
+  auto format(hm::http::Method method, format_context& ctx) const {
+    switch(method)
+    {
+        case hm::http::Method::GET:     return formatter<string>::format("GET", ctx);
+        case hm::http::Method::PUT:     return formatter<string>::format("PUT", ctx);
+        case hm::http::Method::DEL:     return formatter<string>::format("DELETE", ctx);
+        case hm::http::Method::POST:    return formatter<string>::format("POST", ctx);
+        
+        // Unknown
+        case hm::http::Method::Unknown:    return formatter<string>::format("Unknown", ctx);
+    }
+    return formatter<string>::format("", ctx);
+  }
+};
