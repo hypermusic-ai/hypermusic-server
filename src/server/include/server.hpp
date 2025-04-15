@@ -9,14 +9,12 @@ using namespace std::chrono_literals;
 using namespace asio::experimental::awaitable_operators;
 
 #include <spdlog/spdlog.h>
-#include <absl/container/flat_hash_map.h>
 
 #include "utils.hpp"
 #include "session_manager.hpp"
 #include "session.hpp"
 #include "http.hpp"
 #include "route.hpp"
-#include "registry.hpp"
 
 namespace hm
 {
@@ -40,18 +38,16 @@ namespace hm
             */
           	asio::awaitable<void> listen();
 
-            /**
-            * @brief Adds a route to the server.
-            *
-            * This function adds a route with the given handler to the server's route map.
-            * The route is identified by the given RouteKey, which specifies the HTTP method and regex pattern to match.
-            * The handler is an awaitable function that is called when a request is received that matches the route.
-            * The handler should return a pair of an HTTP status code and a response body.
-            * If the route is already in the route map, the handler is replaced with the new one.
-            * @param route The RouteKey identifying the route.
-            * @param handler The awaitable function that handles requests for the route.
-            */
-            void addRoute(RouteKey route, RouteHandlerFunc handler);
+            //std::function<asio::awaitable<hm::http::Response>(const hm::http::Request &, hm::Registry &)>
+
+            //void (*fun_ptr)(int, double);
+
+            template<class F, class ... Args>
+            void addRoute(RouteKey route, F && handler, Args... binded_args)
+            {
+                std::function<asio::awaitable<hm::http::Response>(const hm::http::Request &, std::vector<RouteArg>)>fnc = std::bind(handler, _1, _2, std::forward<Args>(binded_args)...);
+                _router.addRoute(std::move(route), RouteHandlerFunc(std::move(fnc)));
+            }
             
             /**
             * @brief Set the idle interval after which the server will close the connection.
@@ -106,24 +102,15 @@ namespace hm
             */
             asio::awaitable<void> writeData(asio::ip::tcp::socket & sock, std::string message);
 
-            /**
-            * Finds the route handler for the given request.
-            * 
-            * @param request The HTTP request to find a route for.
-            * @return A pair containing the route handler function and a std::smatch containing the regex matches.
-            */
-            std::pair<RouteHandlerFunc, std::smatch> findRoute(const http::Request & request) const;
-
         private:
             asio::io_context & _io_context;
             asio::strand<asio::io_context::executor_type> _strand;
             bool _close;
 
             asio::ip::tcp::acceptor _acceptor;
-            absl::flat_hash_map<RouteKey, RouteHandlerFunc> _routes;
+            Router _router;
 
             SessionManager _session_mgr;
-            Registry _registry;
 
             std::chrono::milliseconds _idle_interval;
     };

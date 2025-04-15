@@ -21,6 +21,10 @@ namespace hm
         public:
             Registry() = delete;
             Registry(asio::io_context & io_context);
+
+            Registry(const Registry&) = delete;
+            Registry& operator=(const Registry&) = delete;
+            
             ~Registry() = default;
 
             /**

@@ -8,7 +8,6 @@ namespace hm
         _strand(asio::make_strand(io_context)),
         _close(false),
         _acceptor(_strand, std::move(endpoint)),
-        _registry(io_context),
         _idle_interval(std::chrono::milliseconds(5000))
     {
     }
@@ -40,16 +39,10 @@ namespace hm
         co_return;
     }
 
-    void Server::addRoute(RouteKey route, RouteHandlerFunc handler)
-    {
-        _routes.try_emplace(std::move(route), std::move(handler));
-    }
-
     void Server::setIdleInterval(std::chrono::milliseconds idle_interval)
     {
         _idle_interval = idle_interval;
     }
-
 
     asio::awaitable<void> Server::handleConnection(asio::ip::tcp::socket sock)
     {
@@ -62,24 +55,6 @@ namespace hm
         spdlog::info("Connection ended");
     }
 
-
-    std::pair<RouteHandlerFunc, std::smatch> Server::findRoute(const http::Request & request) const
-    {
-        RouteHandlerFunc handler;
-        std::smatch matches;
-        for(const auto & [route_key, h] : _routes)
-        {
-            if(route_key.method != request.getMethod())continue;
-            if (std::regex_search(request.getPath(), matches, std::regex(route_key.path)))
-            {
-                handler = h;
-                break;
-            }
-        }
-
-        return std::make_pair(handler, matches);
-    }
-
     asio::awaitable<void> Server::readData(asio::ip::tcp::socket & sock, std::chrono::steady_clock::time_point & deadline)
     {
         std::size_t bytes_transferred = 0;
@@ -87,10 +62,7 @@ namespace hm
         std::string_view read_message;
 
         http::Request request;
-        
         http::Response response;
-        response.setVersion("HTTP/1.1");
-        response.addHeader(http::Header::ContentType, "application/json");
 
         while(_close == false)
         {
@@ -112,18 +84,27 @@ namespace hm
             spdlog::debug("Received bytes [{}]", bytes_transferred);
 
             request = http::parseRequest(std::string(read_message));
+            const http::Request & const_request = request;
 
-            const auto [handler, matches] = findRoute(request);
-            
+            auto [handler, route_args] = _router.findRoute(request);
+
             if (handler) 
             {
-                auto [code, body] = co_await handler(_session_mgr, _registry, matches, request.getBody());
-                response.setCode(code);
-                response.setBody(body);
-                response.setHeader(http::Header::Connection, "keep-alive");
+                try
+                {
+                    response = co_await (*handler)(const_request, std::move(route_args));
+                }
+                catch(...)
+                {
+                    spdlog::error("Error while executing handler");
+                    response.setVersion("HTTP/1.1");
+                    response.setCode(http::Code::InternalServerError);
+                    response.setHeader(http::Header::Connection, "close");
+                }
             } 
             else 
             {
+                response.setVersion("HTTP/1.1");
                 response.setCode(http::Code::NotFound);
                 response.setBody("404 Not Found");
                 response.setHeader(http::Header::Connection, "close");

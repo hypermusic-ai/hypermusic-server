@@ -16,7 +16,18 @@ namespace hm::http
     class MessageBase
     {
         public:
+            //ctor
             MessageBase() = default;
+
+            //move
+            MessageBase(MessageBase && other) = default;
+            MessageBase & operator=(MessageBase && other) = default;
+
+            //copy
+            MessageBase(const MessageBase & other) = delete;
+            MessageBase & operator=(const MessageBase & other) = delete;
+
+            //dtor
             virtual ~MessageBase() = default;
             
             /**
@@ -68,8 +79,20 @@ namespace hm::http
     class Request : public MessageBase
     {
         public:
+            // ctor
             Request() = default;
+
+            //move
+            Request(Request && other) = default;
+            Request & operator=(Request && other) = default;
+
+            //copy
+            Request(const Request & other) = delete;
+            Request & operator=(const Request & other) = delete;
+
+            // dtor
             ~Request() = default;
+
 
             /**
             * @brief Sets the HTTP method of the request.
@@ -104,7 +127,18 @@ namespace hm::http
     class Response : public MessageBase
     {
         public:
+            // ctor
             Response() = default;
+
+            //move
+            Response(Response && other) = default;
+            Response & operator=(Response && other) = default;
+
+            //copy
+            Response(const Response & other) = delete;
+            Response & operator=(const Response & other) = delete;
+
+            // dtor
             ~Response() = default;
 
             /**
@@ -123,7 +157,7 @@ namespace hm::http
 
 template <>
 struct std::formatter<hm::http::Response> : std::formatter<std::string> {
-  auto format(hm::http::Response res, format_context& ctx) const {
+  auto format(const hm::http::Response & res, format_context& ctx) const {
     return formatter<string>::format(
       std::format("{} {}\n{}\r\n{}", res.getVersion(), res.getCode(), res.getHeaders(), res.getBody()), ctx);
   }
@@ -132,7 +166,7 @@ struct std::formatter<hm::http::Response> : std::formatter<std::string> {
 template <>
 struct std::formatter<hm::http::Request> : std::formatter<std::string> {
 
-  auto format(hm::http::Request req, format_context& ctx) const {
+  auto format(const hm::http::Request & req, format_context& ctx) const {
     return formatter<string>::format(
       std::format("{} {} {}\n{}\r\n{}", req.getVersion(), req.getMethod(), req.getPath(), req.getHeaders(), req.getBody()), ctx);
   }

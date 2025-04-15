@@ -13,17 +13,19 @@ int main(int argc, char* argv[])
 
     asio::io_context io_context;
 
+    hm::Registry registry(io_context);
+
     hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
 
     server.setIdleInterval(5000ms);
-
-    server.addRoute({hm::http::Method::GET, "/run"},                hm::GET_feature);
-    server.addRoute({hm::http::Method::POST, "/feature"},           hm::POST_feature);
-    server.addRoute({hm::http::Method::GET, "/feature/(?:(\\w+)(?:/(\\d+))\?)"},     hm::GET_feature);
-    server.addRoute({hm::http::Method::GET, "/transformation"},     hm::GET_transformation);
-    server.addRoute({hm::http::Method::POST, "/transformation"},    hm::POST_transformation);
-    server.addRoute({hm::http::Method::GET, "/condition"},          hm::GET_condition);
-    server.addRoute({hm::http::Method::POST, "/condition"},         hm::POST_condition);
+        //(?:(\\w+)(?:/(\\d+))\?)
+    //server.addRoute({hm::http::Method::GET, "/run"},                std::bind(hm::GET_feature, _1, std::ref(registry)));
+    server.addRoute({hm::http::Method::POST, "/feature"},                           hm::POST_feature, std::ref(registry));
+    server.addRoute({hm::http::Method::GET, "/feature/<string>/<uint?>"},    hm::GET_feature, std::ref(registry));
+    //server.addRoute({hm::http::Method::GET, "/transformation"},                     hm::GET_transformation);
+    //server.addRoute({hm::http::Method::POST, "/transformation"},                    hm::POST_transformation);
+    //server.addRoute({hm::http::Method::GET, "/condition"},                          hm::GET_condition);
+    //server.addRoute({hm::http::Method::POST, "/condition"},                         hm::POST_condition);
 
     asio::co_spawn(io_context, server.listen(), asio::detached);
 

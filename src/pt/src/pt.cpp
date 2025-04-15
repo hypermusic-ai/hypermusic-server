@@ -2,118 +2,174 @@
 
 namespace hm
 {
-    asio::awaitable<std::pair<hm::http::Code, std::string>> GET_feature(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<http::Response> GET_feature(const http::Request &, std::vector<RouteArg> args, Registry & registry)
     {
-        spdlog::debug("GET_feature {}: {}", matches.size(), matches.str());
-        if(matches.size() != 3)
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+        response.setHeader(http::Header::Connection, "close");
+
+        if(args.size() > 2 || args.size() == 0)
         {
-            co_return std::make_pair(hm::http::Code::BadRequest, "invalid url");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("invalid url");
+            co_return response;
         }
 
-        std::string json_output;
+        auto feature_name_result = args.at(0).parseAsString();
+
+        if(!feature_name_result)
+        {
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("invalid url");
+            co_return response;
+        }
+
         google::protobuf::util::JsonPrintOptions options;
         options.add_whitespace = true; // Pretty print
         options.preserve_proto_field_names = true; // Use snake_case from proto
         options.always_print_fields_with_no_presence = true;
 
-        std::string feature_name;
+        std::string json_output;
 
-        if(matches[1].length() > 0 && matches[2].length() > 0)
+        std::optional<Feature> feature_res;
+
+        if(args.size() == 2)
         {
+            auto feature_id_result = args.at(1).parseAsUnsignedInteger();
 
-            feature_name = matches[1].str();
-            auto feature_id_str = matches[2].str();
-            spdlog::debug("GET_feature feature name: {},feature id: {}", feature_name, feature_id_str);
-
-            std::size_t feature_id;
-            try
+            if(!feature_id_result)
             {
-                feature_id = std::stoull(feature_id_str);
-            }
-            catch(...)
-            {
-                spdlog::error("Cannot parse feature id : {}", feature_id_str);
-
-                co_return std::make_pair(hm::http::Code::BadRequest, "invalid url");
+                response.setHeader(http::Header::ContentType, "text/plain");
+                response.setCode(hm::http::Code::BadRequest);
+                response.setBody("invalid url");
+                co_return response;
             }
 
-            auto feature_res = co_await registry.getFeature(feature_name, feature_id);
-            if(!feature_res) {
-                co_return std::make_pair(hm::http::Code::NotFound, "feature not found");
-            }
-
-            auto status = google::protobuf::util::MessageToJsonString(*feature_res, &json_output, options);
-
-            co_return std::make_pair(hm::http::Code::OK, json_output);
+            feature_res = co_await registry.getFeature(feature_name_result.value(), feature_id_result.value());
         }
-        else if(matches[1].length() > 0)
+        else if(args.size() == 1)
         {
-            feature_name = matches[1].str();
-            auto feature_res = co_await registry.getNewestFeature(feature_name);
-            if(!feature_res) {
-                co_return std::make_pair(hm::http::Code::NotFound, "feature not found");
-            }
-
-            auto status = google::protobuf::util::MessageToJsonString(*feature_res, &json_output, options);
-
-            co_return std::make_pair(hm::http::Code::OK, json_output);
+            feature_res = co_await registry.getNewestFeature(feature_name_result.value());
         }
 
-        co_return std::make_pair(hm::http::Code::BadRequest, "invalid url");
+        if(!feature_res) 
+        {
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::NotFound);
+            response.setBody("feature not found");
+            co_return response;
+        }
+        
+        auto status = google::protobuf::util::MessageToJsonString(*feature_res, &json_output, options);
+
+        if(!status.ok())
+        {
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::InternalServerError);
+            response.setBody("internal server error");
+            co_return response;
+        }
+
+        response.setHeader(http::Header::ContentType, "application/json");
+        response.setCode(hm::http::Code::OK);
+        response.setBody(std::move(json_output));
+        co_return std::move(response);
     }
 
-    asio::awaitable<std::pair<hm::http::Code, std::string>> POST_feature(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & json_string)
+    asio::awaitable<http::Response> POST_feature(const http::Request & request, std::vector<RouteArg> args, Registry & registry)
     {
-        spdlog::debug("POST_feature {}: {}", matches.size(), matches.str());
-        if(matches.size() != 1)
-        {
-            co_return std::make_pair(hm::http::Code::BadRequest, "invalid url");
-        }
+        http::Response response;
+        response.setVersion("HTTP/1.1");
 
         // parse feature from json_string
         hm::Feature feature;
         google::protobuf::util::JsonParseOptions options;
-        auto status = google::protobuf::util::JsonStringToMessage(json_string, &feature, options);
+        auto status = google::protobuf::util::JsonStringToMessage(request.getBody(), &feature, options);
 
-        if(!status.ok()) {
-            co_return std::make_pair(hm::http::Code::BadRequest, "failed to parse feature");
+        if(!status.ok()) 
+        {
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("Failed to parse feature");
+            co_return std::move(response);
         }
 
         auto version_res = co_await registry.addFeature(feature);
-        if(!version_res) {
-            co_return std::make_pair(hm::http::Code::BadRequest, "failed to add feature");
+        if(!version_res) 
+        {
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("Failed to add feature");
+            co_return std::move(response);
         }
 
         auto version = *version_res;
         // add to EVM machine
         spdlog::debug("feature '{}' added with hash : {}", feature.name(), std::to_string(version));
 
-        // return debug string
-        co_return std::make_pair(hm::http::Code::OK, std::format(
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::ContentType, "application/json");
+        response.setCode(hm::http::Code::OK);
+        response.setBody(std::format(
             "{{"
             "\"name\":\"{}\","
             "\"version\":\"{}\""
             "}}",
             feature.name(), std::to_string(version)));
+
+        co_return std::move(response);
     }
 
-    asio::awaitable<std::pair<hm::http::Code, std::string>> GET_transformation(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<http::Response> GET_transformation(const http::Request &)
     {
-        co_return std::make_pair(hm::http::Code::OK, "");
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+        response.setCode(hm::http::Code::OK);
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::ContentType, "text/plain");
+        response.setBody("OK");
+
+        co_return std::move(response);
     }
 
-    asio::awaitable<std::pair<hm::http::Code, std::string>> POST_transformation(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<http::Response> POST_transformation(const http::Request &)
     {
-        co_return std::make_pair(hm::http::Code::OK, "");
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+        response.setCode(hm::http::Code::OK);
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::ContentType, "text/plain");
+        response.setBody("OK");
+
+        co_return std::move(response);
     }
 
-    asio::awaitable<std::pair<hm::http::Code, std::string>> GET_condition(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<http::Response> GET_condition(const http::Request &)
     {
-        co_return std::make_pair(hm::http::Code::OK, "");
+        
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+        response.setCode(hm::http::Code::OK);
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::ContentType, "text/plain");
+        response.setBody("OK");
+
+        co_return std::move(response);
     }
 
-    asio::awaitable<std::pair<hm::http::Code, std::string>> POST_condition(hm::SessionManager & session_mgr, Registry & registry, const std::smatch & matches, const std::string & body)
+    asio::awaitable<http::Response> POST_condition(const http::Request &)
     {
-        co_return std::make_pair(hm::http::Code::OK, "");
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+        response.setCode(hm::http::Code::OK);
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::ContentType, "text/plain");
+        response.setBody("OK");
+
+        co_return std::move(response);
     }
 }
