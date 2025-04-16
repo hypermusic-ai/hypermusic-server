@@ -53,12 +53,48 @@ namespace hm
 
 namespace hm::parse
 {
+    /**
+     * @brief Parses a string to a RouteArgType.
+     * 
+     * This function takes a string representation of a `RouteArgType` and converts it to the corresponding enum value.
+     * If the string does not match any known `RouteArgType`, it returns `RouteArgType::Unknown`.
+     * 
+     * @param str The `string` to parse.
+     * @return The corresponding RouteArgType.
+     */
     RouteArgType parseRouteArgTypeFromString(const std::string & str);
     
+    /**
+     * @brief Parses a string to a RouteArgDef.
+     * 
+     * This function takes a string representation of a `RouteArgDef` and converts it to the corresponding enum value.
+     * If the string does not match any known `RouteArgDef`, it returns an empty optional.
+     * 
+     * @param str The `string` to parse.
+     * @return The corresponding RouteArgDef.
+     */
     std::optional<RouteArgDef> parseRouteArgDefFromString(const std::string str);
 
+    /**
+     * @brief Parses a `RouteArg` as a unsigned integer.
+     * 
+     * This function takes a `RouteArg` and attempts to parse it as a unsigned integer.
+     * If the parsing is successful, it returns the unsigned integer; otherwise, it returns an empty optional.
+     * 
+     * @param arg The `RouteArg` to parse.
+     * @return The parsed unsigned integer or an empty optional if parsing fails.
+     */
     std::optional<std::size_t> parseRouteArgAsUnsignedInteger(const RouteArg & arg);
 
+    /**
+     * @brief Parses a `RouteArg` as a string.
+     * 
+     * This function takes a `RouteArg` and attempts to parse it as a `string`.
+     * If the parsing is successful, it returns the `string`; otherwise, it returns an empty optional.
+     * 
+     * @param arg The `RouteArg` to parse.
+     * @return The parsed `string` or an empty optional if parsing fails.
+     */
     std::optional<std::string> parseRouteArgAsString(const RouteArg & arg);
 }
 

@@ -31,37 +31,37 @@ namespace hm::http
             virtual ~MessageBase() = default;
             
             /**
-            * @brief Sets the HTTP version of the message.
-            * @param[in] version The version to set.
-            */
+             * @brief Sets the HTTP version of the message.
+             * @param[in] version The version to set.
+             */
             void setVersion(const std::string & version);
 
             /**
-            * @brief Sets the body of the message.
-            *
-            * This function sets the body of the message to the provided string and updates the Content-Length header
-            * to reflect the size of the new body.
-            *
-            * @param[in] body The body content to set.
-            */
+             * @brief Sets the body of the message.
+             *
+             * This function sets the body of the message to the provided string and updates the Content-Length header
+             * to reflect the size of the new body.
+             *
+             * @param[in] body The body content to set.
+             */
             void setBody(const std::string & body);
 
             /**
-            * @brief Adds a header to the message.
-            *
-            * If the header does not exist, it is added. Even If the header of the same key already exists.
-            * @param[in] header The header to add.
-            * @param[in] value The value of the header.
-            */
+             * @brief Adds a header to the message.
+             *
+             * If the header does not exist, it is added. Even If the header of the same key already exists.
+             * @param[in] header The header to add.
+             * @param[in] value The value of the header.
+             */
             void addHeader(Header header, const std::string & value);
             
             /**
-            * @brief Set a header in the message.
-            * @param[in] header The header to set.
-            * @param[in] value The value of the header.
-            *
-            * If the header does not exist, it is added. If the header already exists, its value is replaced.
-            */
+             * @brief Set a header in the message.
+             * @param[in] header The header to set.
+             * @param[in] value The value of the header.
+             *
+             * If the header does not exist, it is added. If the header already exists, its value is replaced.
+             */
             void setHeader(Header header, const std::string & value);
 
             const std::string & getVersion() const;
@@ -93,17 +93,16 @@ namespace hm::http
             // dtor
             ~Request() = default;
 
-
             /**
-            * @brief Sets the HTTP method of the request.
-            * @param[in] method The method to set.
-            */
+             * @brief Sets the HTTP method of the request.
+             * @param[in] method The method to set.
+             */
             void setMethod(const Method & method);
 
             /**
-            * @brief Sets the path of the request.
-            * @param[in] path The path to set.
-            */
+             * @brief Sets the path of the request.
+             * @param[in] path The path to set.
+             */
             void setPath(const std::string & path);
 
             const Method & getMethod() const;
@@ -133,9 +132,9 @@ namespace hm::http
             ~Response() = default;
 
             /**
-            * @brief Sets the HTTP response code of the message.
-            * @param[in] code The response code to set.
-            */
+             * @brief Sets the HTTP response code of the message.
+             * @param[in] code The response code to set.
+             */
             void setCode(Code code);
 
             const Code & getCode() const;
@@ -148,12 +147,12 @@ namespace hm::http
 namespace hm::parse
 {
     /**
-    * @brief Parse the given string to a `http::Request`.
-    * 
-    * @param request The string to be parsed.
-    * 
-    * @return The parsed `Request`.
-    */
+     * @brief Parse the given string to a `http::Request`.
+     * 
+     * @param request The string to be parsed.
+     * 
+     * @return The parsed `Request`.
+     */
     http::Request parseRequestFromString(const std::string & request);
 }
 

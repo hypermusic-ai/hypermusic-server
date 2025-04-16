@@ -7,10 +7,10 @@
 namespace hm::http
 {
     /**
-    * @brief Enum of HTTP headers as defined by the standard
-    *      This enum contains the most commonly used HTTP headers.
-    * @see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
-    */
+     * @brief Enum of HTTP headers as defined by the standard
+     *      This enum contains the most commonly used HTTP headers.
+     * @see https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+     */
     enum class Header
     {
         // Unknown, specially reserved
@@ -27,20 +27,20 @@ namespace hm::http
     };
 
     /**
-    * @brief A list of headers
-    *      A HeadersList is a vector of pairs, where the first element of the pair is a Header enum value and the second element is the value of the header.
-    *      The index of the Header enum value is used as the key in the vector.
-    */
+     * @brief A list of headers
+     *      A HeadersList is a vector of pairs, where the first element of the pair is a Header enum value and the second element is the value of the header.
+     *      The index of the Header enum value is used as the key in the vector.
+     */
     using HeadersList = std::vector<std::pair<Header, std::string>>;
 }
 
 namespace hm::parse
 {
     /**
-    * @brief Parse a header string to a Header enum
-    * @param[in] header_str The header string to parse
-    * @return The parsed Header enum
-    */
+     * @brief Parse a header string to a Header enum
+     * @param[in] header_str The header string to parse
+     * @return The parsed Header enum
+     */
     http::Header parseHeaderFromString(const std::string & header_str);
 }
 

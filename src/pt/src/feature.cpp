@@ -10,9 +10,15 @@ namespace hm::parse
         return json_obj;
     }
 
-    std::optional<Dimension> parseJsonToDimension(json, use_json_t)
+    std::optional<Dimension> parseJsonToDimension(json json_obj, use_json_t)
     {
-        return std::nullopt;
+        Dimension dimension;
+        dimension.set_feature_name(json_obj["feature_name"].get<std::string>());
+        for(const std::string & transform_name : json_obj["transformation_name"])
+        {
+            dimension.add_transformation_name(transform_name);
+        }
+        return dimension;
     }
 
     std::optional<std::string> parseDimensionToJson(Dimension dimension, use_protobuf_t)
@@ -56,10 +62,22 @@ namespace hm::parse
 
         return json_obj;
     }
-    
+
     std::optional<Feature> parseJsonToFeature(json json_obj, use_json_t)
     {
-        return std::nullopt;
+        Feature feature;
+        feature.set_name(json_obj["name"].get<std::string>());
+        for(const auto & dim : json_obj["dimensions"])
+        {
+            auto dimension = parseJsonToDimension(dim, use_json);
+            if(dimension) {
+                feature.add_dimensions();
+                *feature.mutable_dimensions(feature.dimensions_size() - 1) = *dimension;
+            }else {
+                return std::nullopt; // Error in parsing dimension
+            }
+        }
+        return feature;
     }
 
     std::optional<std::string> parseFeatureToJson(Feature feature, use_protobuf_t)

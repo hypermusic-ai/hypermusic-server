@@ -39,13 +39,13 @@ namespace hm
     };
 
     /**
-    * @brief Combines hash values for a RouteKey object.
-    *
-    * @tparam H The hash state type.
-    * @param h The initial hash state.
-    * @param route_key The RouteKey object whose attributes will be hashed.
-    * @return A combined hash state incorporating the HTTP method and path of the RouteKey.
-    */
+     * @brief Combines hash values for a RouteKey object.
+     *
+     * @tparam H The hash state type.
+     * @param h The initial hash state.
+     * @param route_key The RouteKey object whose attributes will be hashed.
+     * @return A combined hash state incorporating the HTTP method and path of the RouteKey.
+     */
     template <typename H>
     inline H AbslHashValue(H h, const RouteKey& route_key) {
         return H::combine(std::move(h), route_key.getMethod(), route_key.getPath());
@@ -63,23 +63,19 @@ namespace hm
             template<typename... Args>
             struct Wrapper : public Base
             {
-                public:
-                    Wrapper(std::function<asio::awaitable<http::Response>(Args...)> func) 
-                    : function(std::move(func)) 
-                    {}
+                Wrapper(std::function<asio::awaitable<http::Response>(Args...)> func) 
+                : function(std::move(func)) 
+                {}
 
-                    std::function<asio::awaitable<http::Response>(Args...)> function; 
+                std::function<asio::awaitable<http::Response>(Args...)> function; 
             };
-
 
         public:
 
             template<typename... Args>
             RouteHandlerFunc(std::function<asio::awaitable<http::Response>(Args...)> func) 
             : _base(std::make_unique<Wrapper<Args...>>(std::move(func))) 
-            {
-
-            }
+            {}
 
             RouteHandlerFunc(RouteHandlerFunc && other) = default;
 
@@ -97,7 +93,6 @@ namespace hm
                     throw std::runtime_error("Invalid arguments to function object call!");
                 }
             }
-
 
         private:
             std::unique_ptr<Base> _base;

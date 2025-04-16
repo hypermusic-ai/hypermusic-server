@@ -6,23 +6,23 @@
 namespace hm::http
 {
     /**
-    * @brief Enum to represent the request method.
-    * 
-    * This enum represents the possible methods of an HTTP request.
-    * 
-    * The values of the enum are:
-    * 
-    * - `Unknown`: The request method is not recognized or not supported.
-    * 
-    * - `GET`: method requests a representation of the specified resource.
-    * 
-    * - `PUT`: replaces all current representations of the target resource with the request payload.
-    * 
-    * - `DEL`: Tdeletes the specified resource.
-    * 
-    * - `POST`: sends data to the server to create a new resource.
-    * 
-    */
+     * @brief Enum to represent the request method.
+     * 
+     * This enum represents the possible methods of an HTTP request.
+     * 
+     * The values of the enum are:
+     * 
+     * - `Unknown`: The request method is not recognized or not supported.
+     * 
+     * - `GET`: method requests a representation of the specified resource.
+     * 
+     * - `PUT`: replaces all current representations of the target resource with the request payload.
+     * 
+     * - `DEL`: Tdeletes the specified resource.
+     * 
+     * - `POST`: sends data to the server to create a new resource.
+     * 
+     */
     enum class Method
     {
         //Unknown, specially reserved
@@ -38,12 +38,12 @@ namespace hm::http
 namespace hm::parse
 {
     /**
-    * @brief Parse the given string to a `http::Method`.
-    * 
-    * @param method The string to be parsed.
-    * 
-    * @return The parsed `Method` or `Method::Unknown` if the string doesn't match any of the methods.
-    */
+     * @brief Parse the given string to a `http::Method`.
+     * 
+     * @param method The string to be parsed.
+     * 
+     * @return The parsed `Method` or `Method::Unknown` if the string doesn't match any of the methods.
+     */
     http::Method parseMethodFromString(const std::string & method);
 }
 

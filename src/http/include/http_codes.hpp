@@ -5,36 +5,36 @@
 namespace hm::http
 {
     /**
-    * @brief Enum to represent HTTP response status codes.
-    * 
-    * This enum represents the possible status codes of an HTTP response.
-    * 
-    * The values of the enum are categorized as follows:
-    * 
-    * - `Unknown`: The response code is not recognized or not supported.
-    * 
-    * - Level 200: Successful responses.
-    * 
-    *     - - `OK`: The request succeeded.
-    * 
-    * - Level 400: Client error responses.
-    * 
-    *     - - `BadRequest`: The request could not be understood by the server.
-    * 
-    *     - - `Unauthorized`: The request requires user authentication.
-    * 
-    *     - - `Forbidden`: The server understood the request, but refuses to authorize it.
-    * 
-    *     - - `NotFound`: The server has not found anything matching the request.
-    * 
-    * - Level 500: Server error responses.
-    * 
-    *     - - `InternalServerError`: The server encountered an unexpected condition.
-    * 
-    *     - - `ServiceUnavailable`: The server is currently unable to handle the request.
-    * 
-    *     - - `GatewayTimeout`: The server did not receive a timely response from an upstream server.
-    */
+     * @brief Enum to represent HTTP response status codes.
+     * 
+     * This enum represents the possible status codes of an HTTP response.
+     * 
+     * The values of the enum are categorized as follows:
+     * 
+     * - `Unknown`: The response code is not recognized or not supported.
+     * 
+     * - Level 200: Successful responses.
+     * 
+     *     - - `OK`: The request succeeded.
+     * 
+     * - Level 400: Client error responses.
+     * 
+     *     - - `BadRequest`: The request could not be understood by the server.
+     * 
+     *     - - `Unauthorized`: The request requires user authentication.
+     * 
+     *     - - `Forbidden`: The server understood the request, but refuses to authorize it.
+     * 
+     *     - - `NotFound`: The server has not found anything matching the request.
+     * 
+     * - Level 500: Server error responses.
+     * 
+     *     - - `InternalServerError`: The server encountered an unexpected condition.
+     * 
+     *     - - `ServiceUnavailable`: The server is currently unable to handle the request.
+     * 
+     *     - - `GatewayTimeout`: The server did not receive a timely response from an upstream server.
+     */
     enum class Code
     {
         // Unknown, specially reserved
