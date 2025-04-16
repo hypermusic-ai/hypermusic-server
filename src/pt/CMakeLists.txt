@@ -58,6 +58,7 @@ add_module(NAME "PT"
         "${PROJECT_PREFIX}::Session"
         "${PROJECT_PREFIX}::HTTP"
         "${PROJECT_PREFIX}::Server"
+        "${PROJECT_PREFIX}::Parser"
         absl::hash
         spdlog::spdlog
         asio

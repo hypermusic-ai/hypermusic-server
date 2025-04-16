@@ -1,14 +1,14 @@
 #include "http_method.hpp"
 
-namespace hm::http
+namespace hm::parse
 {
-    Method parseMethod(const std::string & method)
+    http::Method parseMethodFromString(const std::string & method)
     {
-        if (method == std::format("{}", Method::GET))return Method::GET;
-        if (method == std::format("{}", Method::PUT))return Method::PUT;
-        if (method == std::format("{}", Method::DEL))return Method::DEL;
-        if (method == std::format("{}", Method::POST))return Method::POST;
+        if (method == std::format("{}", http::Method::GET))return http::Method::GET;
+        if (method == std::format("{}", http::Method::PUT))return http::Method::PUT;
+        if (method == std::format("{}", http::Method::DEL))return http::Method::DEL;
+        if (method == std::format("{}", http::Method::POST))return http::Method::POST;
 
-        return Method::Unknown;
+        return http::Method::Unknown;
     }
 }

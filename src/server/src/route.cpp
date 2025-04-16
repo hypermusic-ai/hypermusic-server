@@ -32,7 +32,7 @@ namespace hm
 
         for(const auto & segment : path_segments)
         {
-            auto arg_parse_result = parseRouteArgDef(segment);
+            auto arg_parse_result = parse::parseRouteArgDefFromString(segment);
 
             if(arg_parse_result.has_value())
             {

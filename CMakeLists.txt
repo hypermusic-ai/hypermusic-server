@@ -44,6 +44,8 @@ if(HYPERMUSIC_DEPS_PATH)
 
         find_package(evmone REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/lib/cmake/evmone")
 
+        find_package(json REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/json/3.12.10/lib/cmake/json")
+
         if(BUILD_TESTING)
             find_package(GTest REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/GTest/1.16.0/lib/cmake/GTest")
         endif()
@@ -72,6 +74,7 @@ target_link_libraries("${PROJECT_NAME}Lib"
         "${PROJECT_PREFIX}::Session"
         "${PROJECT_PREFIX}::PT"
         "${PROJECT_PREFIX}::Runner"
+        "${PROJECT_PREFIX}::Parser"
         PT_proto_gen
         "${PROJECT_PREFIX}::EVM"
 )

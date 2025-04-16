@@ -32,13 +32,16 @@ namespace hm::http
     *      The index of the Header enum value is used as the key in the vector.
     */
     using HeadersList = std::vector<std::pair<Header, std::string>>;
-    
+}
+
+namespace hm::parse
+{
     /**
     * @brief Parse a header string to a Header enum
     * @param[in] header_str The header string to parse
     * @return The parsed Header enum
     */
-    Header parseHeader(const std::string & header_str);
+    http::Header parseHeaderFromString(const std::string & header_str);
 }
 
 template <>

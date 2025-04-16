@@ -115,15 +115,6 @@ namespace hm::http
             std::string _path;
     };
 
-    /**
-    * @brief Parse the given string to a `http::Request`.
-    * 
-    * @param request The string to be parsed.
-    * 
-    * @return The parsed `Request`.
-    */
-    Request parseRequest(const std::string & request);
-
     class Response : public MessageBase
     {
         public:
@@ -152,7 +143,18 @@ namespace hm::http
         private:
             Code _code;
     };
+}
 
+namespace hm::parse
+{
+    /**
+    * @brief Parse the given string to a `http::Request`.
+    * 
+    * @param request The string to be parsed.
+    * 
+    * @return The parsed `Request`.
+    */
+    http::Request parseRequestFromString(const std::string & request);
 }
 
 template <>

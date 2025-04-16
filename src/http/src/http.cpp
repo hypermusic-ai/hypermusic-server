@@ -75,10 +75,13 @@ namespace hm::http
     {
         return _code;
     }
+}
 
-    Request parseRequest(const std::string & request)
+namespace hm::parse
+{
+    http::Request parseRequestFromString(const std::string & request)
     {
-        Request http_request;
+        http::Request http_request;
 
         std::istringstream request_stream(request);
 
@@ -89,7 +92,7 @@ namespace hm::http
         request_stream >> method_str >> path_str >> version_str;
         request_stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        http_request.setMethod(parseMethod(method_str));
+        http_request.setMethod(parse::parseMethodFromString(method_str));
         http_request.setPath(path_str);
         http_request.setVersion(version_str);
 
@@ -111,7 +114,7 @@ namespace hm::http
                 header_value = "";
             }
             
-            http_request.addHeader(parseHeader(header_key), header_value);
+            http_request.addHeader(parse::parseHeaderFromString(header_key), header_value);
 
         }
         std::string body_line;

@@ -2,16 +2,6 @@
 
 namespace hm
 {
-    RouteArgType parseRouteArgType(const std::string & str)
-    {
-        if(str == std::format("{}", RouteArgType::character)) return RouteArgType::character;
-        if(str == std::format("{}", RouteArgType::unsigned_integer)) return RouteArgType::unsigned_integer;
-        if(str == std::format("{}", RouteArgType::base58)) return RouteArgType::base58;
-        if(str == std::format("{}", RouteArgType::string)) return RouteArgType::string;
-
-        return RouteArgType::Unknown;
-    }
-
     RouteArg::RouteArg(RouteArgType type, RouteArgRequirement requirement, std::string data)
     :   _def(type, requirement),
         _data(std::move(data))
@@ -40,27 +30,21 @@ namespace hm
     {
         return _def.second == RouteArgRequirement::optional;
     }
+}
 
-    std::optional<std::size_t> RouteArg::parseAsUnsignedInteger() const 
+namespace hm::parse
+{
+    RouteArgType parseRouteArgTypeFromString(const std::string & str)
     {
-        if(_def.first != RouteArgType::unsigned_integer)return std::nullopt;
-        std::size_t val;
-        try{
-            val = std::stoull(_data);
-        }catch(...)
-        {
-            return std::nullopt;
-        }
-        return val;
+        if(str == std::format("{}", RouteArgType::character)) return RouteArgType::character;
+        if(str == std::format("{}", RouteArgType::unsigned_integer)) return RouteArgType::unsigned_integer;
+        if(str == std::format("{}", RouteArgType::base58)) return RouteArgType::base58;
+        if(str == std::format("{}", RouteArgType::string)) return RouteArgType::string;
+
+        return RouteArgType::Unknown;
     }
 
-    std::optional<std::string> RouteArg::parseAsString() const 
-    {
-        if(_def.first != RouteArgType::string)return std::nullopt;
-        return _data;
-    }
-
-    std::optional<RouteArgDef> parseRouteArgDef(const std::string str)
+    std::optional<RouteArgDef> parseRouteArgDefFromString(const std::string str)
     {   
         constexpr static const char start_delimeter = '<';
         constexpr static const char end_delimeter = '>';
@@ -84,13 +68,13 @@ namespace hm
         {
             // optional value
             requirement = RouteArgRequirement::optional;
-            type = parseRouteArgType(arg.substr(0, arg.size() - 1));
+            type = parseRouteArgTypeFromString(arg.substr(0, arg.size() - 1));
         }
         else
         {
             // flat value
             requirement = RouteArgRequirement::required;
-            type = parseRouteArgType(arg);
+            type = parseRouteArgTypeFromString(arg);
         }
          
         if(type == RouteArgType::Unknown)
@@ -100,5 +84,24 @@ namespace hm
         }
                 
         return std::make_pair(type, requirement); 
+    }
+
+    std::optional<std::size_t> parseRouteArgAsUnsignedInteger(const RouteArg & arg) 
+    {
+        if(arg.getType() != RouteArgType::unsigned_integer)return std::nullopt;
+        std::size_t val;
+        try{
+            val = std::stoull(arg.getData());
+        }catch(...)
+        {
+            return std::nullopt;
+        }
+        return val;
+    }
+
+    std::optional<std::string> parseRouteArgAsString(const RouteArg & arg) 
+    {
+        if(arg.getType() != RouteArgType::string)return std::nullopt;
+        return arg.getData();
     }
 }

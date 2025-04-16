@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     server.setIdleInterval(5000ms);
         //(?:(\\w+)(?:/(\\d+))\?)
     //server.addRoute({hm::http::Method::GET, "/run"},                std::bind(hm::GET_feature, _1, std::ref(registry)));
-    server.addRoute({hm::http::Method::POST, "/feature"},                           hm::POST_feature, std::ref(registry));
+    server.addRoute({hm::http::Method::POST, "/feature"},                    hm::POST_feature, std::ref(registry));
     server.addRoute({hm::http::Method::GET, "/feature/<string>/<uint?>"},    hm::GET_feature, std::ref(registry));
     //server.addRoute({hm::http::Method::GET, "/transformation"},                     hm::GET_transformation);
     //server.addRoute({hm::http::Method::POST, "/transformation"},                    hm::POST_transformation);

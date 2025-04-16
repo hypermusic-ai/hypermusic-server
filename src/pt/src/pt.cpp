@@ -16,7 +16,7 @@ namespace hm
             co_return response;
         }
 
-        auto feature_name_result = args.at(0).parseAsString();
+        auto feature_name_result = parse::parseRouteArgAsString(args.at(0));
 
         if(!feature_name_result)
         {
@@ -26,18 +26,11 @@ namespace hm
             co_return response;
         }
 
-        google::protobuf::util::JsonPrintOptions options;
-        options.add_whitespace = true; // Pretty print
-        options.preserve_proto_field_names = true; // Use snake_case from proto
-        options.always_print_fields_with_no_presence = true;
-
-        std::string json_output;
-
         std::optional<Feature> feature_res;
 
         if(args.size() == 2)
         {
-            auto feature_id_result = args.at(1).parseAsUnsignedInteger();
+            auto feature_id_result = parse::parseRouteArgAsUnsignedInteger(args.at(1));
 
             if(!feature_id_result)
             {
@@ -62,9 +55,9 @@ namespace hm
             co_return response;
         }
         
-        auto status = google::protobuf::util::MessageToJsonString(*feature_res, &json_output, options);
+        auto json_res = parse::parseFeatureToJson(*feature_res, parse::use_protobuf);
 
-        if(!status.ok())
+        if(!json_res)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(hm::http::Code::InternalServerError);
@@ -74,7 +67,7 @@ namespace hm
 
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(hm::http::Code::OK);
-        response.setBody(std::move(json_output));
+        response.setBody(std::move(*json_res));
         co_return std::move(response);
     }
 
@@ -84,11 +77,9 @@ namespace hm
         response.setVersion("HTTP/1.1");
 
         // parse feature from json_string
-        hm::Feature feature;
-        google::protobuf::util::JsonParseOptions options;
-        auto status = google::protobuf::util::JsonStringToMessage(request.getBody(), &feature, options);
+        auto feature_res = parse::parseJsonToFeature(request.getBody(), parse::use_protobuf);
 
-        if(!status.ok()) 
+        if(!feature_res) 
         {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
@@ -96,6 +87,8 @@ namespace hm
             response.setBody("Failed to parse feature");
             co_return std::move(response);
         }
+
+        const Feature & feature = *feature_res;
 
         auto version_res = co_await registry.addFeature(feature);
         if(!version_res) 
@@ -110,17 +103,15 @@ namespace hm
         auto version = *version_res;
         // add to EVM machine
         spdlog::debug("feature '{}' added with hash : {}", feature.name(), std::to_string(version));
+        
+        json json_output;
+        json_output["name"] = feature.name();
+        json_output["version"] = std::to_string(version);
 
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(hm::http::Code::OK);
-        response.setBody(std::format(
-            "{{"
-            "\"name\":\"{}\","
-            "\"version\":\"{}\""
-            "}}",
-            feature.name(), std::to_string(version)));
-
+        response.setBody(json_output.dump());
         co_return std::move(response);
     }
 

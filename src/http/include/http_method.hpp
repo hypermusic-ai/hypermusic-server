@@ -33,7 +33,10 @@ namespace hm::http
         DEL, //DELETE collides with macro definition in winnt.h ... 
         POST
     };
+}
 
+namespace hm::parse
+{
     /**
     * @brief Parse the given string to a `http::Method`.
     * 
@@ -41,7 +44,7 @@ namespace hm::http
     * 
     * @return The parsed `Method` or `Method::Unknown` if the string doesn't match any of the methods.
     */
-    Method parseMethod(const std::string & method);
+    http::Method parseMethodFromString(const std::string & method);
 }
 
 template <>

@@ -20,8 +20,6 @@ namespace hm
         string
     };
 
-    RouteArgType parseRouteArgType(const std::string & str);
-
     enum class RouteArgRequirement
     {
         // Unknown
@@ -45,17 +43,23 @@ namespace hm
 
             bool isOptional() const;
 
-            std::optional<std::size_t> parseAsUnsignedInteger() const;
-
-            std::optional<std::string> parseAsString() const;
-
         private:
 
             RouteArgDef _def;
             std::string _data;
     };
 
-    std::optional<RouteArgDef> parseRouteArgDef(const std::string str);
+}
+
+namespace hm::parse
+{
+    RouteArgType parseRouteArgTypeFromString(const std::string & str);
+    
+    std::optional<RouteArgDef> parseRouteArgDefFromString(const std::string str);
+
+    std::optional<std::size_t> parseRouteArgAsUnsignedInteger(const RouteArg & arg);
+
+    std::optional<std::string> parseRouteArgAsString(const RouteArg & arg);
 }
 
 template <>

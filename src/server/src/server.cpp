@@ -83,7 +83,7 @@ namespace hm
 
             spdlog::debug("Received bytes [{}]", bytes_transferred);
 
-            request = http::parseRequest(std::string(read_message));
+            request = parse::parseRequestFromString(std::string(read_message));
             const http::Request & const_request = request;
 
             auto [handler, route_args] = _router.findRoute(request);
