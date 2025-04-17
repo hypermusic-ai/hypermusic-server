@@ -5,6 +5,9 @@ namespace hm::parse
     http::Header parseHeaderFromString(const std::string & header_str)
     {
         if (header_str == std::format("{}", http::Header::Accept))return http::Header::Accept;
+        if (header_str == std::format("{}", http::Header::AccessControlAllowOrigin))return http::Header::AccessControlAllowOrigin;
+        if (header_str == std::format("{}", http::Header::AccessControlAllowMethods))return http::Header::AccessControlAllowMethods;
+        if (header_str == std::format("{}", http::Header::AccessControlAllowHeaders))return http::Header::AccessControlAllowHeaders;
         if (header_str == std::format("{}", http::Header::Connection))return http::Header::Connection;
         if (header_str == std::format("{}", http::Header::ContentEncoding))return http::Header::ContentEncoding;
         if (header_str == std::format("{}", http::Header::ContentLength))return http::Header::ContentLength;

@@ -7,6 +7,7 @@
 #include "evm.hpp"
 #include "pt.hpp"
 #include "runner.hpp"
+#include "file.hpp"
 
 namespace hm
 {

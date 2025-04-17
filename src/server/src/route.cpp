@@ -86,6 +86,15 @@ namespace hm
         bool comparison_sucess = true;
         for(const auto & [route_key, route_handler] : _routes)
         {
+
+            // if method does not match
+            if(route_key.getMethod() != request.getMethod())
+            {
+                handler = nullptr;
+                path_args.clear();
+                continue;
+            }
+
             const auto & route_key_path = route_key.getPath();
 
             if(path_segments.size() > route_key_path.size())continue;

@@ -31,7 +31,8 @@ namespace hm::http
         GET,
         PUT,
         DEL, //DELETE collides with macro definition in winnt.h ... 
-        POST
+        POST,
+        OPTIONS
     };
 }
 
@@ -57,7 +58,8 @@ struct std::formatter<hm::http::Method> : std::formatter<std::string> {
         case hm::http::Method::PUT:     return formatter<string>::format("PUT", ctx);
         case hm::http::Method::DEL:     return formatter<string>::format("DELETE", ctx);
         case hm::http::Method::POST:    return formatter<string>::format("POST", ctx);
-        
+        case hm::http::Method::OPTIONS:    return formatter<string>::format("OPTIONS", ctx);
+
         // Unknown
         case hm::http::Method::Unknown:    return formatter<string>::format("Unknown", ctx);
     }

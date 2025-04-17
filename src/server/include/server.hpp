@@ -42,6 +42,19 @@ namespace hm
              * @brief Adds a route to the server with a specified HTTP method and path.
              * @param route The route key containing the HTTP method and path.
              * @param handler The handler function to be called when the route is matched.
+             */
+            template<class F>
+            void addRoute(RouteKey route, F && handler)
+            {
+                _router.addRoute(std::move(route), RouteHandlerFunc(
+                    std::function<asio::awaitable<hm::http::Response>(const hm::http::Request &, std::vector<RouteArg>)>(std::move(handler)))
+                );
+            }
+
+            /**
+             * @brief Adds a route to the server with a specified HTTP method and path.
+             * @param route The route key containing the HTTP method and path.
+             * @param handler The handler function to be called when the route is matched.
              * @param binded_args Additional arguments to bind to the handler function.
              */
             template<class F, class ... Args>

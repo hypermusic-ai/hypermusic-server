@@ -3,6 +3,11 @@
 namespace hm::http
 {
 
+    MessageBase::MessageBase()
+    {
+        setHeader(Header::ContentLength, "0");
+    }
+
     void MessageBase::setVersion(const std::string & version) 
     { 
         _version = version; 

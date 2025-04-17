@@ -17,10 +17,15 @@ namespace hm::http
         Unknown = 0,
 
         Accept,
+        AccessControlAllowOrigin,
+        AccessControlAllowMethods,
+        AccessControlAllowHeaders,
+
         Connection,
         ContentEncoding,
         ContentLength,
         ContentType,
+        
         Cookie,
         Date,
         Expect
@@ -50,21 +55,25 @@ struct std::formatter<hm::http::Header> : std::formatter<std::string> {
     switch(header)
     {
         // A
-        case hm::http::Header::Accept:            return formatter<string>::format("Accept", ctx);
+        case hm::http::Header::Accept:                      return formatter<string>::format("Accept", ctx);
+        case hm::http::Header::AccessControlAllowOrigin:    return formatter<string>::format("Access-Control-Allow-Origin", ctx);
+        case hm::http::Header::AccessControlAllowMethods:   return formatter<string>::format("Access-Control-Allow-Methods", ctx);
+        case hm::http::Header::AccessControlAllowHeaders:   return formatter<string>::format("Access-Control-Allow-Headers", ctx);
+
         // B
 
         // C
-        case hm::http::Header::Connection:        return formatter<string>::format("Connection", ctx);
-        case hm::http::Header::ContentEncoding:   return formatter<string>::format("Content-Encoding", ctx);
-        case hm::http::Header::ContentLength:     return formatter<string>::format("Content-Length", ctx);
-        case hm::http::Header::ContentType:       return formatter<string>::format("Content-Type", ctx);
-        case hm::http::Header::Cookie:            return formatter<string>::format("Cookie", ctx);
+        case hm::http::Header::Connection:                  return formatter<string>::format("Connection", ctx);
+        case hm::http::Header::ContentEncoding:             return formatter<string>::format("Content-Encoding", ctx);
+        case hm::http::Header::ContentLength:               return formatter<string>::format("Content-Length", ctx);
+        case hm::http::Header::ContentType:                 return formatter<string>::format("Content-Type", ctx);
+        case hm::http::Header::Cookie:                      return formatter<string>::format("Cookie", ctx);
 
         // D
-        case hm::http::Header::Date:              return formatter<string>::format("Date", ctx);
+        case hm::http::Header::Date:                        return formatter<string>::format("Date", ctx);
 
         // Unknown
-        case hm::http::Header::Unknown:           return formatter<string>::format("Unknown", ctx);
+        case hm::http::Header::Unknown:                     return formatter<string>::format("Unknown", ctx);
     }
     return formatter<string>::format("", ctx);
   }

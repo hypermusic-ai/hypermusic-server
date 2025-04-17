@@ -8,6 +8,7 @@ namespace hm::parse
         if (method == std::format("{}", http::Method::PUT))return http::Method::PUT;
         if (method == std::format("{}", http::Method::DEL))return http::Method::DEL;
         if (method == std::format("{}", http::Method::POST))return http::Method::POST;
+        if (method == std::format("{}", http::Method::OPTIONS))return http::Method::OPTIONS;
 
         return http::Method::Unknown;
     }

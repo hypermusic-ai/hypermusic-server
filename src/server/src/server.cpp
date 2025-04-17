@@ -85,6 +85,7 @@ namespace hm
 
             request = parse::parseRequestFromString(std::string(read_message));
             const http::Request & const_request = request;
+            spdlog::debug("Received request:\n{}", std::format("{}", request));
 
             auto [handler, route_args] = _router.findRoute(request);
 

@@ -17,7 +17,7 @@ namespace hm::http
     {
         public:
             //ctor
-            MessageBase() = default;
+            MessageBase();
 
             //move
             MessageBase(MessageBase && other) = default;

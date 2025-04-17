@@ -17,6 +17,13 @@ using namespace asio::experimental::awaitable_operators;
 
 namespace hm
 {
+    asio::awaitable<http::Response> OPTIONS_SimpleForm(const http::Request &, std::vector<RouteArg>);
+
+    asio::awaitable<http::Response> GET_SimpleForm(const http::Request &, std::vector<RouteArg>, const std::string & simple_form);
+
+
+    asio::awaitable<http::Response> OPTIONS_feature(const http::Request &, std::vector<RouteArg>);
+
     /**
      * @brief Returns the newest feature by name or a specific feature by name and id
      *        if the id is provided in the url.
@@ -49,11 +56,15 @@ namespace hm
      */
     asio::awaitable<http::Response> POST_feature(const http::Request &, std::vector<RouteArg>, Registry & registry);
 
-    asio::awaitable<http::Response> GET_condition(const http::Request &, std::vector<RouteArg>);
 
-    asio::awaitable<http::Response> POST_condition(const http::Request &);
+    asio::awaitable<http::Response> OPTIONS_transformation(const http::Request &, std::vector<RouteArg>);
 
-    asio::awaitable<http::Response> GET_transformation(const http::Request &);
+    asio::awaitable<http::Response> GET_transformation(const http::Request &, std::vector<RouteArg> args, Registry & registry);
 
-    asio::awaitable<http::Response> POST_transformation(const http::Request &);
+    asio::awaitable<http::Response> POST_transformation(const http::Request &, std::vector<RouteArg> args, Registry & registry);
+
+
+    //asio::awaitable<http::Response> GET_condition(const http::Request &, std::vector<RouteArg>);
+
+    //asio::awaitable<http::Response> POST_condition(const http::Request &);
 }

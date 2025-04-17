@@ -13,7 +13,16 @@ namespace hm::parse
     std::optional<Dimension> parseJsonToDimension(json json_obj, use_json_t)
     {
         Dimension dimension;
-        dimension.set_feature_name(json_obj["feature_name"].get<std::string>());
+
+        if (json_obj.contains("feature_name")) {
+            dimension.set_feature_name(json_obj["feature_name"].get<std::string>());
+        }
+        else return std::nullopt;
+
+        if(json_obj.contains("transformation_name") == false) {
+            return std::nullopt;
+        }
+
         for(const std::string & transform_name : json_obj["transformation_name"])
         {
             dimension.add_transformation_name(transform_name);
@@ -66,7 +75,16 @@ namespace hm::parse
     std::optional<Feature> parseJsonToFeature(json json_obj, use_json_t)
     {
         Feature feature;
-        feature.set_name(json_obj["name"].get<std::string>());
+
+        if (json_obj.contains("name")) {
+            feature.set_name(json_obj["name"].get<std::string>());
+        }
+        else return std::nullopt;
+
+        if (json_obj.contains("dimensions") == false) {
+            return std::nullopt;
+        }
+
         for(const auto & dim : json_obj["dimensions"])
         {
             auto dimension = parseJsonToDimension(dim, use_json);

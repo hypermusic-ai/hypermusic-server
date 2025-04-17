@@ -75,6 +75,7 @@ target_link_libraries("${PROJECT_NAME}Lib"
         "${PROJECT_PREFIX}::PT"
         "${PROJECT_PREFIX}::Runner"
         "${PROJECT_PREFIX}::Parser"
+        "${PROJECT_PREFIX}::File"
         PT_proto_gen
         "${PROJECT_PREFIX}::EVM"
 )
@@ -139,3 +140,8 @@ install(FILES
 if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
+
+# make install target of resources directory
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources/"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/resources/"
+)
