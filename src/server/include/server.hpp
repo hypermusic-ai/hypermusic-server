@@ -18,6 +18,15 @@ using namespace asio::experimental::awaitable_operators;
 
 namespace hm
 {
+    using HandlerDefinition = std::function<asio::awaitable<hm::http::Response>(const hm::http::Request &, std::vector<RouteArg>)>;
+
+    // TODO: Add a concept to check if the handler is callable with the expected arguments
+    // template<class F, class ... Args>
+    // concept HandlerCallable = requires(F handler, Args... args)
+    // {
+    //     { t(args...) } -> std::same_as<asio::awaitable<hm::http::Response>>;
+    // };
+
     class Server
     {
         public:
@@ -47,7 +56,7 @@ namespace hm
             void addRoute(RouteKey route, F && handler)
             {
                 _router.addRoute(std::move(route), RouteHandlerFunc(
-                    std::function<asio::awaitable<hm::http::Response>(const hm::http::Request &, std::vector<RouteArg>)>(std::move(handler)))
+                    HandlerDefinition(std::move(handler)))
                 );
             }
 
@@ -61,7 +70,7 @@ namespace hm
             void addRoute(RouteKey route, F && handler, Args... binded_args)
             {
                 _router.addRoute(std::move(route), RouteHandlerFunc(
-                    std::function<asio::awaitable<hm::http::Response>(const hm::http::Request &, std::vector<RouteArg>)>(
+                    HandlerDefinition(
                         std::bind(handler, _1, _2, std::forward<Args>(binded_args)...)
                     )
                 ));

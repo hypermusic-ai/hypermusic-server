@@ -35,6 +35,7 @@ namespace hm::parse
     {
         google::protobuf::util::JsonPrintOptions options;
         options.add_whitespace = true;
+        options.preserve_proto_field_names = true; // Use snake_case from proto
         options.always_print_fields_with_no_presence = true;
 
         std::string json_str;

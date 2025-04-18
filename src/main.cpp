@@ -4,6 +4,16 @@ int main(int argc, char* argv[])
 {    
     spdlog::set_level(spdlog::level::debug);
 
+    spdlog::info("Program started with {} arguments", argc);
+    for(int i = 0; i < argc; ++i)
+    {
+        spdlog::info("Argument {}: {}", i, argv[i]);
+    }
+    
+    hm::setBINPath(std::filesystem::path(argv[0]).parent_path());
+
+    spdlog::info("Current working path: {}", std::filesystem::current_path().string());
+
     CURLcode curl_result = curl_global_init(CURL_GLOBAL_DEFAULT);
 
     if(curl_result != 0) {
@@ -51,5 +61,6 @@ int main(int argc, char* argv[])
     }
     
     curl_global_cleanup();
+    spdlog::debug("Program finished");
     return 0;
 }

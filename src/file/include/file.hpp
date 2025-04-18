@@ -8,8 +8,12 @@
 
 namespace hm
 {
-    static const std::filesystem::path resources_root = std::filesystem::current_path() / "../resources";
-
+    /**
+     * @brief Set the BIN_PATH variable to the path of the binary directory.
+     * 
+     * @param bin_path The path of the binary directory.
+     */
+    void setBINPath(std::filesystem::path bin_path);
 
     std::optional<std::string> loadSimpleForm();
 }

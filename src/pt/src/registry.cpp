@@ -58,6 +58,12 @@ namespace hm
 
     asio::awaitable<std::optional<std::size_t>> Registry::addFeature(Feature feature)
     {
+        if(feature.name().empty())
+        {
+            spdlog::error("Feature name is empty");
+            co_return std::nullopt;
+        }
+
         co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
 
         if(co_await checkIfSubFeaturesExist(feature) == false)
@@ -130,6 +136,12 @@ namespace hm
 
     asio::awaitable<std::optional<std::size_t>> Registry::addTransformation(Transformation transformation)
     {
+        if(transformation.name().empty())
+        {
+            spdlog::error("Transformation name is empty");
+            co_return std::nullopt;
+        }
+
         co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
 
         if(!containsTransformationBucket(transformation.name())) 
