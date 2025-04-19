@@ -10,6 +10,7 @@
 #include "http_codes.hpp"
 #include "http_headers.hpp"
 #include "http_method.hpp"
+#include "url.hpp"
 
 namespace hm::http
 {
@@ -103,15 +104,15 @@ namespace hm::http
              * @brief Sets the path of the request.
              * @param[in] path The path to set.
              */
-            void setPath(const std::string & path);
+            void setPath(URL path);
 
             const Method & getMethod() const;
 
-            const std::string & getPath() const;
+            const URL & getPath() const;
 
         private:
             Method _method;
-            std::string _path;
+            URL _path;
     };
 
     class Response : public MessageBase

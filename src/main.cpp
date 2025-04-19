@@ -25,6 +25,8 @@ int main(int argc, char* argv[])
 
     hm::Registry registry(io_context);
 
+    hm::AuthManager auth_manager(io_context);
+
     hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
 
     server.setIdleInterval(5000ms);
@@ -36,12 +38,15 @@ int main(int argc, char* argv[])
         server.addRoute({hm::http::Method::GET, "/"},                    hm::GET_SimpleForm, std::cref(simple_form.value()));
     }
 
+    server.addRoute({hm::http::Method::GET, "/nonce/<string>"},       hm::GET_nonce, std::ref(auth_manager));
+    server.addRoute({hm::http::Method::POST, "/auth"},                hm::POST_auth, std::ref(auth_manager));
+
     server.addRoute({hm::http::Method::OPTIONS, "/feature"},                    hm::OPTIONS_feature);
-    server.addRoute({hm::http::Method::GET,     "/feature/<string>/<uint?>"},   hm::GET_feature, std::ref(registry));
+    server.addRoute({hm::http::Method::GET,     "/feature/<string>/<~uint>"},   hm::GET_feature, std::ref(registry));
     server.addRoute({hm::http::Method::POST,    "/feature"},                    hm::POST_feature, std::ref(registry));
 
     server.addRoute({hm::http::Method::OPTIONS, "/transformation"},                     hm::OPTIONS_transformation);
-    server.addRoute({hm::http::Method::GET,     "/transformation/<string>/<uint?>"},    hm::GET_transformation, std::ref(registry));
+    server.addRoute({hm::http::Method::GET,     "/transformation/<string>/<~uint>"},    hm::GET_transformation, std::ref(registry));
     server.addRoute({hm::http::Method::POST,    "/transformation"},                     hm::POST_transformation, std::ref(registry));
 
     //server.addRoute({hm::http::Method::GET, "/condition"},                          hm::GET_condition);

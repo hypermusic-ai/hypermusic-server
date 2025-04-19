@@ -19,7 +19,7 @@ add_executable("${PROJECT_NAME}"
 
     # --- Test files ---
     "src/ut0.cpp"
-
+    "src/router-tests.cpp"
 )
 
 target_include_directories("${PROJECT_NAME}"     

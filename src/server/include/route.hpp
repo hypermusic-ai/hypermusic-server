@@ -14,43 +14,12 @@ using namespace std::placeholders;
 #include <absl/container/flat_hash_map.h>
 
 #include "http.hpp"
-#include "session_manager.hpp"
 
 #include "route_arg.hpp"
+#include "route_key.hpp"
 
 namespace hm
 {
-    std::vector<std::string> splitPathSegments(const std::string path);
-
-    class RouteKey 
-    {
-        public:
-            RouteKey(http::Method method, std::string path_def);
-        
-            bool operator==(const RouteKey& other) const;
-            
-            http::Method getMethod() const { return _method; }
-
-            const std::vector<std::variant<std::string, RouteArgDef>> & getPath() const;
-
-        private:
-            http::Method _method;
-            std::vector<std::variant<std::string, RouteArgDef>> _path;
-    };
-
-    /**
-     * @brief Combines hash values for a RouteKey object.
-     *
-     * @tparam H The hash state type.
-     * @param h The initial hash state.
-     * @param route_key The RouteKey object whose attributes will be hashed.
-     * @return A combined hash state incorporating the HTTP method and path of the RouteKey.
-     */
-    template <typename H>
-    inline H AbslHashValue(H h, const RouteKey& route_key) {
-        return H::combine(std::move(h), route_key.getMethod(), route_key.getPath());
-    }
-
     class RouteHandlerFunc
     {
         private:
@@ -107,6 +76,8 @@ namespace hm
             void addRoute(RouteKey route, RouteHandlerFunc handler);
 
             std::pair<const RouteHandlerFunc *, std::vector<RouteArg>> findRoute(const http::Request & request) const;
+        protected:
+            std::pair<bool, std::vector<RouteArg>> doesRouteMatch(const RouteKey & route, const http::Method & request_method, const std::string & module_path, const std::vector<std::string> & request_path_info_segments) const;
 
         private:
             absl::flat_hash_map<RouteKey, RouteHandlerFunc> _routes;

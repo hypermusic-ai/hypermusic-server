@@ -26,9 +26,9 @@ namespace hm
         return _data;
     }
 
-    bool RouteArg::isOptional() const
+    RouteArgRequirement RouteArg::getRequirement() const
     {
-        return _def.second == RouteArgRequirement::optional;
+        return _def.second;
     }
 }
 
@@ -48,7 +48,7 @@ namespace hm::parse
     {   
         constexpr static const char start_delimeter = '<';
         constexpr static const char end_delimeter = '>';
-        constexpr static const char optional_identifier = '?';
+        constexpr static const char optional_identifier = '~';
          
         const auto it_start = str.find(start_delimeter);
         if (it_start == std::string::npos) return std::nullopt;
@@ -64,15 +64,15 @@ namespace hm::parse
         RouteArgRequirement requirement = RouteArgRequirement::required;
         RouteArgType type;
         
-        if(arg.back() == optional_identifier)
+        if(arg.front() == optional_identifier)
         {
             // optional value
             requirement = RouteArgRequirement::optional;
-            type = parseRouteArgTypeFromString(arg.substr(0, arg.size() - 1));
+            type = parseRouteArgTypeFromString(arg.substr(1, arg.size() - 1));
         }
         else
         {
-            // flat value
+            // required value
             requirement = RouteArgRequirement::required;
             type = parseRouteArgTypeFromString(arg);
         }

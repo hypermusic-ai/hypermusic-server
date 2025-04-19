@@ -14,4 +14,31 @@ namespace hm
         }
         co_return;
     }
+
+    std::vector<std::uint8_t> hexToBytes(const std::string& hex) 
+    {
+        std::vector<std::uint8_t> bytes;
+        for (unsigned int i = 0; i < hex.length(); i += 2) 
+        {
+            std::string byteString = hex.substr(i, 2);
+            std::uint8_t byte = static_cast<std::uint8_t>(std::strtol(byteString.c_str(), nullptr, 16));
+            bytes.push_back(byte);
+        }
+        return bytes;
+    }
+
+    std::string bytesToHex(const std::vector<std::uint8_t> & data)
+    {
+        return bytesToHex(data.data(), data.size());
+    }
+
+    std::string bytesToHex(const std::uint8_t* data, std::size_t len) 
+    {
+        std::stringstream ss;
+        for (std::size_t i = 0; i < len; ++i)
+        {
+            ss << std::hex << std::setw(2) << std::setfill('0') << (int)data[i];
+        }
+        return ss.str();
+    }
 }

@@ -1,7 +1,13 @@
 #pragma once
 
+#include <sstream>
+#include <cstdlib>
+#include <cstdint>
+#include <iomanip>
+
 #include "native.h"
 #include <asio.hpp>
+
 
 namespace hm
 {
@@ -15,4 +21,10 @@ namespace hm
      * the server should be shut down.
      */
     asio::awaitable<void> watchdog(std::chrono::steady_clock::time_point& deadline);
+
+    std::vector<std::uint8_t> hexToBytes(const std::string& hex);
+
+    std::string bytesToHex(const std::uint8_t* data, std::size_t len);
+
+    std::string bytesToHex(const std::vector<std::uint8_t> & data);
 }

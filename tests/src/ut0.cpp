@@ -23,15 +23,16 @@ TEST_F(UnitTest, ut1)
 TEST_F(UnitTest, ut2)
 {
     spdlog::info("ut2");
-    spdlog::set_level(spdlog::level::debug);
 
     CURLcode curl_result = curl_global_init(CURL_GLOBAL_DEFAULT);
     EXPECT_EQ(curl_result, 0);
 
     asio::io_context io_context;
     hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
+    
+    hm::Registry registry(io_context);
 
-    server.addRoute({"POST", "/feature"}, hm::POST_feature);
+    server.addRoute({hm::http::Method::POST,    "/feature"}, hm::POST_feature, std::ref(registry));
 
     std::string url = "localhost:54321/feature";
     std::string request_json = R"json(

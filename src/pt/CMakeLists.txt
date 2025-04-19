@@ -55,9 +55,6 @@ install(DIRECTORY ${PROTO_DST_DIR}/
 add_module(NAME "PT"
     DEPENDENCIES
         "${PROJECT_PREFIX}::Native"
-        "${PROJECT_PREFIX}::Session"
-        "${PROJECT_PREFIX}::HTTP"
-        "${PROJECT_PREFIX}::Server"
         "${PROJECT_PREFIX}::Parser"
         absl::hash
         spdlog::spdlog

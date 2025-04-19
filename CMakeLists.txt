@@ -46,6 +46,8 @@ if(HYPERMUSIC_DEPS_PATH)
 
         find_package(json REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/json/3.12.10/lib/cmake/json")
 
+        find_package(libsecp256k1 REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/secp256k1/0.6.0/lib/cmake/libsecp256k1")
+
         if(BUILD_TESTING)
             find_package(GTest REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/GTest/1.16.0/lib/cmake/GTest")
         endif()
@@ -76,8 +78,10 @@ target_link_libraries("${PROJECT_NAME}Lib"
         "${PROJECT_PREFIX}::Runner"
         "${PROJECT_PREFIX}::Parser"
         "${PROJECT_PREFIX}::File"
-        PT_proto_gen
+        "${PROJECT_PREFIX}::Auth"
+        "${PROJECT_PREFIX}::API"
         "${PROJECT_PREFIX}::EVM"
+        PT_proto_gen
 )
 set_target_properties("${PROJECT_NAME}Lib" PROPERTIES CXX_STANDARD 23)
 

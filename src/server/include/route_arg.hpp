@@ -41,7 +41,7 @@ namespace hm
 
             const std::string & getData() const;
 
-            bool isOptional() const;
+            RouteArgRequirement getRequirement() const;
 
         private:
 
@@ -116,9 +116,24 @@ struct std::formatter<hm::RouteArgType> : std::formatter<std::string> {
 };
 
 template <>
+struct std::formatter<hm::RouteArgRequirement> : std::formatter<std::string> {
+  auto format(const hm::RouteArgRequirement & req, format_context& ctx) const {
+    switch(req)
+    {
+        case hm::RouteArgRequirement::required:    return formatter<string>::format("required", ctx);
+        case hm::RouteArgRequirement::optional:    return formatter<string>::format("(optional)", ctx);
+
+        // Unknown
+        case hm::RouteArgRequirement::Unknown:      return formatter<string>::format("Unknown", ctx);
+    }
+    return formatter<string>::format("", ctx);
+  }
+};
+
+template <>
 struct std::formatter<hm::RouteArg> : std::formatter<std::string> {
   auto format(const hm::RouteArg & arg, format_context& ctx) const {
     return formatter<string>::format(
-      std::format("({}) [{}] {}", arg.isOptional() ? "optional" : "mandatory", arg.getType(), arg.getData()), ctx);
+      std::format("({}) [{}] {}", arg.getRequirement(), arg.getType(), arg.getData()), ctx);
   }
 };

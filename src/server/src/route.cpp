@@ -2,166 +2,105 @@
 
 namespace hm
 {
-    std::vector<std::string> splitPathSegments(const std::string path)
+    std::pair<bool, std::vector<RouteArg>> Router::doesRouteMatch(const RouteKey & route, const http::Method & request_method, const std::string & request_module_path, const std::vector<std::string> & request_path_info_segments) const
     {
-        std::vector<std::string> path_parts;
-        if(path.empty())return path_parts;
-
-        constexpr static const char path_delimeter = '/';
-
-        std::stringstream ss(path);
-        std::string segment;
-
-        // first segment must be empty to ensure that path starts with /
-        if(!std::getline(ss, segment, path_delimeter) || !segment.empty())return path_parts;
-
-        while (std::getline(ss, segment, path_delimeter)) 
+        // if method does not match
+        if(route.getMethod() != request_method)
         {
-            path_parts.push_back(segment);
+            return {false, std::vector<RouteArg>()};
         }
 
-        return path_parts;
-    }
-
-
-    RouteKey::RouteKey(http::Method method, std::string path_def)
-    : _method(method)
-    {
-        const std::vector<std::string> path_segments = splitPathSegments(path_def);
-        bool optional_at_end = false;
-
-        for(const auto & segment : path_segments)
+        // if module path does not match
+        if(route.getPath().getPathModule() != request_module_path)
         {
-            auto arg_parse_result = parse::parseRouteArgDefFromString(segment);
+            return {false, std::vector<RouteArg>()};
+        }
 
-            if(arg_parse_result.has_value())
-            {
-                if(optional_at_end == true && arg_parse_result.value().second == RouteArgRequirement::required)
-                {
-                    spdlog::error("RouteKey definition error - optional values MUST appear at the end of the path");
-                    throw std::runtime_error("RouteKey definition error - optional values MUST appear at the end of the path");
-                } 
+        const auto & path_def = route.getPathInfoDef();
+        std::size_t path_segments_index = 0;
+        std::vector<RouteArg> found_path_args;
 
-                if(arg_parse_result.value().second == RouteArgRequirement::optional)optional_at_end = true;
-                
-                // argument
-                _path.emplace_back(arg_parse_result.value());
-            }
-            else
+        for(const auto & path_def_segment : path_def)
+        {
+            if(std::holds_alternative<std::string>(path_def_segment))
             {
-                if(optional_at_end == true)
+                // if request path info segments does not have enough segments
+                if(path_segments_index >= request_path_info_segments.size())
                 {
-                    spdlog::error("RouteKey definition error - optional values MUST appear at the end of the path");
-                    throw std::runtime_error("RouteKey definition error - optional values MUST appear at the end of the path");
+                    return {false, std::vector<RouteArg>()};
                 }
 
-                // flat value
-                _path.emplace_back(segment);
+                // if literal value does not match
+                if(std::get<std::string>(path_def_segment) != request_path_info_segments.at(path_segments_index))
+                {
+                    return {false, std::vector<RouteArg>()};
+                }
+                
+                // consume path info segment
+                path_segments_index++;
+
+            }else if(std::holds_alternative<RouteArgDef>(path_def_segment))
+            {
+                const auto & arg_def = std::get<RouteArgDef>(path_def_segment);
+                
+                // if argument is required but we cannot consume more path segments
+                // then the path does not match
+                if(arg_def.second == RouteArgRequirement::required && path_segments_index >= request_path_info_segments.size())
+                {
+                    return {false, std::vector<RouteArg>()};
+                }
+
+                // if argument is optional but we cannot consume more path segments
+                // then skip the argument
+                if(arg_def.second == RouteArgRequirement::optional && path_segments_index >= request_path_info_segments.size())
+                {
+                    continue;
+                }
+                
+                // consume path info segment
+                found_path_args.emplace_back(arg_def, request_path_info_segments.at(path_segments_index));
+                path_segments_index++;
+            }else 
+            {
+                spdlog::error("RouteKey definition error - path segment is not a literal or an argument definition");
+                return {false, std::vector<RouteArg>()};
             }
         }
+
+        // if we have more path segments than the route definition
+        if(path_segments_index < request_path_info_segments.size())
+        {
+            return {false, std::vector<RouteArg>()};
+        }
+
+        return {true, found_path_args};
     }
 
-    bool RouteKey::operator==(const RouteKey& other) const {
-        return _method == other._method && _path == other._path;
-    }
 
-    const std::vector<std::variant<std::string, RouteArgDef>> & RouteKey::getPath() const
+    std::pair<const RouteHandlerFunc *, std::vector<RouteArg>> Router::findRoute(const http::Request & request) const
     {
-        return _path;
+        const http::Method request_method = request.getMethod();
+        const std::string request_module_path = request.getPath().getPathModule();
+        const std::vector<std::string> request_path_info_segments = http::splitPathSegments(request.getPath().getPathInfo());
+
+        for(const auto & [route_key, route_handler] : _routes)
+        {
+            // check if route matches
+            const auto [match, args] = doesRouteMatch(route_key, request_method, request_module_path, request_path_info_segments);
+            if(!match)
+            {
+                continue;
+            }
+
+            spdlog::debug(std::format("Route for request path {} found: {} {}", request.getPath(), route_key.getMethod(), route_key.getPath()));
+            return {&route_handler, args};
+        }
+
+        return std::make_pair(nullptr, std::vector<RouteArg>());
     }
 
     void Router::addRoute(RouteKey route, RouteHandlerFunc handler)
     {
         _routes.try_emplace(std::move(route), std::move(handler));
-    }
-
-    std::pair<const RouteHandlerFunc *, std::vector<RouteArg>> Router::findRoute(const http::Request & request) const
-    {
-        const std::vector<std::string> path_segments = splitPathSegments(request.getPath());
-        std::size_t path_segments_index = 0;
-
-        std::vector<RouteArg> path_args;
-        const RouteHandlerFunc * handler = nullptr;
-
-        bool comparison_sucess = true;
-        for(const auto & [route_key, route_handler] : _routes)
-        {
-
-            // if method does not match
-            if(route_key.getMethod() != request.getMethod())
-            {
-                handler = nullptr;
-                path_args.clear();
-                continue;
-            }
-
-            const auto & route_key_path = route_key.getPath();
-
-            if(path_segments.size() > route_key_path.size())continue;
-            
-            comparison_sucess = true;
-            path_segments_index = 0;
-            for(std::size_t i = 0; i < route_key_path.size(); ++i)
-            {
-                const auto & route_path_node = route_key_path.at(i);
-
-                if(std::holds_alternative<RouteArgDef>(route_path_node))
-                {
-                    const auto & arg_def = std::get<RouteArgDef>(route_path_node);
-
-                    // if its required argument but we cannot consume more path segments
-                    // then the path does not match
-                    if(arg_def.second == RouteArgRequirement::required && path_segments_index >= path_segments.size())
-                    {
-                        comparison_sucess = false;
-                        break;
-                    }
-
-                    // consume path segment
-                    // and add argument
-                    if(path_segments_index < path_segments.size())
-                    {
-                        path_args.emplace_back(arg_def, path_segments.at(path_segments_index++));
-                    }
-                }
-                else if(std::holds_alternative<std::string>(route_path_node))
-                {
-                    // if its required value but we cannot consume more path segments
-                    // then the path does not match
-                    if(path_segments_index >= path_segments.size())
-                    {
-                        comparison_sucess = false;
-                        break;
-                    }
-
-                    // if any path segment does not match
-                    // then the path does not match
-                    if(path_segments.at(path_segments_index++) != std::get<std::string>(route_path_node))
-                    {
-                        comparison_sucess = false;
-                        break;
-                    }
-                }
-                else
-                {   
-                    spdlog::error("RouteKey invalid path definition error");
-                    comparison_sucess = false;
-                    break;
-                }
-            }
-            
-            if(!comparison_sucess)
-            {
-                handler = nullptr;
-                path_args.clear();
-                continue;
-            }
-
-            // comparison sucessfull
-            handler = &route_handler;
-            break;
-        }
-
-        return std::make_pair(handler, std::move(path_args));
     }
 }

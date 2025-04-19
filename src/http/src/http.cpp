@@ -2,7 +2,6 @@
 
 namespace hm::http
 {
-
     MessageBase::MessageBase()
     {
         setHeader(Header::ContentLength, "0");
@@ -56,9 +55,9 @@ namespace hm::http
         _method = method;
     }
 
-    void Request::setPath(const std::string & path)
+    void Request::setPath(URL path)
     {
-        _path = path;
+        _path = std::move(path);
     }
 
     const Method & Request::getMethod() const
@@ -66,7 +65,7 @@ namespace hm::http
         return _method;
     }
 
-    const std::string & Request::getPath() const
+    const URL & Request::getPath() const
     {
         return _path;
     }

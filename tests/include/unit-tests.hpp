@@ -15,6 +15,7 @@ namespace hm::tests
 
             static void SetUpTestSuite()
             {
+                spdlog::set_level(spdlog::level::debug);
             }
 
             static void TearDownTestSuite()
