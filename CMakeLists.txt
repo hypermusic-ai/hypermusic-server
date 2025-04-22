@@ -43,10 +43,22 @@ if(HYPERMUSIC_DEPS_PATH)
         find_package(evmc REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/evmc/12.1.0/lib/cmake/evmc")
 
         find_package(evmone REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/lib/cmake/evmone")
+        find_file(EVMONE_DLL
+            NAMES evmone.dll
+            PATHS "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/bin"
+            NO_DEFAULT_PATH
+        )
+
+        find_package(solc-exe REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/solc-exe/0.8.29/lib/cmake/solc-exe")
+        find_program(SOLC-EXE NAMES solc-exe-0.8.29 PATHS "${HYPERMUSIC_DEPS_PATH}/solc-exe/0.8.29/bin" NO_DEFAULT_PATH)
 
         find_package(json REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/json/3.12.10/lib/cmake/json")
 
         find_package(libsecp256k1 REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/secp256k1/0.6.0/lib/cmake/libsecp256k1")
+
+        find_package(OpenSSL REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/openssl/3.5.0/lib/cmake/OpenSSL")
+
+        find_package(jwt-cpp REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/jwt/0.7.1/cmake")
 
         if(BUILD_TESTING)
             find_package(GTest REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/GTest/1.16.0/lib/cmake/GTest")
@@ -148,4 +160,15 @@ endif()
 # make install target of resources directory
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources/"
     DESTINATION "${CMAKE_INSTALL_PREFIX}/resources/"
+)
+
+# Copy DLL to bin folder after build
+add_custom_command(TARGET "${PROJECT_NAME}Exe" POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${EVMONE_DLL}"
+    "$<TARGET_FILE_DIR:${PROJECT_NAME}Exe>"
+)
+# Install evmone.dll
+install(FILES "${EVMONE_DLL}"
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

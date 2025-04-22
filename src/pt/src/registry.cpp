@@ -10,10 +10,12 @@ namespace hm
 
     asio::awaitable<bool> Registry::checkIfSubFeaturesExist(const Feature & feature) const
     {
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
         for(const Dimension & dimension : feature.dimensions())
         {
             const std::string & subfeature_name = dimension.feature_name();
-            if(isFeatureBucketEmpty(subfeature_name))co_return false;
+            if(co_await isFeatureBucketEmpty(subfeature_name))co_return false;
 
             const Feature & sub_feature = _features.at(subfeature_name).at(_newest_feature.at(subfeature_name));
             co_return (co_await checkIfSubFeaturesExist(sub_feature));
@@ -22,37 +24,49 @@ namespace hm
     }
 
 
-    bool Registry::containsFeatureBucket(const std::string& name) const 
+    asio::awaitable<bool> Registry::containsFeatureBucket(const std::string& name) const 
     {
-        return _features.contains(name);
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
+        co_return _features.contains(name);
     }
 
-    bool Registry::isFeatureBucketEmpty(const std::string& name) const 
+    asio::awaitable<bool> Registry::isFeatureBucketEmpty(const std::string& name) const 
     {
-        if(containsFeatureBucket(name) == false)return true;
-        return _features.at(name).empty();
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
+        if(co_await containsFeatureBucket(name) == false)co_return true;
+        co_return _features.at(name).empty();
     }
 
-    bool Registry::containsTransformationBucket(const std::string& name) const 
+    asio::awaitable<bool> Registry::containsTransformationBucket(const std::string& name) const 
     {
-        return _transformations.contains(name);
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
+        co_return _transformations.contains(name);
     }
 
-    bool Registry::isTransformationBucketEmpty(const std::string& name) const 
+    asio::awaitable<bool> Registry::isTransformationBucketEmpty(const std::string& name) const 
     {
-        if(containsTransformationBucket(name) == false)return true;
-        return _transformations.at(name).empty();
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
+        if(co_await containsTransformationBucket(name) == false)co_return true;
+        co_return _transformations.at(name).empty();
     }
 
-    bool Registry::containsConditionBucket(const std::string& name) const 
+    asio::awaitable<bool> Registry::containsConditionBucket(const std::string& name) const 
     {
-        return _conditions.contains(name);
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
+        co_return _conditions.contains(name);
     }
 
-    bool Registry::isConditionBucketEmpty(const std::string& name) const 
+    asio::awaitable<bool> Registry::isConditionBucketEmpty(const std::string& name) const 
     {
-        if(containsConditionBucket(name) == false)return true;
-        return _conditions.at(name).empty();
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
+        if(co_await containsConditionBucket(name) == false)co_return true;
+        co_return _conditions.at(name).empty();
     }
 
 
@@ -72,7 +86,7 @@ namespace hm
             co_return std::nullopt;
         }
 
-        if(!containsFeatureBucket(feature.name())) 
+        if(! co_await containsFeatureBucket(feature.name()))
         {
             spdlog::debug("Feature bucket `{}` does not exists, creating new one ... ", feature.name());
             _features.try_emplace(feature.name(), absl::flat_hash_map<std::size_t, Feature>());
@@ -90,12 +104,12 @@ namespace hm
         {
             for(const auto & transformation : dimension.transformation_name())
             {
-                if(!containsTransformationBucket(transformation))
+                if(! co_await containsTransformationBucket(transformation))
                 {
                     spdlog::error("Cannot find transformation `{}` used in feature `{}`", transformation, feature.name());
                     co_return std::nullopt;
                 }
-                if(isTransformationBucketEmpty(transformation))
+                if(co_await isTransformationBucketEmpty(transformation))
                 {
                     spdlog::error("Cannot find transformation `{}` used in feature `{}`", transformation, feature.name());
                     co_return std::nullopt;
@@ -112,6 +126,8 @@ namespace hm
 
     asio::awaitable<std::optional<Feature>> Registry::getNewestFeature(const std::string& name) const
     {
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
         if(_newest_feature.contains(name) == false)co_return std::nullopt;
         co_return (co_await getFeature(name, _newest_feature.at(name)));
     }
@@ -144,7 +160,7 @@ namespace hm
 
         co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
 
-        if(!containsTransformationBucket(transformation.name())) 
+        if(! co_await containsTransformationBucket(transformation.name())) 
         {
             spdlog::debug("Transformation bucket `{}` does not exists, creating new one ... ", transformation.name());
             _transformations.try_emplace(transformation.name(), absl::flat_hash_map<std::size_t, Transformation>());
@@ -165,6 +181,8 @@ namespace hm
 
     asio::awaitable<std::optional<Transformation>> Registry::getNewestTransformation(const std::string& name) const
     {
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
         if(_newest_transformation.contains(name) == false)co_return std::nullopt;
         co_return (co_await getTransformation(name, _newest_transformation.at(name)));
     }
@@ -191,7 +209,7 @@ namespace hm
     {
         co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
 
-        if(!containsConditionBucket(condition.name())) 
+        if(! co_await containsConditionBucket(condition.name())) 
         {
             spdlog::debug("Condition bucket `{}` does not exists, creating new one ... ", condition.name());
             _conditions.try_emplace(condition.name(), absl::flat_hash_map<std::size_t, Condition>());
@@ -212,6 +230,8 @@ namespace hm
 
     asio::awaitable<std::optional<Condition>> Registry::getNewestCondition(const std::string& name) const
     {
+        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+
         if(_newest_condition.contains(name) == false)co_return std::nullopt;
         co_return (co_await getCondition(name, _newest_condition.at(name)));
     }

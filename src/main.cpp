@@ -27,6 +27,8 @@ int main(int argc, char* argv[])
 
     hm::AuthManager auth_manager(io_context);
 
+    hm::EVM evm(io_context);
+
     hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
 
     server.setIdleInterval(5000ms);

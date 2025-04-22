@@ -5,7 +5,8 @@ namespace hm
     AuthManager::AuthManager(asio::io_context & io_context)
     :   _strand(asio::make_strand(io_context)),
         _rng(std::random_device{}()),
-        _dist(100000, 999999)
+        _dist(100000, 999999),
+        _SECRET{"SUPERSECRETKEY123"}
     {
 
     }
@@ -31,7 +32,7 @@ namespace hm
         co_return _nonces.at(address);
     }
 
-    asio::awaitable<bool> AuthManager::verifySignature(const std::string& address, const std::string& sig_hex, const std::string& message)
+    asio::awaitable<bool> AuthManager::verifySignature(const std::string& address, const std::string& sig_hex, const std::string& message) const
     {
         co_await asio::dispatch(_strand, asio::use_awaitable);
         std::vector<uint8_t> signature_bytes = hexToBytes(sig_hex.substr(2, sig_hex.size() - 2)); // remove 0x prefix
@@ -73,7 +74,43 @@ namespace hm
         std::transform(lower2.begin(), lower2.end(), lower2.begin(), ::tolower);
 
         co_return lower1 == lower2;
+    }
 
+    asio::awaitable<std::string> AuthManager::generateToken(const std::string& address)
+    {
+        co_await asio::dispatch(_strand, asio::use_awaitable);
+
+        auto token = jwt::create()
+            .set_issuer("eth-auth-demo")
+            .set_type("JWS")
+            .set_subject(address)
+            .set_issued_at(std::chrono::system_clock::now())
+            .set_expires_at(std::chrono::system_clock::now() + std::chrono::minutes{10})
+            .sign(jwt::algorithm::hs256{_SECRET});
+
+        _tokens[address] = token;
+
+        co_return token;
+    }
+
+    asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyToken(const std::string& token) const
+    {
+        try 
+        {
+            auto decoded = jwt::decode(token);
+
+            auto verifier = jwt::verify()
+                .allow_algorithm(jwt::algorithm::hs256{_SECRET})
+                .with_issuer("eth-auth-demo");
+
+            verifier.verify(decoded);
+
+            co_return decoded.get_subject(); // the Ethereum address
+
+        } catch (const std::exception& e) 
+        {
+            co_return std::unexpected(std::string("Token verification failed: ") + std::string(e.what()));
+        }
     }
 }
 

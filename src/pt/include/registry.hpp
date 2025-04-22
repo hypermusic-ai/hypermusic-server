@@ -168,7 +168,7 @@ namespace hm
              * @return True if the feature bucket with the given name exists,
              *         false otherwise.
              */
-            bool containsFeatureBucket(const std::string& name) const;
+            asio::awaitable<bool> containsFeatureBucket(const std::string& name) const;
 
             /**
              * @brief Checks if a transformation bucket exists in the registry.
@@ -178,7 +178,7 @@ namespace hm
              * @return True if the transformation bucket with the given name exists,
              *         false otherwise.
              */
-            bool containsTransformationBucket(const std::string& name) const;
+            asio::awaitable<bool> containsTransformationBucket(const std::string& name) const;
 
             /**
              * @brief Checks if a condition bucket exists in the registry.
@@ -188,7 +188,7 @@ namespace hm
              * @return True if the condition bucket with the given name exists,
              *         false otherwise.
              */
-            bool containsConditionBucket(const std::string& name) const;
+            asio::awaitable<bool> containsConditionBucket(const std::string& name) const;
 
             /**
              * @brief Checks if a feature bucket is empty.
@@ -202,7 +202,7 @@ namespace hm
              * does exist, the function returns true if the bucket is empty and false
              * otherwise.
              */
-            bool isFeatureBucketEmpty(const std::string& name) const;
+            asio::awaitable<bool> isFeatureBucketEmpty(const std::string& name) const;
 
             /**
              * @brief Checks if a transformation bucket is empty.
@@ -216,7 +216,7 @@ namespace hm
              * transformation bucket does exist, the function returns true if the
              * bucket is empty and false otherwise.
              */
-            bool isTransformationBucketEmpty(const std::string& name) const;
+            asio::awaitable<bool> isTransformationBucketEmpty(const std::string& name) const;
 
             /**
              * @brief Checks if a condition bucket is empty.
@@ -230,7 +230,7 @@ namespace hm
              * condition bucket does exist, the function returns true if the bucket
              * is empty and false otherwise.
              */
-            bool isConditionBucketEmpty(const std::string& name) const;
+            asio::awaitable<bool> isConditionBucketEmpty(const std::string& name) const;
 
             /**
              * @brief Recursively checks if all subfeatures exist in the registry

@@ -102,7 +102,7 @@ namespace hm
         }
 
         auth_response["success"] = true;
-        auth_response["token"] = "00000"; // TODO JWT TOKEN
+        auth_response["token"] = co_await auth_manager.generateToken(address);
         
         response.setCode(http::Code::OK);
         response.setBody(auth_response.dump());

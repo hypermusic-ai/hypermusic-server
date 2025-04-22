@@ -6,5 +6,6 @@ add_module(NAME "Auth"
         asio
         absl::hash
         libsecp256k1::secp256k1
+        jwt-cpp::jwt-cpp
 )
 
