@@ -60,14 +60,14 @@ namespace hm
      *
      * Where `<name>` is the name of the feature and `<version>` is the hash of the feature.
      */
-    asio::awaitable<http::Response> POST_feature(const http::Request &, std::vector<RouteArg>, Registry & registry);
+    asio::awaitable<http::Response> POST_feature(const http::Request &, std::vector<RouteArg>, AuthManager & auth_manager, Registry & registry);
 
 
     asio::awaitable<http::Response> OPTIONS_transformation(const http::Request &, std::vector<RouteArg>);
 
     asio::awaitable<http::Response> GET_transformation(const http::Request &, std::vector<RouteArg> args, Registry & registry);
 
-    asio::awaitable<http::Response> POST_transformation(const http::Request &, std::vector<RouteArg> args, Registry & registry);
+    asio::awaitable<http::Response> POST_transformation(const http::Request &, std::vector<RouteArg> args, AuthManager & auth_manager, Registry & registry);
 
 
     //asio::awaitable<http::Response> GET_condition(const http::Request &, std::vector<RouteArg>);

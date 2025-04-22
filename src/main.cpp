@@ -45,11 +45,11 @@ int main(int argc, char* argv[])
 
     server.addRoute({hm::http::Method::OPTIONS, "/feature"},                    hm::OPTIONS_feature);
     server.addRoute({hm::http::Method::GET,     "/feature/<string>/<~uint>"},   hm::GET_feature, std::ref(registry));
-    server.addRoute({hm::http::Method::POST,    "/feature"},                    hm::POST_feature, std::ref(registry));
+    server.addRoute({hm::http::Method::POST,    "/feature"},                    hm::POST_feature, std::ref(auth_manager), std::ref(registry));
 
     server.addRoute({hm::http::Method::OPTIONS, "/transformation"},                     hm::OPTIONS_transformation);
     server.addRoute({hm::http::Method::GET,     "/transformation/<string>/<~uint>"},    hm::GET_transformation, std::ref(registry));
-    server.addRoute({hm::http::Method::POST,    "/transformation"},                     hm::POST_transformation, std::ref(registry));
+    server.addRoute({hm::http::Method::POST,    "/transformation"},                     hm::POST_transformation, std::ref(auth_manager), std::ref(registry));
 
     //server.addRoute({hm::http::Method::GET, "/condition"},                          hm::GET_condition);
     //server.addRoute({hm::http::Method::POST, "/condition"},                         hm::POST_condition);

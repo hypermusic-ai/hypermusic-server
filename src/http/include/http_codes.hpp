@@ -42,6 +42,7 @@ namespace hm::http
 
         // level 200
         OK = 200,
+        Created = 201,
 
         // LEVEL 400
         BadRequest = 400,
@@ -63,7 +64,8 @@ struct std::formatter<hm::http::Code> : std::formatter<std::string> {
     {
         // level 200
         case hm::http::Code::OK:                  return formatter<string>::format("200 OK", ctx);
-        
+        case hm::http::Code::Created:             return formatter<string>::format("201 Created", ctx);
+
         // LEVEL 400
         case hm::http::Code::BadRequest:          return formatter<string>::format("400 Bad Request", ctx);
         case hm::http::Code::Unauthorized:        return formatter<string>::format("401 Unauthorized", ctx);

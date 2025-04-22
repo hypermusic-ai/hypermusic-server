@@ -35,6 +35,31 @@ namespace hm::http
         result->second = value; 
     }
 
+    std::optional<std::string> MessageBase::getHeader(Header header) const
+    {
+        auto result = std::ranges::find_if(_headers, [&](const auto & h) { return h.first == header; });
+        if(result == _headers.end())
+            return std::nullopt;
+
+        // Copy out the raw value
+        std::string value = result->second;
+
+        // Remove leading spaces/tabs
+        const auto first_non_space = value.find_first_not_of(" \t");
+        if (first_non_space != std::string::npos) 
+        {
+            value.erase(0, first_non_space);
+        } 
+        else 
+        {
+            // all spaces? clear it
+            value.clear();
+        }
+
+        return value;
+    }
+
+
     const std::string & MessageBase::getVersion() const
     {
         return _version;

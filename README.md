@@ -52,6 +52,179 @@ This will install the project with debugging enabled.
 ./build/Debug/HypermusicServer.exe
 ```
 
+## 📚 API Documentation
+
+This section describes the available API endpoints for the server backend.
+
+> ⚠️ All protected routes require authentication via a secure `access_token` cookie. After login, this cookie is automatically included in requests by the browser.
+
+---
+
+### 📄 Interface
+
+#### `OPTIONS /`
+
+Returns CORS headers for the simple HTML interface endpoint.
+
+- **Authentication**: ❌ Public
+
+---
+
+#### `GET /`
+
+Returns the simple HTML interface to interact with the server.
+
+- **Response Type**: `text/html`  
+- **Authentication**: ❌ Public
+
+---
+
+### 🔐 Authentication
+
+#### `GET /nonce/<address>`
+
+Returns a nonce for the specified Ethereum address to use in the login message.
+
+- **Params**:
+  - `address`: Ethereum address (e.g., `0x123...`)
+- **Response**:
+
+```json
+{ "nonce": "string" }
+```
+
+- **Authentication**: ❌ Public
+
+#### `POST /auth`
+
+Verifies the signed nonce and sets an authentication cookie (access_token).
+
+- **Request Body(JSON)**:
+  
+```json
+{
+  "address": "0x...",
+  "message": "Login nonce: ...",
+  "signature": "0x..."
+}
+```
+
+- **Response**: `200 OK` : `Authentication successful`
+
+- **Authentication**: Header: Set-Cookie: access_token=...; HttpOnly; Secure; SameSite=Strict; Path=/
+
+- **Authentication**: ❌ Public
+
+---
+
+### 🧩 Features
+
+#### `OPTIONS /feature`
+
+Returns CORS headers for the feature endpoints.
+
+#### `GET /feature/<name>/<ver?>`
+
+Fetches a feature object by name and version.
+If version is not given, returns newest feature of given name.
+
+- **Params**:
+  - `name`: String identifier
+  - `ver?`: Optional String identifier
+
+- **Response**: Feature data `(JSON)`
+
+  ```json
+  {
+    "name": "...",
+    "dimensions": [...]
+  }
+  ```
+
+- **Authentication**: ❌ Public
+
+#### `POST /feature`
+
+Creates a new feature entry.
+
+- **Request Headers**: `Cookie` must include `access_token`
+
+- **Request Body**: `JSON` payload describing the feature
+  
+  ```json
+  {
+    "name": "...",
+    "dimensions": [...]
+  }
+  ```
+
+- **Response**: `201 Created` or `error`
+- **Response Body** :
+
+  ```json
+  {
+    "name": "...",
+    "version": "1823..."
+  }
+  ```
+
+- **Authentication**: ✅ Required
+
+---
+
+### 🔄 Transformation
+
+#### `OPTIONS /transformation`
+
+Returns CORS headers for the transformation endpoints.
+
+#### `GET /transformation/<name>/<ver?>`
+
+Fetches a transformation by name and version.
+If version is not given, returns newest transformation of given name.
+
+- **Params**:
+  - `name`: String identifier
+  - `ver`: Optional String identifier
+
+- **Response**: Transformation data `(JSON)`
+
+  ```json
+  {
+    "name": "...",
+    "sol_src": "..."
+  }
+  ```
+
+- **Authentication**: ❌ Public
+
+#### `POST /transformation`
+
+Creates a new transformation record.
+
+- **Request Headers**: `Cookie` must include `access_token`
+
+- **Request Body**: `JSON` payload describing the transformation
+
+  ```json
+  {
+    "name": "...",
+    "sol_src": "..."
+  }
+  ```
+
+- **Response**: `201 Created` or `error`
+- **Response Body**:
+
+  ```json
+  {
+    "name": "...",
+    "version": "1823..."
+  }
+  ```
+
+- **Authentication**: ✅ Required
+
 ---
 📜 **License**:
 

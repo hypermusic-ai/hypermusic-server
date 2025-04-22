@@ -65,6 +65,8 @@ namespace hm::http
              */
             void setHeader(Header header, const std::string & value);
 
+            std::optional<std::string> getHeader(Header header) const;
+
             const std::string & getVersion() const;
 
             const HeadersList & getHeaders() const;

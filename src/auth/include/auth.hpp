@@ -3,6 +3,7 @@
 #include <random>
 #include <string>
 #include <expected>
+#include <regex>
 
 #include "native.h"
 #include <asio.hpp>
@@ -33,13 +34,16 @@ namespace hm
 
             asio::awaitable<std::string> generateNonce(const std::string & address);
 
-            asio::awaitable<bool> verifySignature(const std::string& address, const std::string& signature, const std::string& message) const;
+            asio::awaitable<bool> verifyNonce(const std::string& address, const std::string & nonce);
 
-            asio::awaitable<std::string> getNonce(const std::string& address);
+            asio::awaitable<bool> verifySignature(const std::string& address, const std::string& signature, const std::string& message);
 
-            asio::awaitable<std::string> generateToken(const std::string& address);
+            asio::awaitable<std::string> generateJWT(const std::string& address);
 
-            asio::awaitable<std::expected<std::string, std::string>> verifyToken(const std::string& token) const;
+            asio::awaitable<std::expected<std::string, std::string>> verifyJWT(std::string token) const;
+
+        protected:
+
 
         private:
             asio::strand<asio::io_context::executor_type> _strand;
@@ -51,6 +55,12 @@ namespace hm
             absl::flat_hash_map<std::string, std::string> _nonces;
             absl::flat_hash_map<std::string, std::string> _tokens;
     };
+}
 
-    std::string pubkeyToAddress(const std::uint8_t* pubkey, std::size_t len);
+namespace hm::parse
+{
+    std::string parseEthAddressFromPublicKey(const std::uint8_t* pubkey, std::size_t len);
+    std::string parseNonceFromMessage(const std::string & msg);
+    std::optional<std::string> parseJWTFromCookieHeader(const std::string & cookie_str);
+    std::string parseJWTToCookieHeader(const std::string & token_str);
 }

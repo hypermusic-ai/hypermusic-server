@@ -74,19 +74,19 @@ namespace hm
         const std::string & address = auth_request["address"].get<std::string>();
         const std::string & signature = auth_request["signature"].get<std::string>();
         const std::string & message = auth_request["message"].get<std::string>();
+        const std::string request_nonce = parse::parseNonceFromMessage(message);
 
-        auto expected_nonce = co_await auth_manager.getNonce(address);
-        if(expected_nonce == "")
-        {
-            response.setCode(http::Code::BadRequest);
-            response.setBody("Invalid nonce");
-            co_return response;
-        }
-
-        if("Login nonce: " + expected_nonce != message)
+        if(request_nonce.length() == 0)
         {
             response.setCode(http::Code::BadRequest);
             response.setBody("Invalid message");
+            co_return response;
+        }
+
+        if(co_await auth_manager.verifyNonce(address, request_nonce) == false)
+        {
+            response.setCode(http::Code::BadRequest);
+            response.setBody("Invalid nonce");
             co_return response;
         }
 
@@ -102,8 +102,11 @@ namespace hm
         }
 
         auth_response["success"] = true;
-        auth_response["token"] = co_await auth_manager.generateToken(address);
+
+        const std::string token = co_await auth_manager.generateJWT(address);
         
+        response.setHeader(http::Header::SetCookie, parse::parseJWTToCookieHeader(token));
+
         response.setCode(http::Code::OK);
         response.setBody(auth_response.dump());
         co_return response;

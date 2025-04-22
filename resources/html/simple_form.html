@@ -67,12 +67,6 @@
         hr {
             margin: 2rem 0;
         }
-
-        #jwt_token {
-            word-break: break-all;
-            white-space: normal;
-            overflow-wrap: break-word;
-        }
     </style>
 </head>
 
@@ -93,7 +87,6 @@
         <div class="column">
             <div class="response-row">
                 <div id="loginStatus" class="response-body"></div>
-                <div id="jwt_token" class="response-body">JWT Token...</div>
             </div>
         </div>
     </div>
@@ -166,7 +159,9 @@
             try {
                 const res = await fetch('http://localhost:54321/feature', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                                'Content-Type': 'application/json'
+                            },
                     body: json,
                 });
                 const text = await res.text();
@@ -206,7 +201,9 @@
             try {
                 const res = await fetch('http://localhost:54321/transformation', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                                'Content-Type': 'application/json'
+                            },
                     body: json,
                 });
                 const text = await res.text();
@@ -282,10 +279,6 @@
                 if (result.success) 
                 {
                     loginStatusDiv.innerHTML = `<p style="color: green;">✅ Authenticated as <strong>${address}</strong></p>`;
-
-                    // Store token
-                    localStorage.setItem("auth_token", result.token);
-                    document.getElementById("jwt_token").textContent = `JWT Token = ${result.token}`;
                 } 
                 else 
                 {

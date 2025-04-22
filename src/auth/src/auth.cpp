@@ -21,20 +21,30 @@ namespace hm
         co_return nonce;
     }
 
-    asio::awaitable<std::string> AuthManager::getNonce(const std::string& address)
+    asio::awaitable<bool> AuthManager::verifyNonce(const std::string& address, const std::string & nonce)
     {
         co_await asio::dispatch(_strand, asio::use_awaitable);
-        if(_nonces.contains(address) == false)
+
+        auto it = _nonces.find(address);
+        if (it == _nonces.end()) co_return false;
+
+        if (it->second != nonce)
         {
-            co_return "";
+            // remove after failed verification (?)
+            _nonces.erase(it);
+            co_return false;
         }
 
-        co_return _nonces.at(address);
+        // remove nonce after successful verification
+        _nonces.erase(it);
+        co_return true;
     }
 
-    asio::awaitable<bool> AuthManager::verifySignature(const std::string& address, const std::string& sig_hex, const std::string& message) const
+    asio::awaitable<bool> AuthManager::verifySignature(const std::string& address, const std::string& sig_hex, const std::string& message)
     {
         co_await asio::dispatch(_strand, asio::use_awaitable);
+        
+        // verify signature
         std::vector<uint8_t> signature_bytes = hexToBytes(sig_hex.substr(2, sig_hex.size() - 2)); // remove 0x prefix
         if (signature_bytes.size() != 65) co_return false;
 
@@ -43,7 +53,7 @@ namespace hm
         prefix += "Ethereum Signed Message:\n" + std::to_string(message.size()) + message;
         hm::Keccak256::getHash((const uint8_t*)prefix.data(), prefix.size(), hash);
 
-            // Adjust v
+        // Adjust v
         int recid = signature_bytes[64];
         if (recid >= 27) recid -= 27;
 
@@ -66,7 +76,7 @@ namespace hm
         secp256k1_ec_pubkey_serialize(ctx, pubkey_serialized, &pubkey_len, &pubkey, SECP256K1_EC_UNCOMPRESSED);
         secp256k1_context_destroy(ctx);
 
-        std::string recovered = pubkeyToAddress(pubkey_serialized, pubkey_len);
+        std::string recovered = parse::parseEthAddressFromPublicKey(pubkey_serialized, pubkey_len);
 
         // Case-insensitive compare
         std::string lower1 = address, lower2 = recovered;
@@ -76,7 +86,7 @@ namespace hm
         co_return lower1 == lower2;
     }
 
-    asio::awaitable<std::string> AuthManager::generateToken(const std::string& address)
+    asio::awaitable<std::string> AuthManager::generateJWT(const std::string& address)
     {
         co_await asio::dispatch(_strand, asio::use_awaitable);
 
@@ -93,8 +103,11 @@ namespace hm
         co_return token;
     }
 
-    asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyToken(const std::string& token) const
+    asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyJWT(std::string token) const
     {
+        if(token.empty()) co_return std::unexpected("Token is empty");
+        if(token.back() == '\r')token.pop_back(); // remove \r if present
+
         try 
         {
             auto decoded = jwt::decode(token);
@@ -105,7 +118,19 @@ namespace hm
 
             verifier.verify(decoded);
 
-            co_return decoded.get_subject(); // the Ethereum address
+            auto address = decoded.get_subject();
+
+            if(_tokens.contains(address) == false)
+            {
+                co_return std::unexpected("Token not found");
+            }
+
+            if(token != _tokens.at(address))
+            {
+                co_return std::unexpected("Token mismatch");
+            }
+
+            co_return address;
 
         } catch (const std::exception& e) 
         {
@@ -114,14 +139,53 @@ namespace hm
     }
 }
 
-namespace hm
+
+namespace hm::parse
 {
     // Get Ethereum address from public key (last 20 bytes of Keccak256(pubkey))
-    std::string pubkeyToAddress(const std::uint8_t* pubkey, std::size_t len) 
+    std::string parseEthAddressFromPublicKey(const std::uint8_t* pubkey, std::size_t len) 
     {
         uint8_t hash[Keccak256::HASH_LEN];
         // skip 0x04 prefix
         hm::Keccak256::getHash(pubkey + 1, len - 1, hash);
         return "0x" + bytesToHex(hash + 12, 20); // last 20 bytes
     }
+
+    std::string parseNonceFromMessage(const std::string& nonce_str) 
+    {
+        const std::string prefix = "Login nonce: ";
+        // Check that str is at least as long as the prefix
+        if (nonce_str.size() <= prefix.size()) {
+            return {};
+        }
+        // Does it start with prefix?
+        if (nonce_str.compare(0, prefix.size(), prefix) != 0) {
+            return {};
+        }
+        // Extract everything after prefix
+        return nonce_str.substr(prefix.size());
+    }
+
+    const std::string JWT_ACCESS_TOKEN_PREFIX = "access_token=";  
+
+    std::optional<std::string> parseJWTFromCookieHeader(const std::string& cookie_str) 
+    {
+        static const std::regex token_regex(JWT_ACCESS_TOKEN_PREFIX+"([^;]+)");
+        // Check if the cookie string is empty
+        if (cookie_str.empty()) {
+            return {};
+        }
+        // Use regex to find the token in the cookie string
+        std::smatch match;
+        if (std::regex_search(cookie_str, match, token_regex) == false) {
+            return {};
+        }
+        return match[1].str();
+    }
+
+    std::string parseJWTToCookieHeader(const std::string & token_str)
+    {
+        return JWT_ACCESS_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=Strict; Path=/;";
+    }
+
 }

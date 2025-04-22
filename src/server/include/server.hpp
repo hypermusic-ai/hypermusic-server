@@ -67,7 +67,7 @@ namespace hm
              * @param binded_args Additional arguments to bind to the handler function.
              */
             template<class F, class ... Args>
-            void addRoute(RouteKey route, F && handler, Args... binded_args)
+            void addRoute(RouteKey route, F && handler, Args&&... binded_args)
             {
                 _router.addRoute(std::move(route), RouteHandlerFunc(
                     HandlerDefinition(

@@ -85,11 +85,45 @@ namespace hm
         co_return std::move(response);
     }
 
-    asio::awaitable<http::Response> POST_feature(const http::Request & request, std::vector<RouteArg> args, Registry & registry)
+    asio::awaitable<http::Response> POST_feature(const http::Request & request, std::vector<RouteArg> args, AuthManager & auth_manager, Registry & registry)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+
+        auto cookie_res = request.getHeader(http::Header::Cookie);
+        if(cookie_res.has_value() == false)
+        {
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::Unauthorized);
+            response.setBody("missing cookie");
+            co_return std::move(response);
+        }
+        const std::string & cookie_header = cookie_res.value();
+
+        const auto token_res = parse::parseJWTFromCookieHeader(cookie_header);
+        if (token_res.has_value() == false) {
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::Unauthorized);
+            response.setBody("missing token");
+            co_return std::move(response);
+        }
+        const std::string & token = token_res.value();
+
+        auto verification_res = co_await auth_manager.verifyJWT(token);
+
+        if(verification_res.has_value() == false)
+        {
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::Unauthorized);
+            response.setBody("invalid token: " + verification_res.error());
+            co_return std::move(response);
+        }
+
+        spdlog::debug("token verified: {}", verification_res.value());
 
         // parse feature from json_string
         auto feature_res = parse::parseJsonToFeature(request.getBody(), parse::use_protobuf);
@@ -125,7 +159,7 @@ namespace hm
 
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
-        response.setCode(hm::http::Code::OK);
+        response.setCode(hm::http::Code::Created);
         response.setBody(json_output.dump());
         co_return std::move(response);
     }
@@ -214,11 +248,44 @@ namespace hm
         co_return std::move(response);
     }
 
-    asio::awaitable<http::Response> POST_transformation(const http::Request & request, std::vector<RouteArg> args, Registry & registry)
+    asio::awaitable<http::Response> POST_transformation(const http::Request & request, std::vector<RouteArg> args, AuthManager & auth_manager, Registry & registry)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+
+        auto cookie_res = request.getHeader(http::Header::Cookie);
+        if(cookie_res.has_value() == false)
+        {
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::Unauthorized);
+            response.setBody("missing cookie");
+            co_return std::move(response);
+        }
+        const std::string & cookie_header = cookie_res.value();
+
+        const auto token_res = parse::parseJWTFromCookieHeader(cookie_header);
+        if (token_res.has_value() == false) {
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::Unauthorized);
+            response.setBody("missing token");
+            co_return std::move(response);
+        }
+        const std::string & token = token_res.value();
+
+        auto verification_res = co_await auth_manager.verifyJWT(token);
+        if(verification_res.has_value() == false)
+        {
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::Unauthorized);
+            response.setBody("invalid token: " + verification_res.error());
+            co_return std::move(response);
+        }
+
+        spdlog::debug("token verified: {}", verification_res.value());
 
         auto transformation_res = parse::parseJsonToTransformation(request.getBody(), parse::use_protobuf);
 
@@ -253,7 +320,7 @@ namespace hm
 
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
-        response.setCode(hm::http::Code::OK);
+        response.setCode(hm::http::Code::Created);
         response.setBody(json_output.dump());
         co_return std::move(response);
     }

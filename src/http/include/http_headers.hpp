@@ -20,6 +20,7 @@ namespace hm::http
         AccessControlAllowOrigin,
         AccessControlAllowMethods,
         AccessControlAllowHeaders,
+        Authorization,
 
         Connection,
         ContentEncoding,
@@ -28,7 +29,9 @@ namespace hm::http
         
         Cookie,
         Date,
-        Expect
+        Expect,
+
+        SetCookie
     };
 
     /**
@@ -59,6 +62,7 @@ struct std::formatter<hm::http::Header> : std::formatter<std::string> {
         case hm::http::Header::AccessControlAllowOrigin:    return formatter<string>::format("Access-Control-Allow-Origin", ctx);
         case hm::http::Header::AccessControlAllowMethods:   return formatter<string>::format("Access-Control-Allow-Methods", ctx);
         case hm::http::Header::AccessControlAllowHeaders:   return formatter<string>::format("Access-Control-Allow-Headers", ctx);
+        case hm::http::Header::Authorization:               return formatter<string>::format("Authorization", ctx);
 
         // B
 
@@ -71,6 +75,10 @@ struct std::formatter<hm::http::Header> : std::formatter<std::string> {
 
         // D
         case hm::http::Header::Date:                        return formatter<string>::format("Date", ctx);
+
+        // S
+        case hm::http::Header::SetCookie:                        return formatter<string>::format("Set-Cookie", ctx);
+
 
         // Unknown
         case hm::http::Header::Unknown:                     return formatter<string>::format("Unknown", ctx);
