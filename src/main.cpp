@@ -4,10 +4,14 @@ int main(int argc, char* argv[])
 {    
     spdlog::set_level(spdlog::level::debug);
 
-    spdlog::info("Program started with {} arguments", argc);
+    spdlog::info("{}", hm::getAsciiLogo());
+
+    spdlog::info("Version: {}.{}.{}\n", hm::MAJOR_VERSION, hm::MINOR_VERSION, hm::PATCH_VERSION);
+
+    spdlog::info("Hypermusic server started with {} arguments", argc);
     for(int i = 0; i < argc; ++i)
     {
-        spdlog::info("Argument {}: {}", i, argv[i]);
+        spdlog::info("Argument at {}={}", i, argv[i]);
     }
     
     hm::setBINPath(std::filesystem::path(argv[0]).parent_path());
@@ -29,7 +33,7 @@ int main(int argc, char* argv[])
 
     hm::EVM evm(io_context);
 
-    hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
+    hm::Server server(io_context, {asio::ip::tcp::v4(), hm::DEFAULT_PORT});
 
     server.setIdleInterval(5000ms);
     

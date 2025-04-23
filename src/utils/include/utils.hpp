@@ -8,6 +8,8 @@
 #include "native.h"
 #include <asio.hpp>
 
+#include "logo.hpp"
+
 
 namespace hm
 {
