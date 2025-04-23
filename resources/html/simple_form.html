@@ -157,11 +157,11 @@
             const codeDiv = document.getElementById('responseCode');
             const bodyDiv = document.getElementById('responseBody');
             try {
-                const res = await fetch('http://localhost:54321/feature', {
+                const res = await fetchWithRefresh('http://localhost:54321/feature', {
                     method: 'POST',
                     headers: {
-                                'Content-Type': 'application/json'
-                            },
+                        'Content-Type': 'application/json'
+                    },
                     body: json,
                 });
                 const text = await res.text();
@@ -199,11 +199,11 @@
             const codeDiv = document.getElementById('transformationCode');
             const bodyDiv = document.getElementById('transformationBody');
             try {
-                const res = await fetch('http://localhost:54321/transformation', {
+                const res = await fetchWithRefresh('http://localhost:54321/transformation', {
                     method: 'POST',
                     headers: {
-                                'Content-Type': 'application/json'
-                            },
+                        'Content-Type': 'application/json'
+                    },
                     body: json,
                 });
                 const text = await res.text();
@@ -276,12 +276,10 @@
 
                 const result = await authRes.json();
 
-                if (result.success) 
-                {
+                if (result.success) {
                     loginStatusDiv.innerHTML = `<p style="color: green;">✅ Authenticated as <strong>${address}</strong></p>`;
-                } 
-                else 
-                {
+                }
+                else {
                     loginStatusDiv.innerHTML = `<p style="color: red;">❌ Authentication failed</p>`;
                 }
             } catch (err) {
@@ -289,6 +287,29 @@
                 loginStatusDiv.innerHTML = `<p style="color: red;">⚠️ Error: ${err.message}</p>`;
             }
         }
+
+        async function fetchWithRefresh(url, options = {}) {
+            // always include cookies
+            options.credentials = 'include';
+
+            // first attempt
+            let res = await fetch(url, options);
+            if (res.status !== 401) {
+                return res;
+            }
+
+            // 401 → try to refresh
+            const refreshRes = await fetch('http://localhost:54321/refresh', {
+                method: 'POST',
+                credentials: 'include'
+            });
+            if (refreshRes.ok) {
+                // retry original request once
+                res = await fetch(url, options);
+            }
+            return res;
+        }
+
 
         loginButton.onclick = loginWithMetaMask;
 

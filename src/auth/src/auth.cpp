@@ -86,7 +86,7 @@ namespace hm
         co_return lower1 == lower2;
     }
 
-    asio::awaitable<std::string> AuthManager::generateJWT(const std::string& address)
+    asio::awaitable<std::string> AuthManager::generateAccessToken(const std::string& address)
     {
         co_await asio::dispatch(_strand, asio::use_awaitable);
 
@@ -98,14 +98,16 @@ namespace hm
             .set_expires_at(std::chrono::system_clock::now() + std::chrono::minutes{10})
             .sign(jwt::algorithm::hs256{_SECRET});
 
-        _tokens[address] = token;
+        _access_tokens[address] = token;
 
         co_return token;
     }
 
-    asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyJWT(std::string token) const
+    asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyAccessToken(std::string token) const
     {
-        if(token.empty()) co_return std::unexpected("Token is empty");
+        co_await asio::dispatch(_strand, asio::use_awaitable);
+
+        if(token.empty()) co_return std::unexpected("Access token is empty");
         if(token.back() == '\r')token.pop_back(); // remove \r if present
 
         try 
@@ -120,21 +122,92 @@ namespace hm
 
             auto address = decoded.get_subject();
 
-            if(_tokens.contains(address) == false)
+            if(_access_tokens.contains(address) == false)
             {
-                co_return std::unexpected("Token not found");
+                co_return std::unexpected("Access token not found");
             }
 
-            if(token != _tokens.at(address))
+            if(token != _access_tokens.at(address))
             {
-                co_return std::unexpected("Token mismatch");
+                co_return std::unexpected("Access token mismatch");
             }
 
             co_return address;
 
         } catch (const std::exception& e) 
         {
-            co_return std::unexpected(std::string("Token verification failed: ") + std::string(e.what()));
+            co_return std::unexpected(std::string("Access token verification failed: ") + std::string(e.what()));
+        }
+    }
+
+    asio::awaitable<bool> AuthManager::compareAccessToken(std::string address, std::string token) const
+    {
+        co_await asio::dispatch(_strand, asio::use_awaitable);
+
+        if(token.empty()) co_return false;
+        if(token.back() == '\r')token.pop_back(); // remove \r if present
+        if(_access_tokens.contains(address) == false)
+        {
+            co_return false;
+        }
+        if(token != _access_tokens.at(address))
+        {
+            co_return false;
+        }
+        co_return true;
+    }
+
+    asio::awaitable<std::string> AuthManager::generateRefreshToken(const std::string& address)
+    {
+        co_await asio::dispatch(_strand, asio::use_awaitable);
+
+        auto token = jwt::create()
+            .set_issuer("eth-auth-demo")
+            .set_type("JWS")
+            .set_subject(address)
+            .set_issued_at(std::chrono::system_clock::now())
+            .set_expires_at(std::chrono::system_clock::now() + std::chrono::days{7})
+            .sign(jwt::algorithm::hs256{_SECRET});
+
+        _refresh_tokens[address] = token;
+
+        co_return token;
+    }
+
+    asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyRefreshToken(std::string token) const
+    {
+        co_await asio::dispatch(_strand, asio::use_awaitable);
+
+        if(token.empty()) co_return std::unexpected("Refresh token is empty");
+        if(token.back() == '\r')token.pop_back(); // remove \r if present
+
+        try 
+        {
+            auto decoded = jwt::decode(token);
+
+            auto verifier = jwt::verify()
+                .allow_algorithm(jwt::algorithm::hs256{_SECRET})
+                .with_issuer("eth-auth-demo");
+
+            verifier.verify(decoded);
+
+            auto address = decoded.get_subject();
+
+            if(_refresh_tokens.contains(address) == false)
+            {
+                co_return std::unexpected("Refresh token not found");
+            }
+
+            if(token != _refresh_tokens.at(address))
+            {
+                co_return std::unexpected("Refresh token mismatch");
+            }
+
+            co_return address;
+
+        } catch (const std::exception& e) 
+        {
+            co_return std::unexpected(std::string("Refresh token verification failed: ") + std::string(e.what()));
         }
     }
 }
@@ -166,11 +239,11 @@ namespace hm::parse
         return nonce_str.substr(prefix.size());
     }
 
-    const std::string JWT_ACCESS_TOKEN_PREFIX = "access_token=";  
+    static const std::string ACCESS_TOKEN_PREFIX = "access_token=";  
 
-    std::optional<std::string> parseJWTFromCookieHeader(const std::string& cookie_str) 
+    std::optional<std::string> parseAccessTokenFromCookieHeader(const std::string& cookie_str) 
     {
-        static const std::regex token_regex(JWT_ACCESS_TOKEN_PREFIX+"([^;]+)");
+        static const std::regex token_regex(ACCESS_TOKEN_PREFIX+"([^;]+)");
         // Check if the cookie string is empty
         if (cookie_str.empty()) {
             return {};
@@ -183,9 +256,31 @@ namespace hm::parse
         return match[1].str();
     }
 
-    std::string parseJWTToCookieHeader(const std::string & token_str)
+    std::string parseAccessTokenToCookieHeader(const std::string & token_str)
     {
-        return JWT_ACCESS_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=Strict; Path=/;";
+        return ACCESS_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=Strict; Path=/;";
+    }
+
+    static const std::string REFRESH_TOKEN_PREFIX = "refresh_token=";  
+
+    std::optional<std::string> parseRefreshTokenFromCookieHeader(const std::string& cookie_str) 
+    {
+        static const std::regex token_regex(REFRESH_TOKEN_PREFIX+"([^;]+)");
+        // Check if the cookie string is empty
+        if (cookie_str.empty()) {
+            return {};
+        }
+        // Use regex to find the token in the cookie string
+        std::smatch match;
+        if (std::regex_search(cookie_str, match, token_regex) == false) {
+            return {};
+        }
+        return match[1].str();
+    }
+
+    std::string parseRefreshTokenToCookieHeader(const std::string & token_str)
+    {
+        return REFRESH_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=Strict; Path=/refresh;";
     }
 
 }

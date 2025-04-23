@@ -92,7 +92,7 @@ namespace hm
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
 
         auto cookie_res = request.getHeader(http::Header::Cookie);
-        if(cookie_res.has_value() == false)
+        if(cookie_res.empty())
         {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
@@ -100,9 +100,9 @@ namespace hm
             response.setBody("missing cookie");
             co_return std::move(response);
         }
-        const std::string & cookie_header = cookie_res.value();
+        const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
 
-        const auto token_res = parse::parseJWTFromCookieHeader(cookie_header);
+        const auto token_res = parse::parseAccessTokenFromCookieHeader(cookie_header);
         if (token_res.has_value() == false) {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
@@ -112,7 +112,7 @@ namespace hm
         }
         const std::string & token = token_res.value();
 
-        auto verification_res = co_await auth_manager.verifyJWT(token);
+        auto verification_res = co_await auth_manager.verifyAccessToken(token);
 
         if(verification_res.has_value() == false)
         {
@@ -255,7 +255,7 @@ namespace hm
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
 
         auto cookie_res = request.getHeader(http::Header::Cookie);
-        if(cookie_res.has_value() == false)
+        if(cookie_res.empty())
         {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
@@ -263,9 +263,9 @@ namespace hm
             response.setBody("missing cookie");
             co_return std::move(response);
         }
-        const std::string & cookie_header = cookie_res.value();
+        const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
 
-        const auto token_res = parse::parseJWTFromCookieHeader(cookie_header);
+        const auto token_res = parse::parseAccessTokenFromCookieHeader(cookie_header);
         if (token_res.has_value() == false) {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
@@ -275,7 +275,7 @@ namespace hm
         }
         const std::string & token = token_res.value();
 
-        auto verification_res = co_await auth_manager.verifyJWT(token);
+        auto verification_res = co_await auth_manager.verifyAccessToken(token);
         if(verification_res.has_value() == false)
         {
             response.setHeader(http::Header::Connection, "close");

@@ -111,9 +111,23 @@ Verifies the signed nonce and sets an authentication cookie (access_token).
 
 - **Response**: `200 OK` : `Authentication successful`
 
-- **Authentication**: Header: Set-Cookie: access_token=...; HttpOnly; Secure; SameSite=Strict; Path=/
+- **Authentication**:
+  - **Header**: Set-Cookie: `access_token`=...; HttpOnly; Secure; SameSite=Strict; Path=/
+  - **Header**: Set-Cookie: `refresh_token`=...; HttpOnly; Secure; SameSite=Strict; Path=/refresh"
 
 - **Authentication**: ❌ Public
+
+#### `POST /refresh`
+
+Verifies `refresh_token` and `access_token` and generates new `access_token`.
+
+- **Response**: `200 OK` : `Authentication successful`
+
+- **Authentication**:
+  - **Header**: Set-Cookie: `access_token`=...; HttpOnly; Secure; SameSite=Strict; Path=/
+  - **Header**: Set-Cookie: `refresh_token`=...; HttpOnly; Secure; SameSite=Strict; Path=/refresh"
+
+- **Authentication**: ✅ Required
 
 ---
 

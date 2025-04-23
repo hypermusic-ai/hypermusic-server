@@ -26,6 +26,7 @@ namespace hm
 
     asio::awaitable<http::Response> POST_auth(const http::Request &, std::vector<RouteArg>, AuthManager &);
 
+    asio::awaitable<http::Response> POST_refresh(const http::Request &, std::vector<RouteArg>, AuthManager &);
 
 
     asio::awaitable<http::Response> OPTIONS_feature(const http::Request &, std::vector<RouteArg>);

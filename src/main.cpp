@@ -42,6 +42,7 @@ int main(int argc, char* argv[])
 
     server.addRoute({hm::http::Method::GET, "/nonce/<string>"},       hm::GET_nonce, std::ref(auth_manager));
     server.addRoute({hm::http::Method::POST, "/auth"},                hm::POST_auth, std::ref(auth_manager));
+    server.addRoute({hm::http::Method::POST, "/refresh"},             hm::POST_refresh, std::ref(auth_manager));
 
     server.addRoute({hm::http::Method::OPTIONS, "/feature"},                    hm::OPTIONS_feature);
     server.addRoute({hm::http::Method::GET,     "/feature/<string>/<~uint>"},   hm::GET_feature, std::ref(registry));
