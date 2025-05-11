@@ -3,7 +3,6 @@
 #include "native.h"
 #include <asio.hpp>
 #include <spdlog/spdlog.h>
-#include <curl/curl.h>
 
 #include "session_manager.hpp"
 #include "http.hpp"

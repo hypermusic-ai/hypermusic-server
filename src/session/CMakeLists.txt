@@ -7,5 +7,4 @@ add_module(NAME "Session"
         absl::hash
         spdlog::spdlog
         asio
-        CURL::libcurl
 )

@@ -20,6 +20,7 @@ function(add_module)
         FILES  ${INCLUDE_SOURCES}
     )
 
+    message(STATUS "Configuring module ${add_module_NAME}")
     add_library("${PROJECT_PREFIX}::${add_module_NAME}" ALIAS "${add_module_NAME}")
 
     target_include_directories("${add_module_NAME}"     

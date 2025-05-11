@@ -1,18 +1,23 @@
 cmake_minimum_required(VERSION 3.30)
 
 set(PROJECT_NAME "HypermusicServer")
-set(PROJECT_PREFIX "HypermusicServer")
+set(PROJECT_PREFIX "Hypermusic")
 
 project("${PROJECT_NAME}"   
     VERSION "0.0.1"
     DESCRIPTION "Hypermusic-Server"
     HOMEPAGE_URL "https://github.com/hypermusic-ai/hypermusic-server"
-    LANGUAGES CXX
+    LANGUAGES C CXX
 )
-include("cmake/compile_options.cmake")
+include(cmake/compile_options.cmake)
+include(cmake/dependencies.cmake)
 
+# --------------------------------------------------------------------------
+# Options
+# --------------------------------------------------------------------------
 option(HYPERMUSIC_ENABLE_INSTALL "Enable install rule" OFF)
 option(HYPERMUSIC_DEPS_PATH "Path to dependencies" "")
+option(HYPERMUSIC_BUILD_TESTS "Build tests" OFF)
 
 message(STATUS "Install directory ${CMAKE_INSTALL_PREFIX}")
 set(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
@@ -21,53 +26,6 @@ set(CMAKE_INSTALL_BINDIR "${CMAKE_INSTALL_PREFIX}/bin")
 message(STATUS "include directory ${CMAKE_INSTALL_INCLUDEDIR}")
 message(STATUS "lib directory ${CMAKE_INSTALL_LIBDIR}")
 message(STATUS "bin directory ${CMAKE_INSTALL_BINDIR}")
-
-if(HYPERMUSIC_DEPS_PATH)
-    message(STATUS "Dependencies path specified to ${HYPERMUSIC_DEPS_PATH}")
-    if(NOT EXISTS "${HYPERMUSIC_DEPS_PATH}")
-        message(FATAL_ERROR "Dependencies path does not exist")
-    else()
-        find_package(spdlog REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/spdlog/1.15.1/lib/cmake/spdlog")
-
-        find_package(absl REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/abseil/20250127.1/lib/cmake/absl")
-
-        find_package(utf8_range REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/lib/cmake/utf8_range")
-
-        find_package(Protobuf REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/lib/cmake/protobuf")
-        find_program(Protobuf_PROTOC NAMES protoc PATHS "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/bin" NO_DEFAULT_PATH)
-
-        find_package(asio REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/asio/1.34.0/lib/cmake/asio")
-
-        find_package(CURL REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/curl/8.12.1/lib/cmake/CURL")
-
-        find_package(evmc REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/evmc/12.1.0/lib/cmake/evmc")
-
-        find_package(evmone REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/lib/cmake/evmone")
-        find_file(EVMONE_DLL
-            NAMES evmone.dll
-            PATHS "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/bin"
-            NO_DEFAULT_PATH
-        )
-
-        find_package(solc-exe REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/solc-exe/0.8.29/lib/cmake/solc-exe")
-        find_program(SOLC-EXE NAMES solc-exe-0.8.29 PATHS "${HYPERMUSIC_DEPS_PATH}/solc-exe/0.8.29/bin" NO_DEFAULT_PATH)
-
-        find_package(json REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/json/3.12.10/lib/cmake/json")
-
-        find_package(libsecp256k1 REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/secp256k1/0.6.0/lib/cmake/libsecp256k1")
-
-        find_package(OpenSSL REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/openssl/3.5.0/lib/cmake/OpenSSL")
-
-        find_package(jwt-cpp REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/jwt/0.7.1/cmake")
-
-        if(BUILD_TESTING)
-            find_package(GTest REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/GTest/1.16.0/lib/cmake/GTest")
-        endif()
-
-    endif()
-else()
-    message(STATUS "Dependencies path not specified, try to find it automatically")
-endif()
 
 add_subdirectory(src)
 
@@ -81,6 +39,15 @@ target_include_directories("${PROJECT_NAME}Lib"
 
 target_link_libraries("${PROJECT_NAME}Lib"
     PUBLIC
+        spdlog
+        asio
+        jwt-cpp
+        secp256k1
+        evmc
+        evmone
+
+        proto_gen
+        
         "${PROJECT_PREFIX}::Native"
         "${PROJECT_PREFIX}::Utils"
         "${PROJECT_PREFIX}::Server"
@@ -93,9 +60,7 @@ target_link_libraries("${PROJECT_NAME}Lib"
         "${PROJECT_PREFIX}::Auth"
         "${PROJECT_PREFIX}::API"
         "${PROJECT_PREFIX}::EVM"
-        PT_proto_gen
 )
-set_target_properties("${PROJECT_NAME}Lib" PROPERTIES CXX_STANDARD 23)
 
 target_sources("${PROJECT_NAME}Lib" PUBLIC
     FILE_SET public_headers
@@ -115,60 +80,65 @@ install(TARGETS ${PROJECT_NAME}Lib
 )
 
 # create executable target
-add_executable("${PROJECT_NAME}Exe" src/main.cpp)
+add_executable("${PROJECT_NAME}" src/main.cpp)
 
-target_link_libraries("${PROJECT_NAME}Exe"
+target_link_libraries("${PROJECT_NAME}"
     PRIVATE
         "${PROJECT_NAME}Lib"
 )
 
-set_target_properties("${PROJECT_NAME}Exe" PROPERTIES CXX_STANDARD 23)
-
 # executable install target
-install(TARGETS ${PROJECT_NAME}Exe
-    EXPORT ${PROJECT_NAME}ExeTargets
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}Targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(FILES "$<TARGET_PDB_FILE:${PROJECT_NAME}Exe>"
+# install debug information
+install(FILES "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     OPTIONAL
 )
-
-# Configure the Config file
-include(CMakePackageConfigHelpers)
-configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/HypermusicServer/HypermusicServerConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/cmake/HypermusicServer/HypermusicServerConfig.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/HypermusicServer
-)
-# Install the generated config file
-install(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/HypermusicServer/HypermusicServerTargets.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/cmake/HypermusicServer/HypermusicServerConfig.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/HypermusicServer
-)
-
-# build tests
-if(BUILD_TESTING)
-    add_subdirectory(tests)
-endif()
 
 # make install target of resources directory
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources/"
     DESTINATION "${CMAKE_INSTALL_PREFIX}/resources/"
 )
 
-# Copy DLL to bin folder after build
-add_custom_command(TARGET "${PROJECT_NAME}Exe" POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${EVMONE_DLL}"
-    "$<TARGET_FILE_DIR:${PROJECT_NAME}Exe>"
+
+# Generate version config
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    VERSION ${CMAKE_PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
 )
-# Install evmone.dll
-install(FILES "${EVMONE_DLL}"
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+
+# Generate config file
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
+
+# Install all config files
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+# Export targets
+install(
+    EXPORT ${PROJECT_NAME}Targets
+    NAMESPACE ${PROJECT_PREFIX}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+# build tests
+if(HYPERMUSIC_BUILD_TESTS)
+    add_subdirectory(tests)
+endif()

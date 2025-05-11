@@ -5,7 +5,8 @@ add_module(NAME "Auth"
         spdlog::spdlog
         asio
         absl::hash
-        libsecp256k1::secp256k1
+        #libsecp256k1::secp256k1
+        secp256k1
         jwt-cpp::jwt-cpp
 )
 

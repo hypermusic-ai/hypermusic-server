@@ -4,6 +4,6 @@ add_module(NAME "Parser"
         spdlog::spdlog
         protobuf::libprotobuf
         asio
-        json
+        nlohmann_json
 )
 

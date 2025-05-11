@@ -18,13 +18,6 @@ int main(int argc, char* argv[])
 
     spdlog::info("Current working path: {}", std::filesystem::current_path().string());
 
-    CURLcode curl_result = curl_global_init(CURL_GLOBAL_DEFAULT);
-
-    if(curl_result != 0) {
-        spdlog::error("Failed to initialize curl");
-        return 1;
-    }
-
     asio::io_context io_context;
 
     hm::Registry registry(io_context);
@@ -72,7 +65,7 @@ int main(int argc, char* argv[])
         spdlog::error("Error: {}", e.what());
     }
     
-    curl_global_cleanup();
+
     spdlog::debug("Program finished");
     return 0;
 }

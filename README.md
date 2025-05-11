@@ -17,13 +17,13 @@ This project requires the following libraries:
 To configure the project using CMake, run the following command:
 
 ```sh
-cmake -S . -B build -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=install -DHYPERMUSIC_DEPS_PATH="..."
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=install -DHYPERMUSIC_BUILD_TESTS=ON -DHYPERMUSIC_DEPS_PATH="..."
 ```
 
 - `-S .`: Specifies the source directory.
 - `-B build`: Specifies the build directory.
-- `-DBUILD_TESTING=ON`: Enables tests.
 - `-DCMAKE_INSTALL_PREFIX=install`: Specifies install directory.
+- `-DHYPERMUSIC_BUILD_TESTS=ON`: Enables tests.
 - `-DHYPERMUSIC_DEPS_PATH="..."`: Specifies the dependencies path.
 
 ## 🛠️ Building the Project (Debug Mode)

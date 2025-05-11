@@ -1,74 +1,361 @@
-# TODO fallback for downloading external dependencies
+cmake_minimum_required(VERSION 3.30)
 
 include(FetchContent)
-
-FetchContent_Declare(
-    spdlog
-    GIT_REPOSITORY  "https://github.com/gabime/spdlog.git"
-    GIT_TAG         "v1.11.0"
-)
-FetchContent_MakeAvailable(spdlog)
-set_target_properties(spdlog PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
-FetchContent_Declare(
-    asio
-    GIT_REPOSITORY "https://github.com/chriskohlhoff/asio.git"
-    GIT_TAG        "asio-1-34-0"
-)
-FetchContent_MakeAvailable(asio)
+include(ExternalProject)
 
 
-set(protobuf_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(protobuf_BUILD_CONFORMANCE OFF CACHE BOOL "" FORCE)
-FetchContent_Declare(
-    protobuf
-    GIT_REPOSITORY "https://github.com/protocolbuffers/protobuf.git"
-    GIT_TAG        "v30.1"
-)
-FetchContent_MakeAvailable(protobuf)
+function(silence_warnings)
+    set(options)
+    set(oneValueArgs)
+    set(multiValueArgs TARGETS)
+    cmake_parse_arguments(silence_warnings "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FS")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /FS")
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-add_link_options("/DEBUG")        # Enable debug information in the linker
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")  # Ensure Debug mode
-target_compile_options(libprotoc PRIVATE         
-"$<$<CONFIG:Debug>:/Od>"
-"$<$<CONFIG:Debug>:/MTd>"
-"$<$<CONFIG:Debug>:/Z7>")
-#set_target_properties(libtest_common_lite PROPERTIES CXX_STANDARD 23)
-set_target_properties(protoc PROPERTIES CXX_STANDARD 23)
-set_target_properties(libprotoc PROPERTIES CXX_STANDARD 23)
-set_target_properties(libprotobuf PROPERTIES CXX_STANDARD 23)
-set_target_properties(libprotobuf-lite PROPERTIES CXX_STANDARD 23)
-target_compile_options(libprotobuf  
-    PUBLIC         
-        /FS
-)
-target_compile_options(libprotobuf-lite  
-PUBLIC         
-        /FS
-)
-target_link_libraries(libprotobuf PRIVATE absl::strings absl::base)
+    foreach(tgt ${silence_warnings_TARGETS})
+        get_target_property(alias_actual ${tgt} ALIASED_TARGET)
+        if(alias_actual)
+            set(real_target ${alias_actual})
+        else()
+            set(real_target ${tgt})
+        endif()
 
-if(BUILD_TESTING)
-    message(STATUS "CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE}")
-    set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
-    set(BUILD_GTEST ON CACHE BOOL "" FORCE)
-    set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+        if(NOT TARGET ${real_target})
+            message(FATAL_ERROR "Target ${real_target} not found, cannot silence warnings.")
+        endif()
+
+        get_target_property(type ${real_target} TYPE)
+
+        if("${type}" STREQUAL "INTERFACE_LIBRARY")
+            target_compile_options(${real_target} INTERFACE /W0)
+        else()
+            target_compile_options(${real_target} PRIVATE /W0)
+        endif()
+    endforeach()
+endfunction()
+
+
+if(HYPERMUSIC_DEPS_PATH)
+    message(STATUS "Dependencies path specified to ${HYPERMUSIC_DEPS_PATH}")
+    if(NOT EXISTS "${HYPERMUSIC_DEPS_PATH}")
+        message(FATAL_ERROR "Dependencies path does not exist")
+    else()
+        find_package(spdlog REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/spdlog/1.15.1/lib/cmake/spdlog")
+
+        find_package(absl REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/abseil/20250127.1/lib/cmake/absl")
+
+        find_package(utf8_range REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/lib/cmake/utf8_range")
+
+        find_package(Protobuf REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/lib/cmake/protobuf")
+        find_program(Protobuf_PROTOC NAMES protoc PATHS "${HYPERMUSIC_DEPS_PATH}/protobuf/30.1/bin" NO_DEFAULT_PATH)
+
+        find_package(asio REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/asio/1.34.0/lib/cmake/asio")
+
+        find_package(CURL REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/curl/8.12.1/lib/cmake/CURL")
+
+        find_package(evmc REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/evmc/12.1.0/lib/cmake/evmc")
+
+        find_package(evmone REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/lib/cmake/evmone")
+
+        find_package(solc-exe REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/solc-exe/0.8.29/lib/cmake/solc-exe")
+        find_program(SOLC-EXE NAMES solc-exe-0.8.29 PATHS "${HYPERMUSIC_DEPS_PATH}/solc-exe/0.8.29/bin" NO_DEFAULT_PATH)
+
+        find_package(json REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/json/3.12.10/lib/cmake/json")
+
+        find_package(libsecp256k1 REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/secp256k1/0.6.0/lib/cmake/libsecp256k1")
+
+        find_package(OpenSSL REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/openssl/3.5.0/lib/cmake/OpenSSL")
+
+        find_package(jwt-cpp REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/jwt/0.7.1/cmake")
+
+        if(HYPERMUSIC_BUILD_TESTS)
+            find_package(GTest REQUIRED NO_DEFAULT_PATH PATHS "${HYPERMUSIC_DEPS_PATH}/GTest/1.16.0/lib/cmake/GTest")
+        endif()
+
+        # Copy evmone.dll
+        find_file(EVMONE_DLL
+            NAMES evmone.dll
+            PATHS "${HYPERMUSIC_DEPS_PATH}/evmone/0.14.1/bin"
+            NO_DEFAULT_PATH
+        )
+        add_custom_command(TARGET "${PROJECT_NAME}" POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${EVMONE_DLL}"
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+        )
+        install(FILES "${EVMONE_DLL}"
+            DESTINATION ${CMAKE_INSTALL_BINDIR}
+        )
+
+    endif()
+else()
+    message(STATUS "Dependencies path not specified, Fetching from repositories ...")
+    
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libs only")
+
+    # ---------------------------------------------------------
+    # OpenSSL
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `OpenSSL` ...")
+    find_package(OpenSSL)
+
+    # ---------------------------------------------------------
+    # spdlog
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `spdlog` ...")
     FetchContent_Declare(
-        gtest
-        GIT_REPOSITORY  "https://github.com/google/googletest.git"
-        GIT_TAG         "v1.16.0"
+        spdlog
+        GIT_REPOSITORY  "https://github.com/gabime/spdlog.git"
+        GIT_TAG         "v1.11.0"
+        SYSTEM
+        OVERRIDE_FIND_PACKAGE
     )
-    FetchContent_MakeAvailable(gtest)
-    target_compile_options(gtest PRIVATE         
-    "$<$<CONFIG:Debug>:/Od>"
-    "$<$<CONFIG:Debug>:/MTd>"
-    "$<$<CONFIG:Debug>:/Z7>")
-    set_target_properties(gtest PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    set_target_properties(gtest PROPERTIES CXX_STANDARD 23)
+    FetchContent_MakeAvailable(spdlog)
+
+    # ---------------------------------------------------------
+    # asio
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `asio` ...")
+    FetchContent_Declare(
+        asio
+        GIT_REPOSITORY "https://github.com/chriskohlhoff/asio.git"
+        GIT_TAG        "asio-1-34-0"
+        SYSTEM
+        OVERRIDE_FIND_PACKAGE
+    )
+    FetchContent_MakeAvailable(asio)
+    add_library(asio INTERFACE)
+    target_compile_options(asio INTERFACE /wd4459)
+    target_include_directories(asio INTERFACE "${asio_SOURCE_DIR}/asio/include")
+    install(DIRECTORY ${asio_SOURCE_DIR}/asio/include/asio DESTINATION include)
+
+    # ---------------------------------------------------------
+    # abseil
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `abseil` ...")
+    FetchContent_Declare(
+        abseil
+        GIT_REPOSITORY "https://github.com/abseil/abseil-cpp.git"
+        GIT_TAG "20250127.1"
+        SYSTEM
+        OVERRIDE_FIND_PACKAGE
+    )
+    set(ABSL_MSVC_STATIC_RUNTIME ON CACHE BOOL "" FORCE)
+    set(ABSL_ENABLE_INSTALL ON CACHE BOOL "" FORCE)
+    set(ABSL_PROPAGATE_CXX_STD ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(abseil)
+
+    silence_warnings(TARGETS 
+        absl::algorithm
+        absl::base
+        absl::debugging
+        absl::flat_hash_map
+        absl::flags
+        absl::memory
+        absl::meta
+        absl::numeric
+        absl::random_random
+        absl::strings
+        absl::synchronization
+        absl::time
+        absl::utility
+    )
+
+    # ---------------------------------------------------------
+    # protobuf
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `protobuf` ...")
+    FetchContent_Declare(
+            protobuf
+            GIT_REPOSITORY "https://github.com/protocolbuffers/protobuf"
+            GIT_TAG        "v30.2"
+            SYSTEM
+            OVERRIDE_FIND_PACKAGE
+    )
+    set(protobuf_MSVC_STATIC_RUNTIME ON CACHE BOOL "" FORCE)
+    set(protobuf_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(protobuf_ABSL_PROVIDER "package" CACHE STRING "" FORCE)
+    set(absl_DIR "${abseil_SOURCE_DIR}" CACHE PATH "")
+    set(protobuf_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(protobuf_BUILD_CONFORMANCE OFF CACHE BOOL "" FORCE)
+    set(protobuf_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+    FetchContent_MakeAvailable(protobuf)
+
+    # Suppress warnings for building protobuf
+    silence_warnings(TARGETS 
+        protobuf::libprotobuf
+        protobuf::libprotoc
+        protobuf::protoc
+        protobuf::protoc-gen-upb
+        protobuf::protoc-gen-upb_minitable
+        protobuf::protoc-gen-upbdefs
+        protobuf::libupb
+        protobuf::libprotobuf-lite
+        utf8_range
+        utf8_validity
+    )
+    # set protobuf protoc executable location
+    set(Protobuf_PROTOC_EXECUTABLE $<TARGET_FILE:protobuf::protoc> CACHE FILEPATH "" FORCE)
+    
+    add_custom_target(check_protoc_version
+        COMMAND "${Protobuf_PROTOC_EXECUTABLE}" --version
+        COMMENT "Checking protoc version ${Protobuf_PROTOC_EXECUTABLE}"
+        VERBATIM
+    )
+    
+    # ---------------------------------------------------------
+    # json
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `json` ...")
+    FetchContent_Declare(
+        json
+        GIT_REPOSITORY  "https://github.com/nlohmann/json.git"
+        GIT_TAG         "v3.12.0"
+        SYSTEM
+        OVERRIDE_FIND_PACKAGE
+    )
+    set(JSON_BuildTests OFF)
+    FetchContent_MakeAvailable(json)
+
+    # ---------------------------------------------------------
+    # jwt-cpp
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `jwt-cpp` ...")
+    FetchContent_Declare(
+        jwt-cpp
+        GIT_REPOSITORY  "https://github.com/Thalhammer/jwt-cpp.git"
+        GIT_TAG         "v0.7.1"
+        SYSTEM
+        OVERRIDE_FIND_PACKAGE
+    )
+    set(JWT_BUILD_EXAMPLES OFF)
+    set(JWT_BUILD_TESTS OFF)
+    FetchContent_MakeAvailable(jwt-cpp)
+
+    # ---------------------------------------------------------
+    # secp256k1
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `secp256k1` ...")
+    FetchContent_Declare(
+        secp256k1
+        GIT_REPOSITORY  "https://github.com/bitcoin-core/secp256k1.git"
+        GIT_TAG         "v0.6.0"
+        SYSTEM
+        OVERRIDE_FIND_PACKAGE
+    )
+    set(SECP256K1_DISABLE_SHARED ON)
+    set(SECP256K1_BUILD_BENCHMARK OFF)
+    set(SECP256K1_BUILD_TESTS OFF)
+    set(SECP256K1_BUILD_EXHAUSTIVE_TESTS OFF)
+    set(SECP256K1_BUILD_CTIME_TESTS OFF)
+    set(SECP256K1_ENABLE_MODULE_RECOVERY ON)
+    FetchContent_MakeAvailable(secp256k1)
+
+    # ---------------------------------------------------------
+    # solc
+    # ---------------------------------------------------------
+    #message(STATUS "Fetching dependency `solidity` ...")
+    #set(SOLC_VERSION "v0.8.30")
+    #set(SOLC_EXE_NAME "solc-windows.exe")
+    #set(SOLC_URL "https://github.com/ethereum/solidity/releases/download/${SOLC_VERSION}/${SOLC_EXE_NAME}")
+    #set(SOLC_BIN_DIR "${CMAKE_INSTALL_PREFIX}/solidity/bin")
+    #
+    #ExternalProject_Add(solidity_bin
+    #    URL ${SOLC_URL}
+    #    PREFIX ${CMAKE_BINARY_DIR}/_deps/solidity
+    #    CONFIGURE_COMMAND ""
+    #    BUILD_COMMAND ""
+    #    INSTALL_COMMAND ${CMAKE_COMMAND} -E make_directory ${SOLC_BIN_DIR}
+    #                  && ${CMAKE_COMMAND} -E copy <DOWNLOAD_DIR>/${SOLC_EXE_NAME} ${SOLC_BIN_DIR}/solc.exe
+    #    LOG_DOWNLOAD ON
+    #)
+    
+    # Create an imported executable target
+    #add_executable(solc_imported IMPORTED GLOBAL)
+    #add_dependencies(solc_imported solidity_bin)
+    
+    # Set the location of the executable
+    #set_target_properties(solc_imported PROPERTIES
+    #    IMPORTED_LOCATION "${SOLC_BIN_DIR}/solc.exe"
+    #)
+
+    # ---------------------------------------------------------
+    # evmc
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `evmc` ...")
+    FetchContent_Declare(
+        evmc
+        GIT_REPOSITORY  "https://github.com/ethereum/evmc.git"
+        GIT_TAG         "v12.1.0"
+        SYSTEM
+        OVERRIDE_FIND_PACKAGE
+    )
+    set(EVMC_INSTALL ON)
+    set(EVMC_TESTING OFF)
+    FetchContent_MakeAvailable(evmc)
+
+    # ---------------------------------------------------------
+    # evmone
+    # ---------------------------------------------------------
+    message(STATUS "Fetching dependency `evmone` ...")
+    set(EVMONE_VERSION "0.15.0")
+    set(EVMONE_ZIP_NAME "evmone-${EVMONE_VERSION}-windows-amd64.zip")
+    set(EVMONE_URL "https://github.com/ethereum/evmone/releases/download/v${EVMONE_VERSION}/${EVMONE_ZIP_NAME}")
+
+    set(EVMONE_PREFIX "${CMAKE_BINARY_DIR}/_deps/evmone")
+    set(EVMONE_ZIP_EXTRACT_DIR "${EVMONE_PREFIX}/src/evmone_bin")
+    set(EVMONE_INSTALL_DIR "${CMAKE_BINARY_DIR}/_install/evmone") # Use a binary-tree install location
+
+    file(MAKE_DIRECTORY "${EVMONE_INSTALL_DIR}/bin")
+    file(MAKE_DIRECTORY "${EVMONE_INSTALL_DIR}/lib")
+    file(MAKE_DIRECTORY "${EVMONE_INSTALL_DIR}/include")
+
+    ExternalProject_Add(evmone_bin
+        URL ${EVMONE_URL}
+        PREFIX ${EVMONE_PREFIX}
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND 
+            ${CMAKE_COMMAND} -E copy "${EVMONE_ZIP_EXTRACT_DIR}/bin/evmone.dll" "${EVMONE_INSTALL_DIR}/bin/"
+            && ${CMAKE_COMMAND} -E copy "${EVMONE_ZIP_EXTRACT_DIR}/lib/evmone.lib" "${EVMONE_INSTALL_DIR}/lib/"
+            && ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ZIP_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
+        LOG_DOWNLOAD ON
+    )
+
+    # Create imported target
+    add_library(evmone IMPORTED STATIC GLOBAL)
+    add_dependencies(evmone evmone_bin)
+
+    set_target_properties(evmone PROPERTIES
+        IMPORTED_LOCATION "${EVMONE_INSTALL_DIR}/lib/evmone.lib"
+    )
+
+    target_include_directories(evmone INTERFACE
+        $<BUILD_INTERFACE:${EVMONE_INSTALL_DIR}/include>
+    )
+
+    # Install evmone binaries
+    install(DIRECTORY "${EVMONE_INSTALL_DIR}/bin/"
+            DESTINATION ${CMAKE_INSTALL_BINDIR}
+            FILES_MATCHING PATTERN "*.dll")
+
+    install(DIRECTORY "${EVMONE_INSTALL_DIR}/lib/"
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            FILES_MATCHING PATTERN "*.lib")
+
+    install(DIRECTORY "${EVMONE_INSTALL_DIR}/include/"
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+    # ---------------------------------------------------------
+    # GTest
+    # ---------------------------------------------------------
+    if(HYPERMUSIC_BUILD_TESTS)
+        message(STATUS "Fetching dependency `GTest` ...")
+        FetchContent_Declare(
+            googletest
+            GIT_REPOSITORY "https://github.com/google/googletest"
+            GIT_TAG        "v1.16.0"
+            SYSTEM
+        )
+        FetchContent_MakeAvailable(googletest)
+    endif()
 endif()

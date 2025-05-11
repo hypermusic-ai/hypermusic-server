@@ -5,5 +5,4 @@ add_module(NAME "HTTP"
         "${PROJECT_PREFIX}::Native"
         spdlog::spdlog
         asio
-        CURL::libcurl
 )

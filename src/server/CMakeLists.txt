@@ -9,6 +9,5 @@ add_module(NAME "Server"
         absl::hash
         spdlog::spdlog
         asio
-        CURL::libcurl
 )
 
