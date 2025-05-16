@@ -18,6 +18,9 @@ using namespace asio::experimental::awaitable_operators;
 
 namespace hm
 {
+    /**
+     * @brief Type representing a route handler function.
+     */
     using HandlerDefinition = std::function<asio::awaitable<hm::http::Response>(const hm::http::Request &, std::vector<RouteArg>)>;
 
     // TODO: Add a concept to check if the handler is callable with the expected arguments
@@ -27,6 +30,12 @@ namespace hm
     //     { t(args...) } -> std::same_as<asio::awaitable<hm::http::Response>>;
     // };
 
+    /**
+     * @brief A class representing a server for handling HTTP requests.
+     * 
+     * This class is responsible for listening for incoming TCP connections on a specified port, 
+     * handling incoming HTTP requests, and executing route handlers based on the request method and path.
+     */
     class Server
     {
         public:

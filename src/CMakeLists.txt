@@ -1,5 +1,6 @@
 add_subdirectory(native)
 add_subdirectory(utils)
+add_subdirectory(crypto)
 add_subdirectory(server)
 add_subdirectory(http)
 add_subdirectory(session)

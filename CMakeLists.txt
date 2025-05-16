@@ -50,6 +50,7 @@ target_link_libraries("${PROJECT_NAME}Lib"
         
         "${PROJECT_PREFIX}::Native"
         "${PROJECT_PREFIX}::Utils"
+        "${PROJECT_PREFIX}::Crypto"
         "${PROJECT_PREFIX}::Server"
         "${PROJECT_PREFIX}::HTTP"
         "${PROJECT_PREFIX}::Session"

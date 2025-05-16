@@ -9,6 +9,11 @@
 
 namespace hm
 {
+    /**
+     * @brief A class representing a route key, which is a combination of a HTTP method and a URL.
+     * 
+     * This class is used to identify a specific route in the server's routing table.
+     */
     class RouteKey 
     {
         public:
@@ -16,10 +21,25 @@ namespace hm
         
             bool operator==(const RouteKey& other) const;
             
+            /**
+             * @brief Get the HTTP method of the route key.
+             * 
+             * @return The HTTP method.
+             */
             http::Method getMethod() const;
 
+            /**
+             * @brief Get the URL of the route key.
+             * 
+             * @return The URL.
+             */
             const http::URL & getPath() const;
 
+            /**
+             * @brief Get the path info segments of the route key.
+             * 
+             * @return The path info segments.
+             */
             const std::vector<std::variant<std::string, RouteArgDef>> & getPathInfoDef() const;
 
         private:

@@ -9,6 +9,11 @@
 
 namespace hm
 {
+    /**
+     * @brief Enum to represent the type of a route argument.
+     * 
+     * This enum represents the possible types of a route argument.
+     */
     enum class RouteArgType
     {
         // Unknown
@@ -20,6 +25,11 @@ namespace hm
         string
     };
 
+    /**
+     * @brief Enum to represent the requirement of a route argument.
+     * 
+     * This enum represents the possible requirements of a route argument.
+     */
     enum class RouteArgRequirement
     {
         // Unknown
@@ -29,18 +39,44 @@ namespace hm
         required
     };
 
+    /**
+     * @brief A pair of RouteArgType and RouteArgRequirement.
+     * 
+     * This type represents a pair of RouteArgType and RouteArgRequirement.
+     */
     using RouteArgDef = std::pair<RouteArgType, RouteArgRequirement>;
 
+    /**
+     * @brief A class representing a route argument.
+     * 
+     * This class represents a route argument, which is a pair of RouteArgType and RouteArgRequirement.
+     * It also holds the data associated with the argument.
+     */
     class RouteArg
     {
         public:
             RouteArg(RouteArgType type, RouteArgRequirement requirement, std::string data);
             RouteArg(RouteArgDef def, std::string data);
 
+            /**
+             * @brief Gets the type of the route argument.
+             * 
+             * @return The type of the route argument.
+             */
             RouteArgType getType() const;
 
+            /**
+             * @brief Gets the data associated with the route argument.
+             * 
+             * @return The data associated with the route argument.
+             */
             const std::string & getData() const;
 
+            /**
+             * @brief Gets the requirement of the route argument.
+             * 
+             * @return The requirement of the route argument.
+             */
             RouteArgRequirement getRequirement() const;
 
         private:
@@ -48,7 +84,6 @@ namespace hm
             RouteArgDef _def;
             std::string _data;
     };
-
 }
 
 namespace hm::parse

@@ -24,10 +24,28 @@ namespace hm::http
 
             bool operator==(const URL& other) const;
 
-
+            /**
+             * @brief Returns the full path of the URL, including the query string.
+             * @return The full path of the URL.
+             */
             std::string getFullPath() const;
+
+            /**
+             * @brief Returns the path module of the URL.
+             * @return The path module of the URL.
+             */
             std::string getPathModule() const;
+
+            /**
+             * @brief Returns the path info of the URL.
+             * @return The path info of the URL.
+             */
             std::string getPathInfo() const;
+
+            /**
+             * @brief Returns the query string of the URL.
+             * @return The query string of the URL.
+             */
             std::string getQuery() const;
 
         private:

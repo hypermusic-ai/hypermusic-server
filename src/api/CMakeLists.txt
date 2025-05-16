@@ -10,7 +10,6 @@ add_module(NAME "API"
         "${PROJECT_PREFIX}::Auth"
         spdlog::spdlog
         asio
-        #libsecp256k1::secp256k1
         secp256k1
 )
 

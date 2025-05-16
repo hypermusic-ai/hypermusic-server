@@ -20,6 +20,11 @@ using namespace std::placeholders;
 
 namespace hm
 {
+    /**
+     * @brief A class representing a route handler function.
+     * 
+     * This class is used to store and execute route handler function.
+     */
     class RouteHandlerFunc
     {
         private:
@@ -67,6 +72,11 @@ namespace hm
             std::unique_ptr<Base> _base;
     };
 
+    /**
+     * @brief A class representing a router for handling HTTP requests.
+     * 
+     * This class is used to store and execute set of route handler functions.
+     */
     class Router
     {
         public:

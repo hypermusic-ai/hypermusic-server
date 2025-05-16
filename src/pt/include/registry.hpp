@@ -14,6 +14,14 @@
 
 namespace hm
 {
+    /**
+     * @brief A class that represents a registry of features, transformations, and conditions.
+     * 
+     * This class is used to store and manage features, transformations, and conditions.
+     * It provides methods to add, get, and remove features, transformations, and conditions.
+     * It also provides methods to check if a feature, transformation, or condition exists.
+     * 
+     */
     class Registry
     {
         public:

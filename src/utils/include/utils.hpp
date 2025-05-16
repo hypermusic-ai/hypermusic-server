@@ -24,9 +24,31 @@ namespace hm
      */
     asio::awaitable<void> watchdog(std::chrono::steady_clock::time_point& deadline);
 
+    /**
+     * @brief Converts a hex string to a vector of bytes
+     * 
+     * @param hex The hex string to convert
+     * 
+     * @return A vector of bytes
+     */
     std::vector<std::uint8_t> hexToBytes(const std::string& hex);
 
+    /**
+     * @brief Converts a vector of bytes to a hex string
+     * 
+     * @param data The array of bytes to convert
+     * @param len The length of the array
+     * 
+     * @return A hex string
+     */
     std::string bytesToHex(const std::uint8_t* data, std::size_t len);
 
+    /**
+     * @brief Converts a vector of bytes to a hex string
+     * 
+     * @param data The vector of bytes to convert
+     * 
+     * @return A hex string
+     */
     std::string bytesToHex(const std::vector<std::uint8_t> & data);
 }

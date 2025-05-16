@@ -1,8 +1,7 @@
-add_module(NAME "Auth"
+add_module(NAME "Crypto"
     DEPENDENCIES
         "${PROJECT_PREFIX}::Utils"
         "${PROJECT_PREFIX}::Native"
-        "${PROJECT_PREFIX}::Crypto"
         spdlog::spdlog
         asio
         absl::hash

@@ -22,6 +22,8 @@ namespace hm::http
      * 
      * - `POST`: sends data to the server to create a new resource.
      * 
+     * - `OPTIONS`: requests information about the communication options for the target resource.
+     * 
      */
     enum class Method
     {

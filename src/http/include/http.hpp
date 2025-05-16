@@ -65,12 +65,29 @@ namespace hm::http
              */
             void setHeader(Header header, const std::string & value);
 
+            /**
+             * @brief Gets the value of a header.
+             * @param[in] header The header to get the value of.
+             * @return The value of the header.
+             */
             std::vector<std::string> getHeader(Header header) const;
 
+            /**
+             * @brief Gets the version of the message.
+             * @return The version of the message.
+             */
             const std::string & getVersion() const;
 
+            /**
+             * @brief Gets the headers of the message.
+             * @return The headers of the message.
+             */
             const HeadersList & getHeaders() const;
-            
+
+            /**
+             * @brief Gets the body of the message.
+             * @return The body of the message.
+             */
             const std::string & getBody() const;
 
         private:
@@ -108,8 +125,16 @@ namespace hm::http
              */
             void setPath(URL path);
 
+            /**
+             * @brief Gets the HTTP method of the request.
+             * @return The method of the request.
+             */
             const Method & getMethod() const;
 
+            /**
+             * @brief Gets the path of the request.
+             * @return The path of the request.
+             */
             const URL & getPath() const;
 
         private:
@@ -140,6 +165,10 @@ namespace hm::http
              */
             void setCode(Code code);
 
+            /**
+             * @brief Gets the HTTP response code of the message.
+             * @return The response code of the message.
+             */
             const Code & getCode() const;
             
         private:
