@@ -1,5 +1,17 @@
 # 🚀 Hypermusic server
 
+## 📚 Documentation
+
+</br>
+
+[![Docs](https://img.shields.io/badge/docs-online-blue)](https://hypermusic-ai.github.io/hypermusic-server/)
+
+[View Doxygen API Docs](https://hypermusic-ai.github.io/hypermusic-server/)
+
+</br>
+
+---
+
 ## 📦 Dependencies
 
 This project requires the following libraries:
@@ -11,6 +23,10 @@ This project requires the following libraries:
 - [**evmone**](https://github.com/ethereum/evmone)
 
 🔗 **[Dependencies repository](https://github.com/hypermusic-ai/hypermusic-server-deps)** – Prebuilt dependencies and setup instructions can be found here.
+
+</br>
+
+---
 
 ## ⚙️ Configuring the Project
 
@@ -25,6 +41,10 @@ cmake -S . -B build -DCMAKE_INSTALL_PREFIX=install -DHYPERMUSIC_BUILD_TESTS=ON -
 - `-DCMAKE_INSTALL_PREFIX=install`: Specifies install directory.
 - `-DHYPERMUSIC_BUILD_TESTS=ON`: Enables tests.
 - `-DHYPERMUSIC_DEPS_PATH="..."`: Specifies the dependencies path.
+
+</br>
+
+---
 
 ## 🛠️ Building the Project (Debug Mode)
 
@@ -46,11 +66,19 @@ cmake --build build --config Debug --target install
 
 This will install the project with debugging enabled.
 
+</br>
+
+---
+
 ## 🖥️ Start the server
 
 ```sh
 ./build/Debug/HypermusicServer.exe
 ```
+
+</br>
+
+---
 
 ## 📚 API Documentation
 
