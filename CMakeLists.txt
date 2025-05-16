@@ -16,7 +16,6 @@ include(cmake/dependencies.cmake)
 # Options
 # --------------------------------------------------------------------------
 option(HYPERMUSIC_ENABLE_INSTALL "Enable install rule" OFF)
-option(HYPERMUSIC_DEPS_PATH "Path to dependencies" "")
 option(HYPERMUSIC_BUILD_TESTS "Build tests" OFF)
 
 message(STATUS "Install directory ${CMAKE_INSTALL_PREFIX}")

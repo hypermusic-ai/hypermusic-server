@@ -16,13 +16,21 @@
 
 This project requires the following libraries:
 
-- [**Asio**](https://think-async.com/Asio/)
-- [**spdlog**](https://github.com/gabime/spdlog)
-- [**cURL**](https://curl.se/)
-- [**Protobuf**](https://protobuf.dev/)
-- [**evmone**](https://github.com/ethereum/evmone)
+- [**OpenSSL**](https://www.openssl.org/) - **Installed on the machine**
+- [**Asio**](https://think-async.com/Asio/) - Fetched automatically
+- [**spdlog**](https://github.com/gabime/spdlog) - Fetched automatically
+- [**cURL**](https://curl.se/) - Fetched automatically
+- [**abseil**](https://github.com/abseil/abseil-cpp) - Fetched automatically
+- [**Protobuf**](https://protobuf.dev/) - Fetched automatically
+- [**jwt-cpp**](https://github.com/Thalhammer/jwt-cpp) - Fetched automatically
+- [**secp256k1**](https://github.com/bitcoin-core/secp256k1) - Fetched automatically
+- [**solc**](https://github.com/ethereum/solidity) - Fetched automatically
+- [**evmc**](https://github.com/ethereum/evmc) - Fetched automatically
+- [**evmone**](https://github.com/ethereum/evmone) - Fetched automatically
 
-🔗 **[Dependencies repository](https://github.com/hypermusic-ai/hypermusic-server-deps)** – Prebuilt dependencies and setup instructions can be found here.
+Testing
+
+- [**GTest**](https://github.com/google/googletest) - Fetched automatically
 
 </br>
 
@@ -33,14 +41,13 @@ This project requires the following libraries:
 To configure the project using CMake, run the following command:
 
 ```sh
-cmake -S . -B build -DCMAKE_INSTALL_PREFIX=install -DHYPERMUSIC_BUILD_TESTS=ON -DHYPERMUSIC_DEPS_PATH="..."
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=install -DHYPERMUSIC_BUILD_TESTS=ON
 ```
 
 - `-S .`: Specifies the source directory.
 - `-B build`: Specifies the build directory.
 - `-DCMAKE_INSTALL_PREFIX=install`: Specifies install directory.
 - `-DHYPERMUSIC_BUILD_TESTS=ON`: Enables tests.
-- `-DHYPERMUSIC_DEPS_PATH="..."`: Specifies the dependencies path.
 
 </br>
 
