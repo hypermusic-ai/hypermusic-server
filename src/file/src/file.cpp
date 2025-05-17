@@ -4,12 +4,13 @@ namespace hm
 {
     static std::filesystem::path BIN_PATH = std::filesystem::path();
     static std::filesystem::path RESOURCES_DIR = std::filesystem::path("resources");
+    static std::filesystem::path PT_REPO = std::filesystem::path("pt");
 
 
     void setBinPath(std::filesystem::path bin_path)
     {
         BIN_PATH = bin_path;
-        spdlog::info("BIN path: {}", BIN_PATH.string());
+        spdlog::info("bin/ path: {}", BIN_PATH.string());
     }
 
     std::filesystem::path getBinPath()
@@ -22,12 +23,17 @@ namespace hm
         return BIN_PATH.parent_path() / RESOURCES_DIR;
     }
 
+    std::filesystem::path getPTPath()
+    {
+        return BIN_PATH.parent_path() / PT_REPO;
+    }
+
     std::optional<std::string> loadSimpleForm()
     {
         const auto simple_form_path = getResourcesPath() / "html" / "simple_form.html";
         if(std::filesystem::exists(simple_form_path) == false)
         {
-            spdlog::error("Cann0ot find simple_form.html in the resources directory.");
+            spdlog::error("Cannot find simple_form.html in the resources directory.");
             return std::nullopt;
         }
         

@@ -178,7 +178,7 @@ namespace hm
         }
 
         // deploy code
-        auto deploy_res = co_await evm.deploy(out_dir / (feature.name() + ".bin"), address, 1000000, 0);
+        auto deploy_res = co_await evm.deploy(out_dir / (feature.name() + ".bin"), {}, address, 1000000, 0);
         if(!deploy_res)
         {
             spdlog::error("Failed to deploy code : {}", deploy_res.error());
@@ -389,7 +389,7 @@ namespace hm
         }
 
         // deploy code
-        auto deploy_res = co_await evm.deploy(out_dir / (transformation.name() + ".bin"), address, 1000000, 0);
+        auto deploy_res = co_await evm.deploy(out_dir / (transformation.name() + ".bin"), {}, address, 1000000, 0);
         if(!deploy_res)
         {
             spdlog::error("Failed to deploy code");

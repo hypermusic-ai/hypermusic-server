@@ -308,6 +308,62 @@ install(DIRECTORY "${EVMONE_INSTALL_DIR}/include/"
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 # ---------------------------------------------------------
+# PT repository
+# ---------------------------------------------------------
+message(STATUS "Fetching dependency `PT` ...")
+set(PT_REPO_PREFIX "${CMAKE_BINARY_DIR}/_deps/pt")
+include(cmake/FetchPT.cmake)
+
+set(PT_SOLIDITY_DIR "${PT_REPO_PREFIX}/solidity")
+set(PT_ARTIFACTS_DIR "${PT_SOLIDITY_DIR}/artifacts")
+set(PT_INSTALL_DIR "${CMAKE_BINARY_DIR}/_install/pt")
+set(PT_BUILD_MARKER "${PT_SOLIDITY_DIR}/pt_build_success.txt")
+
+message(STATUS "PT repository location : ${PT_REPO_PREFIX}")
+message (STATUS "PT solidity location : ${PT_SOLIDITY_DIR}")
+message (STATUS "PT artifacts location : ${PT_ARTIFACTS_DIR}")
+
+file(MAKE_DIRECTORY "${PT_INSTALL_DIR}")
+file(MAKE_DIRECTORY "${PT_INSTALL_DIR}/contracts")
+file(MAKE_DIRECTORY "${PT_INSTALL_DIR}/node_modules")
+
+add_custom_command(
+    OUTPUT ${PT_BUILD_MARKER}
+    COMMAND ${CMAKE_COMMAND} -E echo "Installing dependencies for Solidity contracts..." &&
+            cd ${PT_SOLIDITY_DIR} &&
+            npm install
+            && ${CMAKE_COMMAND} -E touch ${PT_BUILD_MARKER}
+            && ${CMAKE_COMMAND} -E copy_directory "${PT_SOLIDITY_DIR}/contracts" "${PT_INSTALL_DIR}/contracts"
+            && ${CMAKE_COMMAND} -E copy_directory "${PT_SOLIDITY_DIR}/node_modules" "${PT_INSTALL_DIR}/node_modules"
+    WORKING_DIRECTORY ${PT_SOLIDITY_DIR}
+    COMMENT "Configuring PT repo"
+)
+
+add_custom_target(configure_pt_repo ALL DEPENDS ${PT_BUILD_MARKER})
+add_dependencies(configure_pt_repo pt_repo)
+
+install(DIRECTORY "${PT_INSTALL_DIR}/"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/pt"
+)
+
+# Copy ABI or bytecode from artifacts if needed
+#add_custom_command(
+#    OUTPUT ${CMAKE_BINARY_DIR}/resources/abi/Runner.json
+#    COMMAND ${CMAKE_COMMAND} -E copy
+#            ${PT_ARTIFACTS_DIR}/contracts/Runner.sol/Runner.json
+#            ${CMAKE_BINARY_DIR}/resources/abi/Runner.json
+#    DEPENDS build_pt_contracts
+#    COMMENT "Copying Runner ABI to resources"
+#)
+
+#add_custom_target(copy_pt_abi ALL
+#    DEPENDS ${CMAKE_BINARY_DIR}/resources/abi/Runner.json
+#)
+
+#add_dependencies(${PROJECT_NAME} copy_pt_abi)
+
+
+# ---------------------------------------------------------
 # GTest
 # ---------------------------------------------------------
 if(HYPERMUSIC_BUILD_TESTS)

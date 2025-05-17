@@ -54,14 +54,19 @@ namespace hm
 
         asio::awaitable<bool> addAccount(std::string address_hex, std::uint64_t initial_gas) noexcept;
 
-        asio::awaitable<bool> compile(std::filesystem::path code_path, std::filesystem::path out_dir) const noexcept;
+        asio::awaitable<bool> compile(std::filesystem::path code_path,
+                std::filesystem::path out_dir,
+                std::filesystem::path base_path = {},
+                std::filesystem::path includes = {}) const noexcept;
 
-        asio::awaitable<std::expected<std::string, std::string>> deploy(std::istream & code_stream,  
+        asio::awaitable<std::expected<std::string, std::string>> deploy(std::istream & code_stream, 
+                    std::vector<uint8_t> constructor_args, 
                     std::string sender_hex,
                     std::uint64_t gas_limit,
                     std::uint64_t value) noexcept;
 
-        asio::awaitable<std::expected<std::string, std::string>> deploy(std::filesystem::path code_path,   
+        asio::awaitable<std::expected<std::string, std::string>> deploy(std::filesystem::path code_path,
+                    std::vector<uint8_t> constructor_args,    
                     std::string sender_hex,
                     std::uint64_t gas_limit,
                     std::uint64_t value) noexcept;
@@ -72,6 +77,9 @@ namespace hm
                     std::vector<std::uint8_t> input_bytes,
                     std::uint64_t gas_limit,
                     std::uint64_t value) noexcept;
+
+    protected:
+        asio::awaitable<std::expected<std::string, std::string>> loadPT();
 
     private:
         asio::strand<asio::io_context::executor_type> _strand;

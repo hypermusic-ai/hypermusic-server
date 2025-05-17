@@ -16,21 +16,27 @@
 
 This project requires the following libraries:
 
-- [**OpenSSL**](https://www.openssl.org/) - **Installed on the machine**
-- [**Asio**](https://think-async.com/Asio/) - Fetched automatically
-- [**spdlog**](https://github.com/gabime/spdlog) - Fetched automatically
-- [**cURL**](https://curl.se/) - Fetched automatically
-- [**abseil**](https://github.com/abseil/abseil-cpp) - Fetched automatically
-- [**Protobuf**](https://protobuf.dev/) - Fetched automatically
-- [**jwt-cpp**](https://github.com/Thalhammer/jwt-cpp) - Fetched automatically
-- [**secp256k1**](https://github.com/bitcoin-core/secp256k1) - Fetched automatically
-- [**solc**](https://github.com/ethereum/solidity) - Fetched automatically
-- [**evmc**](https://github.com/ethereum/evmc) - Fetched automatically
-- [**evmone**](https://github.com/ethereum/evmone) - Fetched automatically
+### Installed on the machine
 
-Testing
+- [**OpenSSL**](https://www.openssl.org/)
+- [**npm**](https://www.npmjs.com/)
 
-- [**GTest**](https://github.com/google/googletest) - Fetched automatically
+### Fetched automatically
+
+- [**Asio**](https://think-async.com/Asio/)
+- [**spdlog**](https://github.com/gabime/spdlog)
+- [**cURL**](https://curl.se/)
+- [**abseil**](https://github.com/abseil/abseil-cpp)
+- [**Protobuf**](https://protobuf.dev/)
+- [**jwt-cpp**](https://github.com/Thalhammer/jwt-cpp)
+- [**secp256k1**](https://github.com/bitcoin-core/secp256k1)
+- [**solc**](https://github.com/ethereum/solidity)
+- [**evmc**](https://github.com/ethereum/evmc)
+- [**evmone**](https://github.com/ethereum/evmone)
+
+#### Testing
+
+- [**GTest**](https://github.com/google/googletest)
 
 </br>
 

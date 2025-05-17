@@ -15,6 +15,8 @@ namespace hm
         }
 
         _vm.set_option("O", "0"); // disable optimizations
+
+        co_spawn(io_context, loadPT(), asio::detached);
     }
     
     asio::awaitable<bool> EVM::addAccount(std::string address_hex, std::uint64_t initial_gas) noexcept
@@ -46,17 +48,44 @@ namespace hm
         co_return true;
     }
 
-    asio::awaitable<bool> EVM::compile(std::filesystem::path code_path, std::filesystem::path out_dir) const noexcept
+    asio::awaitable<bool> EVM::compile(std::filesystem::path code_path, std::filesystem::path out_dir, std::filesystem::path base_path, std::filesystem::path includes) const noexcept
     {
-        std::string compile_result = hm::native::runProcess(_solc_path.string(), 
-            {
-                    "--evm-version", "shanghai", 
-                    "--overwrite", "-o", out_dir.string(), 
-                    "--optimize", "--bin",
-                    "--ast-compact-json", "--asm",
-                    code_path.string()
-                }
-        );
+
+        if(!std::filesystem::exists(code_path))
+        {
+            spdlog::error(std::format("File {} does not exist", code_path.string()));
+            co_return false;
+        }
+
+
+        std::vector<std::string> args = {
+            "--evm-version", "shanghai",
+            "--overwrite", "-o", out_dir.string(),
+            "--optimize", "--bin",
+            "--abi",
+            code_path.string()
+        };
+
+        if(!includes.empty() && base_path.empty())
+        {
+            spdlog::error("Base path must be specified if includes are specified");
+            co_return false;
+        }
+
+        if (!base_path.empty()) 
+        {
+            args.emplace_back("--base-path");
+            args.emplace_back(base_path.string());
+        }
+
+        if (!includes.empty()) 
+        {
+            args.emplace_back("--include-path");
+            args.emplace_back(includes.string());
+        }
+
+        std::string compile_result = hm::native::runProcess(_solc_path.string(), std::move(args));
+
         spdlog::debug("Solc {} compilation result:\n{}", code_path.string(), compile_result);
 
         // TODO
@@ -64,6 +93,7 @@ namespace hm
     }
 
     asio::awaitable<std::expected<std::string, std::string>> EVM::deploy(std::istream & code_stream,
+                        std::vector<uint8_t> constructor_args, 
                         std::string sender_hex,
                         std::uint64_t gas_limit,
                         std::uint64_t value) noexcept
@@ -90,12 +120,17 @@ namespace hm
             co_return std::unexpected<std::string>("Empty bytecode");
         }
 
+        std::vector<uint8_t> deployment_input;
+        deployment_input.reserve(bytecode.size() + constructor_args.size());
+        deployment_input.insert(deployment_input.end(), bytecode.begin(), bytecode.end());
+        deployment_input.insert(deployment_input.end(), constructor_args.begin(), constructor_args.end());
+
         evmc_message create_msg{};
         create_msg.kind       = EVMC_CREATE2;
         create_msg.sender     = sender;
         create_msg.gas        = gas_limit;
-        create_msg.input_data = bytecode.data();
-        create_msg.input_size = bytecode.size();
+        create_msg.input_data = deployment_input.data();
+        create_msg.input_size = deployment_input.size();
 
         // fill message salt
         std::string salt_str = "message_salt_42";
@@ -128,13 +163,14 @@ namespace hm
      }
 
     asio::awaitable<std::expected<std::string, std::string>> EVM::deploy(std::filesystem::path code_path,
+                        std::vector<uint8_t> constructor_args,
                         std::string sender_hex,
                         std::uint64_t gas_limit,
                         std::uint64_t value) noexcept
     {
         spdlog::debug(std::format("Deploying contract from file: {}", code_path.string()));
         std::ifstream file(code_path, std::ios::binary);
-        co_return co_await deploy(file, std::move(sender_hex), gas_limit, value);
+        co_return co_await deploy(file, std::move(constructor_args), std::move(sender_hex), gas_limit, value);
     }
 
     asio::awaitable<std::expected<std::string, std::string>> EVM::execute(std::string sender_hex,
@@ -203,6 +239,34 @@ namespace hm
 
         co_return bytesToHex(result.output_data, result.output_size);
     }
+
+    asio::awaitable<std::expected<std::string, std::string>> EVM::loadPT()
+    {
+        
+        const auto & contracts_dir = getPTPath() / "contracts";
+        const auto & out_dir = getPTPath() / "out";
+        const auto & node_modules = getPTPath() / "node_modules";
+
+        std::filesystem::create_directories(out_dir);
+
+        std::vector<std::pair<std::filesystem::path, std::string>> contracts_locations{
+            {"ownable", "OwnableBase"},
+            {"registry", "RegistryBase"}
+        };
+
+        for(const auto & [prefix_path, file_name] : contracts_locations)
+        {
+            co_await compile(contracts_dir / prefix_path / (file_name + ".sol"), out_dir / prefix_path, contracts_dir, node_modules);
+        }
+
+        for(const auto & [prefix_path, file_name] : contracts_locations)
+        {
+            co_await deploy(out_dir / prefix_path / (file_name + ".bin"), {}, "0x0000000000000000000000000000000000000000", 1000000, 0);
+        }
+
+        co_return "";
+    }
+
 }
 
 namespace hm{

@@ -11,6 +11,7 @@
 #endif
 
 #include <string>
+#include <vector>
 
 namespace hm::native
 {
@@ -21,5 +22,5 @@ namespace hm::native
      * @param command The command to execute in the new process
      * @param args The arguments to pass to the command
      */
-    std::string runProcess(const std::string & command, std::initializer_list<std::string> args = {});
+    std::string runProcess(const std::string & command, std::vector<std::string> args = {});
 }

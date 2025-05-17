@@ -3,7 +3,7 @@
 #include <spdlog/spdlog.h>
 
 namespace hm::native{
-    std::string runProcess(const std::string& command, std::initializer_list<std::string> args)
+    std::string runProcess(const std::string& command, std::vector<std::string> args)
     {
         std::ostringstream oss;
 
@@ -30,7 +30,7 @@ namespace hm::native{
         if (full_cmd.size() >= sizeof(cmd_line))
             throw std::runtime_error("Command line too long");
 
-        std::strcpy(cmd_line, full_cmd.c_str());
+        strcpy_s(cmd_line, full_cmd.c_str());
 
         // Create pipe
         HANDLE read_pipe = NULL, write_pipe = NULL;

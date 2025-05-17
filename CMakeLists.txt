@@ -9,8 +9,6 @@ project("${PROJECT_NAME}"
     HOMEPAGE_URL "https://github.com/hypermusic-ai/hypermusic-server"
     LANGUAGES C CXX
 )
-include(cmake/compile_options.cmake)
-include(cmake/dependencies.cmake)
 
 # --------------------------------------------------------------------------
 # Options
@@ -18,6 +16,8 @@ include(cmake/dependencies.cmake)
 option(HYPERMUSIC_ENABLE_INSTALL "Enable install rule" OFF)
 option(HYPERMUSIC_BUILD_TESTS "Build tests" OFF)
 
+
+# --------------------------------------------------------------------------
 message(STATUS "Install directory ${CMAKE_INSTALL_PREFIX}")
 set(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
 set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
@@ -25,6 +25,9 @@ set(CMAKE_INSTALL_BINDIR "${CMAKE_INSTALL_PREFIX}/bin")
 message(STATUS "include directory ${CMAKE_INSTALL_INCLUDEDIR}")
 message(STATUS "lib directory ${CMAKE_INSTALL_LIBDIR}")
 message(STATUS "bin directory ${CMAKE_INSTALL_BINDIR}")
+
+include(cmake/compile_options.cmake)
+include(cmake/dependencies.cmake)
 
 add_subdirectory(src)
 

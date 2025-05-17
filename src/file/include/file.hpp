@@ -19,5 +19,8 @@ namespace hm
 
     std::filesystem::path getResourcesPath();
 
+    std::filesystem::path getPTPath();
+
+
     std::optional<std::string> loadSimpleForm();
 }

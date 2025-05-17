@@ -7,16 +7,8 @@ namespace hm
             _revision(rev)
     {
         // Initialize the genesis account
-        Account genesis_account;
-
-        // TODO implement evmc_uint256be operations
-        std::string hex = "0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"; // 32-byte max
-        std::vector<uint8_t> bytes = hexToBytes(hex);
-        std::memcpy(&genesis_account.balance.bytes[32 - bytes.size()], bytes.data(), bytes.size());
-        //std::memcpy(&genesis_account.balance.bytes[24], &value, sizeof(value));  // store in last 8 bytes (big endian)
-
-        genesis_account.code = {};
-        _accounts[to_key(evmc::address{})] = genesis_account;
+        add_account(evmc::address{});
+        set_balance(evmc::address{}, 1000000000000000000);
     }
 
     bool EVMStorage::account_exists(const evmc::address& addr) const noexcept
@@ -31,6 +23,7 @@ namespace hm
             spdlog::error(std::format("get_storage : Account {} does not exist", addr));
             return {};
         }
+        if(_accounts.at(to_key(addr)).storage.find(key) == _accounts.at(to_key(addr)).storage.end()) return {};
         return _accounts.at(to_key(addr)).storage.at(key);
     }
 
@@ -202,7 +195,19 @@ namespace hm
                           const evmc::bytes32 topics[],
                           size_t num_topics) noexcept
     {
-        spdlog::info(std::format("Log from {}: {} bytes, {} topics", evmc::hex(addr), data_size, num_topics));
+        std::string ascii_str(reinterpret_cast<const char*>(data), data_size);
+
+        // Format topics
+        std::string topics_str;
+        for (size_t i = 0; i < num_topics; ++i) {
+            topics_str += std::format("Topic[{}]: {}\n", i, evmc::hex(topics[i]));
+        }
+
+        spdlog::info(std::format("Log from {}:\n  Data: {} bytes\n  Content: {}\n  Topics:\n{}",
+                             evmc::hex(addr),
+                             data_size,
+                             ascii_str,
+                             topics_str));
     }
 
     evmc_access_status EVMStorage::access_account(const evmc::address& addr) noexcept
