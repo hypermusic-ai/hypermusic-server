@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('classhm_1_1EVM.html',''); initResizabl
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classhm_1_1EVM-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">hm::EVM Class Reference</div></div>
 </div><!--header-->
@@ -122,14 +123,19 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae3dd438a339c2e657ed669356338a967"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc136036f1d9c011cec21fc345378239" id="r_acc136036f1d9c011cec21fc345378239"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html#acc136036f1d9c011cec21fc345378239">addAccount</a> (std::string <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">address_hex</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">initial_gas</a>) <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">noexcept</a></td></tr>
 <tr class="separator:acc136036f1d9c011cec21fc345378239"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ef89abcb4e425ce046056cf149009d3" id="r_a5ef89abcb4e425ce046056cf149009d3"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html#a5ef89abcb4e425ce046056cf149009d3">compile</a> (std::filesystem::path <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">code_path</a>, std::filesystem::path <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">out_dir</a>) <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">noexcept</a></td></tr>
-<tr class="separator:a5ef89abcb4e425ce046056cf149009d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c67bbd93f8954378e836fddeb403efa" id="r_a8c67bbd93f8954378e836fddeb403efa"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; std::expected&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html#a8c67bbd93f8954378e836fddeb403efa">deploy</a> (std::istream &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">code_stream</a>, std::string <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">sender_hex</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">gas_limit</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">value</a>) <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">noexcept</a></td></tr>
-<tr class="separator:a8c67bbd93f8954378e836fddeb403efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae23577bf43b251206f51351c38dd219a" id="r_ae23577bf43b251206f51351c38dd219a"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; std::expected&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html#ae23577bf43b251206f51351c38dd219a">deploy</a> (std::filesystem::path <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">code_path</a>, std::string <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">sender_hex</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">gas_limit</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">value</a>) <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">noexcept</a></td></tr>
-<tr class="separator:ae23577bf43b251206f51351c38dd219a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e6dba32277f0e5bb24e1acf4cbb10a4" id="r_a9e6dba32277f0e5bb24e1acf4cbb10a4"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html#a9e6dba32277f0e5bb24e1acf4cbb10a4">compile</a> (std::filesystem::path <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">code_path</a>, std::filesystem::path <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">out_dir</a>, std::filesystem::path <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">base_path</a>={}, std::filesystem::path <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">includes</a>={}) <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">noexcept</a></td></tr>
+<tr class="separator:a9e6dba32277f0e5bb24e1acf4cbb10a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f5a61f9035e54c8620d6538147a7dca" id="r_a7f5a61f9035e54c8620d6538147a7dca"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; std::expected&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html#a7f5a61f9035e54c8620d6538147a7dca">deploy</a> (std::istream &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">code_stream</a>, std::vector&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">uint8_t</a> &gt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">constructor_args</a>, std::string <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">sender_hex</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">gas_limit</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">value</a>) <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">noexcept</a></td></tr>
+<tr class="separator:a7f5a61f9035e54c8620d6538147a7dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae58a911b44bbdff7a72ecb5278d9b492" id="r_ae58a911b44bbdff7a72ecb5278d9b492"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; std::expected&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html#ae58a911b44bbdff7a72ecb5278d9b492">deploy</a> (std::filesystem::path <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">code_path</a>, std::vector&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">uint8_t</a> &gt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">constructor_args</a>, std::string <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">sender_hex</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">gas_limit</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">value</a>) <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">noexcept</a></td></tr>
+<tr class="separator:ae58a911b44bbdff7a72ecb5278d9b492"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a472c1bc3c280a067c68882d515a2ce2f" id="r_a472c1bc3c280a067c68882d515a2ce2f"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; std::expected&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html#a472c1bc3c280a067c68882d515a2ce2f">execute</a> (std::string <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">sender_hex</a>, std::string <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">recipient_hex</a>, std::vector&lt; std::uint8_t &gt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">input_bytes</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">gas_limit</a>, std::uint64_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">value</a>) <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">noexcept</a></td></tr>
 <tr class="separator:a472c1bc3c280a067c68882d515a2ce2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:aa10fecb911cf05202d34946930580d08" id="r_aa10fecb911cf05202d34946930580d08"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; std::expected&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html#aa10fecb911cf05202d34946930580d08">loadPT</a> ()</td></tr>
+<tr class="separator:aa10fecb911cf05202d34946930580d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a48d61bde8fce0a3fe32a72a756830a55" name="a48d61bde8fce0a3fe32a72a756830a55"></a>
@@ -280,8 +286,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5ef89abcb4e425ce046056cf149009d3" name="a5ef89abcb4e425ce046056cf149009d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ef89abcb4e425ce046056cf149009d3">&#9670;&#160;</a></span>compile()</h2>
+<a id="a9e6dba32277f0e5bb24e1acf4cbb10a4" name="a9e6dba32277f0e5bb24e1acf4cbb10a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e6dba32277f0e5bb24e1acf4cbb10a4">&#9670;&#160;</a></span>compile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -299,7 +305,19 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::filesystem::path&#160;</td>
-          <td class="paramname"><em>out_dir</em>&#160;</td>
+          <td class="paramname"><em>out_dir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::filesystem::path&#160;</td>
+          <td class="paramname"><em>base_path</em> = <code>{}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::filesystem::path&#160;</td>
+          <td class="paramname"><em>includes</em> = <code>{}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -316,8 +334,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae23577bf43b251206f51351c38dd219a" name="ae23577bf43b251206f51351c38dd219a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae23577bf43b251206f51351c38dd219a">&#9670;&#160;</a></span>deploy() <span class="overload">[1/2]</span></h2>
+<a id="ae58a911b44bbdff7a72ecb5278d9b492" name="ae58a911b44bbdff7a72ecb5278d9b492"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae58a911b44bbdff7a72ecb5278d9b492">&#9670;&#160;</a></span>deploy() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -330,6 +348,12 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">std::filesystem::path&#160;</td>
           <td class="paramname"><em>code_path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">uint8_t</a> &gt;&#160;</td>
+          <td class="paramname"><em>constructor_args</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -364,8 +388,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8c67bbd93f8954378e836fddeb403efa" name="a8c67bbd93f8954378e836fddeb403efa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c67bbd93f8954378e836fddeb403efa">&#9670;&#160;</a></span>deploy() <span class="overload">[2/2]</span></h2>
+<a id="a7f5a61f9035e54c8620d6538147a7dca" name="a7f5a61f9035e54c8620d6538147a7dca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f5a61f9035e54c8620d6538147a7dca">&#9670;&#160;</a></span>deploy() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -378,6 +402,12 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">std::istream &amp;&#160;</td>
           <td class="paramname"><em>code_stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">uint8_t</a> &gt;&#160;</td>
+          <td class="paramname"><em>constructor_args</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -460,6 +490,31 @@ Public Member Functions</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa10fecb911cf05202d34946930580d08" name="aa10fecb911cf05202d34946930580d08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa10fecb911cf05202d34946930580d08">&#9670;&#160;</a></span>loadPT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">asio::awaitable&lt; std::expected&lt; std::string, std::string &gt; &gt; hm::EVM::loadPT </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

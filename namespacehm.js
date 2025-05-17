@@ -2,7 +2,7 @@ var namespacehm =
 [
     [ "http", "namespacehm_1_1http.html", "namespacehm_1_1http" ],
     [ "native", "namespacehm_1_1native.html", [
-      [ "runProcess", "namespacehm_1_1native.html#a5dbdb424eb117271b0dd524c5957161f", null ]
+      [ "runProcess", "namespacehm_1_1native.html#aad7dfb49a559b4ee887a9037e601fc6f", null ]
     ] ],
     [ "parse", "namespacehm_1_1parse.html", "namespacehm_1_1parse" ],
     [ "AuthManager", "classhm_1_1AuthManager.html", "classhm_1_1AuthManager" ],
@@ -57,6 +57,7 @@ var namespacehm =
     [ "GET_transformation", "namespacehm.html#a57bb7b2654487cb862364102786f0c06", null ],
     [ "getAsciiLogo", "namespacehm.html#af7234023dfb2d3437f2606e847bb2ea7", null ],
     [ "getBinPath", "namespacehm.html#a2cf1544433bbde96b34c52064923b75f", null ],
+    [ "getPTPath", "namespacehm.html#a6e783e5e09275289798625fb528535e8", null ],
     [ "getResourcesPath", "namespacehm.html#a8c3fe396ac2088c57d2e2a2834e67ed8", null ],
     [ "hexToBytes", "namespacehm.html#a1982677cc158b1142a43328524e42f2d", null ],
     [ "loadSimpleForm", "namespacehm.html#a6346d98b5cdc163f9e08ccb0565bc327", null ],

@@ -36,10 +36,11 @@ var searchData=
   ['getpathinfo_33',['getPathInfo',['../classhm_1_1http_1_1URL.html#a9879702ee72d3ffe877f2e133569615a',1,'hm::http::URL']]],
   ['getpathinfodef_34',['getPathInfoDef',['../classhm_1_1RouteKey.html#a137cce4bc543218613971582a6064040',1,'hm::RouteKey']]],
   ['getpathmodule_35',['getPathModule',['../classhm_1_1http_1_1URL.html#ae257f51b2b0c1c1f657235df086f5f51',1,'hm::http::URL']]],
-  ['getquery_36',['getQuery',['../classhm_1_1http_1_1URL.html#a2543d7ec05f108f72301ad27c838e0bb',1,'hm::http::URL']]],
-  ['getrequirement_37',['getRequirement',['../classhm_1_1RouteArg.html#aba958f7f09840b2bd0b9ad57c0f7533c',1,'hm::RouteArg']]],
-  ['getresourcespath_38',['getResourcesPath',['../namespacehm.html#a8c3fe396ac2088c57d2e2a2834e67ed8',1,'hm']]],
-  ['gettransformation_39',['getTransformation',['../classhm_1_1Registry.html#afe64a6566ec4c368808beb8a2973b277',1,'hm::Registry']]],
-  ['gettype_40',['getType',['../classhm_1_1RouteArg.html#aaf096038bac2d0ca026de6faafeb29d0',1,'hm::RouteArg']]],
-  ['getversion_41',['getVersion',['../classhm_1_1http_1_1MessageBase.html#acfcb1d5762d7fde4babb588917dde84b',1,'hm::http::MessageBase']]]
+  ['getptpath_36',['getPTPath',['../namespacehm.html#a6e783e5e09275289798625fb528535e8',1,'hm']]],
+  ['getquery_37',['getQuery',['../classhm_1_1http_1_1URL.html#a2543d7ec05f108f72301ad27c838e0bb',1,'hm::http::URL']]],
+  ['getrequirement_38',['getRequirement',['../classhm_1_1RouteArg.html#aba958f7f09840b2bd0b9ad57c0f7533c',1,'hm::RouteArg']]],
+  ['getresourcespath_39',['getResourcesPath',['../namespacehm.html#a8c3fe396ac2088c57d2e2a2834e67ed8',1,'hm']]],
+  ['gettransformation_40',['getTransformation',['../classhm_1_1Registry.html#afe64a6566ec4c368808beb8a2973b277',1,'hm::Registry']]],
+  ['gettype_41',['getType',['../classhm_1_1RouteArg.html#aaf096038bac2d0ca026de6faafeb29d0',1,'hm::RouteArg']]],
+  ['getversion_42',['getVersion',['../classhm_1_1http_1_1MessageBase.html#acfcb1d5762d7fde4babb588917dde84b',1,'hm::http::MessageBase']]]
 ];

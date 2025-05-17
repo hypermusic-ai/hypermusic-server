@@ -1,5 +1,10 @@
 var NAVTREEINDEX3 =
 {
+"structstd_1_1formatter_3_01evmc__address_01_4.html#a83981edd1cf383327909e90fecfe350d":[1,0,1,1,0],
+"structstd_1_1formatter_3_01evmc__call__kind_01_4.html":[1,0,1,2],
+"structstd_1_1formatter_3_01evmc__call__kind_01_4.html#a73b0f6d546e241b42a2c0d96b6091996":[1,0,1,2,0],
+"structstd_1_1formatter_3_01evmc__flags_01_4.html":[1,0,1,3],
+"structstd_1_1formatter_3_01evmc__flags_01_4.html#a9e561a8e45c3e65046cdb821adb7ba5b":[1,0,1,3,0],
 "structstd_1_1formatter_3_01evmc__status__code_01_4.html":[1,0,1,4],
 "structstd_1_1formatter_3_01evmc__status__code_01_4.html#a86b454128ea4f78f28a97229ddb0856f":[1,0,1,4,0],
 "structstd_1_1formatter_3_01hm_1_1RouteArgRequirement_01_4.html":[1,0,1,13],
@@ -63,7 +68,7 @@ var NAVTREEINDEX3 =
 "utils_8hpp.html#afcbcd4d5713f2827400fe2c95959d28e":[2,0,1,12,0,1,7],
 "utils_8hpp_source.html":[2,0,1,12,0,1],
 "windows_8cpp.html":[2,0,1,6,1,2,0],
-"windows_8cpp.html#a5dbdb424eb117271b0dd524c5957161f":[2,0,1,6,1,2,0,0],
+"windows_8cpp.html#aad7dfb49a559b4ee887a9037e601fc6f":[2,0,1,6,1,2,0,0],
 "windows_8h.html":[2,0,1,6,0,2,0],
 "windows_8h.html#a9f918755b601cf4bffca775992e6fb90":[2,0,1,6,0,2,0,1],
 "windows_8h.html#ac50762666aa00bd3a4308158510f1748":[2,0,1,6,0,2,0,0],
