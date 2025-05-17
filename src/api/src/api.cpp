@@ -30,7 +30,7 @@ namespace hm
             co_return response;
         }
 
-        auto feature_name_result = parse::parseRouteArgAsString(args.at(0));
+        auto feature_name_result = parse::parseRouteArgAs<std::string>(args.at(0));
 
         if(!feature_name_result)
         {
@@ -44,7 +44,7 @@ namespace hm
 
         if(args.size() == 2)
         {
-            auto feature_id_result = parse::parseRouteArgAsUnsignedInteger(args.at(1));
+            auto feature_id_result = parse::parseRouteArgAs<std::size_t>(args.at(1));
 
             if(!feature_id_result)
             {
@@ -210,7 +210,7 @@ namespace hm
             co_return response;
         }
 
-        auto transformation_name_result = parse::parseRouteArgAsString(args.at(0));
+        auto transformation_name_result = parse::parseRouteArgAs<std::string>(args.at(0));
 
         if(!transformation_name_result)
         {
@@ -224,7 +224,7 @@ namespace hm
 
         if(args.size() == 2)
         {
-            auto transformation_id_result = parse::parseRouteArgAsUnsignedInteger(args.at(1));
+            auto transformation_id_result = parse::parseRouteArgAs<std::size_t>(args.at(1));
 
             if(!transformation_id_result)
             {
@@ -434,7 +434,7 @@ namespace hm
             co_return response;
         }
 
-        auto receipent_result = parse::parseRouteArgAsString(args.at(0));
+        auto receipent_result = parse::parseRouteArgAs<std::string>(args.at(0));
 
         if(!receipent_result)
         {

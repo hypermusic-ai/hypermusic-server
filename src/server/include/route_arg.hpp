@@ -110,6 +110,9 @@ namespace hm::parse
      */
     std::optional<RouteArgDef> parseRouteArgDefFromString(const std::string str);
 
+    template<class T>
+    std::optional<T> parseRouteArgAs(const RouteArg & arg);
+
     /**
      * @brief Parses a `RouteArg` as a unsigned integer.
      * 
@@ -119,7 +122,8 @@ namespace hm::parse
      * @param arg The `RouteArg` to parse.
      * @return The parsed unsigned integer or an empty optional if parsing fails.
      */
-    std::optional<std::size_t> parseRouteArgAsUnsignedInteger(const RouteArg & arg);
+    template<>
+    std::optional<std::size_t> parseRouteArgAs<std::size_t>(const RouteArg & arg);
 
     /**
      * @brief Parses a `RouteArg` as a string.
@@ -130,7 +134,8 @@ namespace hm::parse
      * @param arg The `RouteArg` to parse.
      * @return The parsed `string` or an empty optional if parsing fails.
      */
-    std::optional<std::string> parseRouteArgAsString(const RouteArg & arg);
+    template<>
+    std::optional<std::string> parseRouteArgAs<std::string>(const RouteArg & arg);
 }
 
 template <>

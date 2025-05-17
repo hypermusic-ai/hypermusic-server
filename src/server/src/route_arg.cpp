@@ -86,7 +86,8 @@ namespace hm::parse
         return std::make_pair(type, requirement); 
     }
 
-    std::optional<std::size_t> parseRouteArgAsUnsignedInteger(const RouteArg & arg) 
+    template<>
+    std::optional<std::size_t> parseRouteArgAs<std::size_t>(const RouteArg & arg) 
     {
         if(arg.getType() != RouteArgType::unsigned_integer)return std::nullopt;
         std::size_t val;
@@ -99,7 +100,8 @@ namespace hm::parse
         return val;
     }
 
-    std::optional<std::string> parseRouteArgAsString(const RouteArg & arg) 
+    template<>
+    std::optional<std::string> parseRouteArgAs<std::string>(const RouteArg & arg) 
     {
         if(arg.getType() != RouteArgType::string)return std::nullopt;
         return arg.getData();

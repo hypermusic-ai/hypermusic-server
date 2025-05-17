@@ -16,7 +16,7 @@ namespace hm
             co_return response;
         }
 
-        std::optional<std::string> nonce_res = parse::parseRouteArgAsString(args.at(0));
+        std::optional<std::string> nonce_res = parse::parseRouteArgAs<std::string>(args.at(0));
         if(!nonce_res)
         {
             response.setCode(http::Code::BadRequest);
