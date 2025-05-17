@@ -1,4 +1,4 @@
 var native_8h =
 [
-    [ "spawnProcess", "native_8h.html#aba69fa1c686299c148ae0e77a8144d4b", null ]
+    [ "runProcess", "native_8h.html#a5dbdb424eb117271b0dd524c5957161f", null ]
 ];

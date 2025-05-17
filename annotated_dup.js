@@ -25,6 +25,11 @@ var annotated_dup =
       [ "SessionManager", "classhm_1_1SessionManager.html", "classhm_1_1SessionManager" ]
     ] ],
     [ "std", null, [
+      [ "formatter< evmc::address >", "structstd_1_1formatter_3_01evmc_1_1address_01_4.html", "structstd_1_1formatter_3_01evmc_1_1address_01_4" ],
+      [ "formatter< evmc_address >", "structstd_1_1formatter_3_01evmc__address_01_4.html", "structstd_1_1formatter_3_01evmc__address_01_4" ],
+      [ "formatter< evmc_call_kind >", "structstd_1_1formatter_3_01evmc__call__kind_01_4.html", "structstd_1_1formatter_3_01evmc__call__kind_01_4" ],
+      [ "formatter< evmc_flags >", "structstd_1_1formatter_3_01evmc__flags_01_4.html", "structstd_1_1formatter_3_01evmc__flags_01_4" ],
+      [ "formatter< evmc_status_code >", "structstd_1_1formatter_3_01evmc__status__code_01_4.html", "structstd_1_1formatter_3_01evmc__status__code_01_4" ],
       [ "formatter< hm::http::Code >", "structstd_1_1formatter_3_01hm_1_1http_1_1Code_01_4.html", "structstd_1_1formatter_3_01hm_1_1http_1_1Code_01_4" ],
       [ "formatter< hm::http::Header >", "structstd_1_1formatter_3_01hm_1_1http_1_1Header_01_4.html", "structstd_1_1formatter_3_01hm_1_1http_1_1Header_01_4" ],
       [ "formatter< hm::http::HeadersList >", "structstd_1_1formatter_3_01hm_1_1http_1_1HeadersList_01_4.html", "structstd_1_1formatter_3_01hm_1_1http_1_1HeadersList_01_4" ],

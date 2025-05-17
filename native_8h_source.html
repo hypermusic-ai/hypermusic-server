@@ -100,27 +100,29 @@ $(document).ready(function(){initNavTree('native_8h_source.html',''); initResiza
   <div class="headertitle"><div class="title">native.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="native_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#if defined(WIN32)</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;<a class="code" href="windows_8h.html">windows/windows.h</a>&quot;</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#elif defined(UNIX)</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="unix_8h.html">unix/unix.h</a>&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#elif defined(__APPLE__)</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="mac_8h.html">mac/mac.h</a>&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#   error &quot;Error, unsupported platform&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<a href="native_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#if defined(WIN32)</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="windows_8h.html">windows/windows.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#elif defined(UNIX)</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="unix_8h.html">unix/unix.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#elif defined(__APPLE__)</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="mac_8h.html">mac/mac.h</a>&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#   error &quot;Error, unsupported platform&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="foldopen" id="foldopen00013" data-start="{" data-end="}">
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="namespacehm_1_1native.html">   13</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacehm_1_1native.html">hm::native</a></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>{</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="namespacehm_1_1native.html#aba69fa1c686299c148ae0e77a8144d4b">spawnProcess</a>(<span class="keyword">const</span> std::string &amp; <a class="code hl_enumvalue" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">command</a>);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>}</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="}">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="namespacehm_1_1native.html">   15</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacehm_1_1native.html">hm::native</a></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>{</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    std::string <a class="code hl_function" href="namespacehm_1_1native.html#a5dbdb424eb117271b0dd524c5957161f">runProcess</a>(<span class="keyword">const</span> std::string &amp; <a class="code hl_enumvalue" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">command</a>, std::initializer_list&lt;std::string&gt; <a class="code hl_enumvalue" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">args</a> = {});</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>}</div>
 </div>
 <div class="ttc" id="amac_8h_html"><div class="ttname"><a href="mac_8h.html">mac.h</a></div></div>
-<div class="ttc" id="anamespacehm_1_1native_html"><div class="ttname"><a href="namespacehm_1_1native.html">hm::native</a></div><div class="ttdef"><b>Definition</b> native.h:14</div></div>
-<div class="ttc" id="anamespacehm_1_1native_html_aba69fa1c686299c148ae0e77a8144d4b"><div class="ttname"><a href="namespacehm_1_1native.html#aba69fa1c686299c148ae0e77a8144d4b">hm::native::spawnProcess</a></div><div class="ttdeci">void spawnProcess(const std::string &amp;command)</div><div class="ttdef"><b>Definition</b> windows.cpp:6</div></div>
+<div class="ttc" id="anamespacehm_1_1native_html"><div class="ttname"><a href="namespacehm_1_1native.html">hm::native</a></div><div class="ttdef"><b>Definition</b> native.h:16</div></div>
+<div class="ttc" id="anamespacehm_1_1native_html_a5dbdb424eb117271b0dd524c5957161f"><div class="ttname"><a href="namespacehm_1_1native.html#a5dbdb424eb117271b0dd524c5957161f">hm::native::runProcess</a></div><div class="ttdeci">std::string runProcess(const std::string &amp;command, std::initializer_list&lt; std::string &gt; args={})</div><div class="ttdef"><b>Definition</b> windows.cpp:6</div></div>
 <div class="ttc" id="anamespacehm_html_a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d"><div class="ttname"><a href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">hm::RouteArgRequirement::optional</a></div><div class="ttdeci">@ optional</div></div>
 <div class="ttc" id="aunix_8h_html"><div class="ttname"><a href="unix_8h.html">unix.h</a></div></div>
 <div class="ttc" id="awindows_8h_html"><div class="ttname"><a href="windows_8h.html">windows.h</a></div></div>

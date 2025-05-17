@@ -4,6 +4,11 @@ var hierarchy =
     [ "hm::AuthManager", "classhm_1_1AuthManager.html", null ],
     [ "hm::EVM", "classhm_1_1EVM.html", null ],
     [ "std::formatter", null, [
+      [ "std::formatter< evmc::address >", "structstd_1_1formatter_3_01evmc_1_1address_01_4.html", null ],
+      [ "std::formatter< evmc_address >", "structstd_1_1formatter_3_01evmc__address_01_4.html", null ],
+      [ "std::formatter< evmc_call_kind >", "structstd_1_1formatter_3_01evmc__call__kind_01_4.html", null ],
+      [ "std::formatter< evmc_flags >", "structstd_1_1formatter_3_01evmc__flags_01_4.html", null ],
+      [ "std::formatter< evmc_status_code >", "structstd_1_1formatter_3_01evmc__status__code_01_4.html", null ],
       [ "std::formatter< hm::RouteArg >", "structstd_1_1formatter_3_01hm_1_1RouteArg_01_4.html", null ],
       [ "std::formatter< hm::RouteArgRequirement >", "structstd_1_1formatter_3_01hm_1_1RouteArgRequirement_01_4.html", null ],
       [ "std::formatter< hm::RouteArgType >", "structstd_1_1formatter_3_01hm_1_1RouteArgType_01_4.html", null ],

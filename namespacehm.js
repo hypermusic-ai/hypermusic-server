@@ -2,7 +2,7 @@ var namespacehm =
 [
     [ "http", "namespacehm_1_1http.html", "namespacehm_1_1http" ],
     [ "native", "namespacehm_1_1native.html", [
-      [ "spawnProcess", "namespacehm_1_1native.html#aba69fa1c686299c148ae0e77a8144d4b", null ]
+      [ "runProcess", "namespacehm_1_1native.html#a5dbdb424eb117271b0dd524c5957161f", null ]
     ] ],
     [ "parse", "namespacehm_1_1parse.html", "namespacehm_1_1parse" ],
     [ "AuthManager", "classhm_1_1AuthManager.html", "classhm_1_1AuthManager" ],
@@ -47,6 +47,8 @@ var namespacehm =
     [ "GET_SimpleForm", "namespacehm.html#ab2f1d2872dacc5591eff37ba2aec16c8", null ],
     [ "GET_transformation", "namespacehm.html#a57bb7b2654487cb862364102786f0c06", null ],
     [ "getAsciiLogo", "namespacehm.html#af7234023dfb2d3437f2606e847bb2ea7", null ],
+    [ "getBinPath", "namespacehm.html#a2cf1544433bbde96b34c52064923b75f", null ],
+    [ "getResourcesPath", "namespacehm.html#a8c3fe396ac2088c57d2e2a2834e67ed8", null ],
     [ "hexToBytes", "namespacehm.html#a30c62dc7861b62eb150147821f90ec8c", null ],
     [ "loadSimpleForm", "namespacehm.html#a6346d98b5cdc163f9e08ccb0565bc327", null ],
     [ "OPTIONS_feature", "namespacehm.html#acf0974ae4ae37240c370ea2267bb5752", null ],
@@ -57,7 +59,7 @@ var namespacehm =
     [ "POST_feature", "namespacehm.html#a485caae18883d1640dfe9fc5bb8f4908", null ],
     [ "POST_refresh", "namespacehm.html#a53c37a8d077c0ab08639ca5b2c991044", null ],
     [ "POST_transformation", "namespacehm.html#ad7e9e4962a2a977d099a7e78f6f3ff5d", null ],
-    [ "setBINPath", "namespacehm.html#acbc19144ac3c9b95cc0326a7ebfbe176", null ],
+    [ "setBinPath", "namespacehm.html#a751ec989ebf6d69bd2789a242344c69f", null ],
     [ "watchdog", "namespacehm.html#afcbcd4d5713f2827400fe2c95959d28e", null ],
     [ "DEFAULT_PORT", "namespacehm.html#a4c55f2aba59d13eb3231974863e38cd3", null ],
     [ "DEFAULT_TLS_PORT", "namespacehm.html#a1fb4d85b46b8be5692bdf6796f684b55", null ],

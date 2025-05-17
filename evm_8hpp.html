@@ -100,8 +100,7 @@ $(document).ready(function(){initNavTree('evm_8hpp.html',''); initResizable(); }
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">evm.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -110,10 +109,12 @@ $(document).ready(function(){initNavTree('evm_8hpp.html',''); initResizable(); }
 <code>#include &lt;cstring&gt;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;expected&gt;</code><br />
+<code>#include &lt;fstream&gt;</code><br />
+<code>#include &lt;istream&gt;</code><br />
 <code>#include &lt;evmc/evmc.h&gt;</code><br />
 <code>#include &lt;evmc/evmc.hpp&gt;</code><br />
+<code>#include &lt;evmc/mocked_host.hpp&gt;</code><br />
 <code>#include &lt;evmc/hex.hpp&gt;</code><br />
 <code>#include &lt;evmone/evmone.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="native_8h_source.html">native.h</a>&quot;</code><br />
@@ -122,15 +123,13 @@ $(document).ready(function(){initNavTree('evm_8hpp.html',''); initResizable(); }
 <code>#include &lt;absl/container/flat_hash_map.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="utils_8hpp_source.html">utils.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="keccak256_8hpp_source.html">keccak256.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="evm__storage_8hpp_source.html">evm_storage.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="evm__formatter_8hpp_source.html">evm_formatter.hpp</a>&quot;</code><br />
 </div>
 <p><a href="evm_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVMStorage.html">hm::EVMStorage</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structhm_1_1EVMStorage_1_1Account.html">hm::EVMStorage::Account</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1EVM.html">hm::EVM</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -143,12 +142,6 @@ Namespaces</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a8f8bdbe5685d2ab60ca313c61017b92a" id="r_a8f8bdbe5685d2ab60ca313c61017b92a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="evm_8hpp.html#a8f8bdbe5685d2ab60ca313c61017b92a">interface</a>&#160;&#160;&#160;__STRUCT__</td></tr>
 <tr class="separator:a8f8bdbe5685d2ab60ca313c61017b92a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ad3229c6f450c7dcab70cc817fa1f9762" id="r_ad3229c6f450c7dcab70cc817fa1f9762"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">typename</a> <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">H</a> &gt; </td></tr>
-<tr class="memitem:ad3229c6f450c7dcab70cc817fa1f9762"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">H</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm.html#ad3229c6f450c7dcab70cc817fa1f9762">hm::AbslHashValue</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">H</a> <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">h</a>, <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> evmc::address &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">addr</a>)</td></tr>
-<tr class="separator:ad3229c6f450c7dcab70cc817fa1f9762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a8f8bdbe5685d2ab60ca313c61017b92a" name="a8f8bdbe5685d2ab60ca313c61017b92a"></a>
