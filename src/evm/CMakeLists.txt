@@ -3,6 +3,8 @@ add_module(NAME "EVM"
         "${PROJECT_PREFIX}::Utils"
         "${PROJECT_PREFIX}::Native"
         "${PROJECT_PREFIX}::Crypto"
+        "${PROJECT_PREFIX}::File"
+
         absl::hash
         absl::flat_hash_map
         spdlog::spdlog

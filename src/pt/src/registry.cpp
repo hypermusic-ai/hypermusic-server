@@ -10,7 +10,7 @@ namespace hm
 
     asio::awaitable<bool> Registry::checkIfSubFeaturesExist(const Feature & feature) const
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         for(const Dimension & dimension : feature.dimensions())
         {
@@ -26,14 +26,14 @@ namespace hm
 
     asio::awaitable<bool> Registry::containsFeatureBucket(const std::string& name) const 
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         co_return _features.contains(name);
     }
 
     asio::awaitable<bool> Registry::isFeatureBucketEmpty(const std::string& name) const 
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         if(co_await containsFeatureBucket(name) == false)co_return true;
         co_return _features.at(name).empty();
@@ -41,14 +41,14 @@ namespace hm
 
     asio::awaitable<bool> Registry::containsTransformationBucket(const std::string& name) const 
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         co_return _transformations.contains(name);
     }
 
     asio::awaitable<bool> Registry::isTransformationBucketEmpty(const std::string& name) const 
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         if(co_await containsTransformationBucket(name) == false)co_return true;
         co_return _transformations.at(name).empty();
@@ -56,14 +56,14 @@ namespace hm
 
     asio::awaitable<bool> Registry::containsConditionBucket(const std::string& name) const 
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         co_return _conditions.contains(name);
     }
 
     asio::awaitable<bool> Registry::isConditionBucketEmpty(const std::string& name) const 
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         if(co_await containsConditionBucket(name) == false)co_return true;
         co_return _conditions.at(name).empty();
@@ -78,7 +78,7 @@ namespace hm
             co_return std::nullopt;
         }
 
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         if(co_await checkIfSubFeaturesExist(feature) == false)
         {
@@ -126,7 +126,7 @@ namespace hm
 
     asio::awaitable<std::optional<Feature>> Registry::getNewestFeature(const std::string& name) const
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         if(_newest_feature.contains(name) == false)co_return std::nullopt;
         co_return (co_await getFeature(name, _newest_feature.at(name)));
@@ -134,7 +134,7 @@ namespace hm
 
     asio::awaitable<std::optional<Feature>> Registry::getFeature(const std::string& name, std::size_t version) const
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         auto bucket_it = _features.find(name);
         if(bucket_it == _features.end()) 
@@ -158,7 +158,7 @@ namespace hm
             co_return std::nullopt;
         }
 
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         if(! co_await containsTransformationBucket(transformation.name())) 
         {
@@ -181,7 +181,7 @@ namespace hm
 
     asio::awaitable<std::optional<Transformation>> Registry::getNewestTransformation(const std::string& name) const
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         if(_newest_transformation.contains(name) == false)co_return std::nullopt;
         co_return (co_await getTransformation(name, _newest_transformation.at(name)));
@@ -189,7 +189,7 @@ namespace hm
 
     asio::awaitable<std::optional<Transformation>> Registry::getTransformation(const std::string& name, std::size_t version) const
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         auto bucket_it = _transformations.find(name);
         if(bucket_it == _transformations.end()) 
@@ -207,7 +207,7 @@ namespace hm
 
     asio::awaitable<std::optional<std::size_t>> Registry::addCondition(Condition condition)
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         if(! co_await containsConditionBucket(condition.name())) 
         {
@@ -230,7 +230,7 @@ namespace hm
 
     asio::awaitable<std::optional<Condition>> Registry::getNewestCondition(const std::string& name) const
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         if(_newest_condition.contains(name) == false)co_return std::nullopt;
         co_return (co_await getCondition(name, _newest_condition.at(name)));
@@ -238,7 +238,7 @@ namespace hm
 
     asio::awaitable<std::optional<Condition>> Registry::getCondition(const std::string& name, std::size_t version) const
     {
-        co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
+        co_await ensureOnStrand(_strand);
 
         auto bucket_it = _conditions.find(name);
         if(bucket_it == _conditions.end()) 

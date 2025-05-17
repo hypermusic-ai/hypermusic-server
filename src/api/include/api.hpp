@@ -13,6 +13,8 @@ using namespace asio::experimental::awaitable_operators;
 #include "parser.hpp"
 #include "pt.hpp"
 #include "auth.hpp"
+#include "evm.hpp"
+#include "file.hpp"
 
 namespace hm
 {
@@ -149,7 +151,7 @@ namespace hm
      *
      * Where `<name>` is the name of the feature and `<version>` is the hash of the feature.
      */
-    asio::awaitable<http::Response> POST_feature(const http::Request &, std::vector<RouteArg>, AuthManager & auth_manager, Registry & registry);
+    asio::awaitable<http::Response> POST_feature(const http::Request &, std::vector<RouteArg>, AuthManager & auth_manager, Registry & registry, EVM & evm);
 
     /**
      * Handles OPTIONS requests for the transformation endpoint by returning a response with CORS headers.
@@ -183,10 +185,12 @@ namespace hm
      * @param registry Registry instance for adding transformations
      * @return An HTTP response with the added transformation data as JSON, or an error response if invalid input or authentication failure
      */
-    asio::awaitable<http::Response> POST_transformation(const http::Request &, std::vector<RouteArg> args, AuthManager & auth_manager, Registry & registry);
+    asio::awaitable<http::Response> POST_transformation(const http::Request &, std::vector<RouteArg> args, AuthManager & auth_manager, Registry & registry, EVM & evm);
 
 
     //asio::awaitable<http::Response> GET_condition(const http::Request &, std::vector<RouteArg>);
 
     //asio::awaitable<http::Response> POST_condition(const http::Request &);
+
+    asio::awaitable<http::Response> GET_execute(const http::Request & request, std::vector<RouteArg> args, const AuthManager & auth_manager, const Registry & registry, EVM & evm);
 }

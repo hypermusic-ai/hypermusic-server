@@ -32,6 +32,7 @@
 #include <absl/container/flat_hash_map.h>
 
 #include "utils.hpp"
+#include "file.hpp"
 #include "keccak256.hpp"
 
 #include "evm_storage.hpp"
@@ -42,7 +43,7 @@ namespace hm
     class EVM
     {
     public:
-        EVM(asio::io_context & io_context, evmc_revision rev);
+        EVM(asio::io_context & io_context, evmc_revision rev, std::filesystem::path solc_path);
         ~EVM() = default;
 
         EVM(const EVM&) = delete;
@@ -52,6 +53,8 @@ namespace hm
         EVM& operator=(EVM&&) = delete;
 
         asio::awaitable<bool> addAccount(std::string address_hex, std::uint64_t initial_gas) noexcept;
+
+        asio::awaitable<bool> compile(std::filesystem::path code_path, std::filesystem::path out_dir) const noexcept;
 
         asio::awaitable<std::expected<std::string, std::string>> deploy(std::istream & code_stream,  
                     std::string sender_hex,
@@ -76,6 +79,14 @@ namespace hm
         evmc::VM _vm;
         evmc_revision _rev;
 
+        std::filesystem::path _solc_path;
+
         EVMStorage _storage;
     };
+
+    template<class T>
+    T decodeReturnedValueFromHex(const std::string& hex);
+
+    template<>
+    std::string decodeReturnedValueFromHex<std::string>(const std::string& hex);
 }

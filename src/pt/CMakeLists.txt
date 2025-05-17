@@ -5,7 +5,9 @@ include("${PROJECT_SOURCE_DIR}/cmake/protobuf_generate.cmake")
 add_module(NAME "PT"
     DEPENDENCIES
         "${PROJECT_PREFIX}::Native"
+        "${PROJECT_PREFIX}::Utils"
         "${PROJECT_PREFIX}::Parser"
+        "${PROJECT_PREFIX}::Crypto"
         absl::hash
         spdlog::spdlog
         asio

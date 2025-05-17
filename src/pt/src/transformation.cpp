@@ -1,5 +1,23 @@
 #include "transformation.hpp"
 
+namespace hm
+{
+    std::string constructTransformationSolidityCode(std::string name, std::string body)
+    {
+
+        /*
+        // SPDX-License-Identifier: MIT
+        pragma solidity ^0.8.0;
+
+        contract name{
+            // here comes the body
+        }
+        */
+
+        return "//SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\ncontract " + name + "{\n    " + body + "\n}";
+    }
+}
+
 namespace hm::parse
 {
     std::optional<json> parseTransformationToJson(Transformation transformation, use_json_t)

@@ -90,7 +90,24 @@
             </div>
         </div>
     </div>
+
     <hr>
+    
+    <div class="row">
+        <div class="column">
+            <h2>Execute contract</h2>
+            <label for="executeAddress">Contract address</label>
+            <input type="text" id="executeAddress" placeholder="e.g. d8f295970180682dd71432d0399c2cff342d8bf7" />
+            <button onclick="execute()">Send GET to /execute/:address</button>
+            <div class="response-row">
+                <div id="executeCode" class="response-code">—</div>
+                <div id="executeBody" class="response-body">Waiting for response...</div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
     <!-- Feature Row -->
     <div class="row">
         <!-- Feature POST -->
@@ -164,6 +181,26 @@
                     },
                     body: json,
                 });
+                const text = await res.text();
+                codeDiv.textContent = res.status;
+                bodyDiv.textContent = formatJSON(text);
+            } catch (error) {
+                codeDiv.textContent = 'Error';
+                bodyDiv.textContent = error.message;
+            }
+        }
+
+        async function execute() {
+            const address = document.getElementById('executeAddress').value.trim();
+            const codeDiv = document.getElementById('executeCode');
+            const bodyDiv = document.getElementById('executeBody');
+            if (!address) {
+                alert("Contract address is required.");
+                return;
+            }
+            const url = `http://localhost:54321/execute/${address}`;
+            try {
+                const res = await fetch(url);
                 const text = await res.text();
                 codeDiv.textContent = res.status;
                 bodyDiv.textContent = formatJSON(text);

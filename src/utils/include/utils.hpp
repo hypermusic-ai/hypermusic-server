@@ -10,6 +10,8 @@
 
 #include "logo.hpp"
 
+#include <spdlog/spdlog.h>
+
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
@@ -26,6 +28,9 @@ namespace hm
      */
     asio::awaitable<void> watchdog(std::chrono::steady_clock::time_point& deadline);
 
+
+    asio::awaitable<void> ensureOnStrand(const asio::strand<asio::io_context::executor_type> & strand);
+
     /**
      * @brief Converts a hex string to a vector of bytes
      * 
@@ -33,7 +38,7 @@ namespace hm
      * 
      * @return A vector of bytes
      */
-    std::vector<std::uint8_t> hexToBytes(const std::string& hex);
+    std::vector<std::uint8_t> hexToBytes(std::string hex);
 
     /**
      * @brief Converts a vector of bytes to a hex string
@@ -53,4 +58,6 @@ namespace hm
      * @return A hex string
      */
     std::string bytesToHex(const std::vector<std::uint8_t> & data);
+
+    std::uint64_t readBigEndianUint64(const std::uint8_t* data);
 }

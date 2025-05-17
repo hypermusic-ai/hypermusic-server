@@ -2,10 +2,11 @@
 
 namespace hm
 {
-    EVM::EVM(asio::io_context & io_context, evmc_revision rev)
+    EVM::EVM(asio::io_context & io_context, evmc_revision rev, std::filesystem::path solc_path)
     :   _vm(evmc_create_evmone()),
         _rev(rev),
         _strand(asio::make_strand(io_context)),
+        _solc_path(std::move(solc_path)),
         _storage(_vm, _rev)
     {
         if (!_vm)
@@ -31,6 +32,8 @@ namespace hm
         evmc::address address{};
         std::memcpy(address.bytes, address_bytes.data(), 20);
 
+        co_await ensureOnStrand(_strand);
+
         if(_storage.add_account(address))
         {
             _storage.set_balance(address, initial_gas);
@@ -40,6 +43,23 @@ namespace hm
             co_return false;
         }
 
+        co_return true;
+    }
+
+    asio::awaitable<bool> EVM::compile(std::filesystem::path code_path, std::filesystem::path out_dir) const noexcept
+    {
+        std::string compile_result = hm::native::runProcess(_solc_path.string(), 
+            {
+                    "--evm-version", "shanghai", 
+                    "--overwrite", "-o", out_dir.string(), 
+                    "--optimize", "--bin",
+                    "--ast-compact-json", "--asm",
+                    code_path.string()
+                }
+        );
+        spdlog::debug("Solc {} compilation result:\n{}", code_path.string(), compile_result);
+
+        // TODO
         co_return true;
     }
 
@@ -80,6 +100,8 @@ namespace hm
         evmc_uint256be value256{};
         std::memcpy(&value256.bytes[24], &value, sizeof(value));  // Big endian: last 8 bytes hold the value
         create_msg.value = value256;
+
+        co_await ensureOnStrand(_strand);
 
         evmc::Result result = _storage.call(create_msg);        
 
@@ -157,6 +179,7 @@ namespace hm
         std::memcpy(&value256.bytes[24], &value, sizeof(value));  // Big endian: last 8 bytes hold the value
         msg.value = value256;
 
+        co_await ensureOnStrand(_strand);
         evmc::Result result = _storage.call(msg);
         
         if (result.status_code != EVMC_SUCCESS)
@@ -174,5 +197,28 @@ namespace hm
         }
 
         co_return bytesToHex(result.output_data, result.output_size);
+    }
+}
+
+namespace hm{
+    template<>
+    std::string decodeReturnedValueFromHex<std::string>(const std::string& hex)
+    {
+        // Convert hex string to bytes
+        std::vector<uint8_t> data = hm::hexToBytes(hex);
+
+        if (data.size() < 64)
+            return "Error: Output too small";
+
+        // Get pointer to the 32 bytes starting at offset 32
+        const uint8_t* len_ptr = data.data() + 32;
+
+        // Only last 8 bytes contain the length (big-endian)
+        uint64_t str_len = readBigEndianUint64(len_ptr + 24);
+
+        if (64 + str_len > data.size())
+            return "Error: Declared string length out of bounds";
+
+        return std::string(reinterpret_cast<const char*>(data.data() + 64), str_len);
     }
 }

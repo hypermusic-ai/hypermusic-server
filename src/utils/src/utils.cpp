@@ -15,9 +15,43 @@ namespace hm
         co_return;
     }
 
-    std::vector<std::uint8_t> hexToBytes(const std::string& hex) 
+    asio::awaitable<void> ensureOnStrand(const asio::strand<asio::io_context::executor_type> & strand)
+    {
+        if (strand.running_in_this_thread())
+        {
+            co_return;
+        }
+        co_return co_await asio::dispatch(strand, asio::use_awaitable);
+    }
+
+    std::vector<std::uint8_t> hexToBytes(std::string hex) 
     {
         std::vector<std::uint8_t> bytes;
+        
+        if(hex.empty()) 
+        {
+            spdlog::error("Hex string must not be empty.");
+            return {};
+        }
+
+        if(hex.length() % 2 != 0) 
+        {
+            spdlog::error("Hex string must have an even number of characters.");
+            return {};
+        }
+
+        // Remove leading 0x prefix
+        if(hex.length() >= 2 && hex.substr(0, 2) == "0x") 
+        {
+            hex.erase(0, 2);
+        }
+
+        if(hex.find_first_not_of("0123456789abcdefABCDEF") != std::string::npos) 
+        {
+            spdlog::error("WTF ????? Hex string must only contain hexadecimal characters.");
+            return {};
+        }
+
         for (unsigned int i = 0; i < hex.length(); i += 2) 
         {
             std::string byteString = hex.substr(i, 2);
@@ -40,5 +74,17 @@ namespace hm
             ss << std::hex << std::setw(2) << std::setfill('0') << (int)data[i];
         }
         return ss.str();
+    }
+
+    std::uint64_t readBigEndianUint64(const std::uint8_t* data)
+    {
+        return (static_cast<std::uint64_t>(data[0]) << 56) |
+               (static_cast<std::uint64_t>(data[1]) << 48) |
+               (static_cast<std::uint64_t>(data[2]) << 40) |
+               (static_cast<std::uint64_t>(data[3]) << 32) |
+               (static_cast<std::uint64_t>(data[4]) << 24) |
+               (static_cast<std::uint64_t>(data[5]) << 16) |
+               (static_cast<std::uint64_t>(data[6]) << 8)  |
+               (static_cast<std::uint64_t>(data[7]));
     }
 }

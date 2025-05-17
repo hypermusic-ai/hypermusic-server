@@ -8,6 +8,7 @@
 #include <absl/container/flat_hash_map.h>
 #include <spdlog/spdlog.h>
 
+#include "utils.hpp"
 #include "feature.hpp"
 #include "transformation.hpp"
 #include "condition.hpp"

@@ -15,7 +15,7 @@ namespace hm
     {
         std::string nonce =  std::to_string(_dist(_rng));
         
-        co_await asio::dispatch(_strand, asio::use_awaitable);
+        co_await ensureOnStrand(_strand);
 
         _nonces[address] = nonce;
         co_return nonce;
@@ -23,7 +23,7 @@ namespace hm
 
     asio::awaitable<bool> AuthManager::verifyNonce(const std::string& address, const std::string & nonce)
     {
-        co_await asio::dispatch(_strand, asio::use_awaitable);
+        co_await ensureOnStrand(_strand);
 
         auto it = _nonces.find(address);
         if (it == _nonces.end()) co_return false;
@@ -42,7 +42,7 @@ namespace hm
 
     asio::awaitable<bool> AuthManager::verifySignature(const std::string& address, const std::string& sig_hex, const std::string& message)
     {
-        co_await asio::dispatch(_strand, asio::use_awaitable);
+        co_await ensureOnStrand(_strand);
         
         // verify signature
         std::vector<uint8_t> signature_bytes = hexToBytes(sig_hex.substr(2, sig_hex.size() - 2)); // remove 0x prefix
@@ -88,7 +88,7 @@ namespace hm
 
     asio::awaitable<std::string> AuthManager::generateAccessToken(const std::string& address)
     {
-        co_await asio::dispatch(_strand, asio::use_awaitable);
+        co_await ensureOnStrand(_strand);
 
         auto token = jwt::create()
             .set_issuer("eth-auth-demo")
@@ -105,7 +105,7 @@ namespace hm
 
     asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyAccessToken(std::string token) const
     {
-        co_await asio::dispatch(_strand, asio::use_awaitable);
+        co_await ensureOnStrand(_strand);
 
         if(token.empty()) co_return std::unexpected("Access token is empty");
         if(token.back() == '\r')token.pop_back(); // remove \r if present
@@ -142,7 +142,7 @@ namespace hm
 
     asio::awaitable<bool> AuthManager::compareAccessToken(std::string address, std::string token) const
     {
-        co_await asio::dispatch(_strand, asio::use_awaitable);
+        co_await ensureOnStrand(_strand);
 
         if(token.empty()) co_return false;
         if(token.back() == '\r')token.pop_back(); // remove \r if present
@@ -159,7 +159,7 @@ namespace hm
 
     asio::awaitable<std::string> AuthManager::generateRefreshToken(const std::string& address)
     {
-        co_await asio::dispatch(_strand, asio::use_awaitable);
+        co_await ensureOnStrand(_strand);
 
         auto token = jwt::create()
             .set_issuer("eth-auth-demo")
@@ -176,7 +176,7 @@ namespace hm
 
     asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyRefreshToken(std::string token) const
     {
-        co_await asio::dispatch(_strand, asio::use_awaitable);
+        co_await ensureOnStrand(_strand);
 
         if(token.empty()) co_return std::unexpected("Refresh token is empty");
         if(token.back() == '\r')token.pop_back(); // remove \r if present

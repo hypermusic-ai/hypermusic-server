@@ -1,4 +1,7 @@
 #pragma once
+#include <string>
+#include <regex>
+
 #include <absl/hash/hash.h>
 
 #include "transformation.pb.h"
@@ -19,6 +22,8 @@ namespace hm
     inline H AbslHashValue(H h, const Transformation& t) {
         return H::combine(std::move(h), t.name(), t.sol_src());
     }
+    
+    std::string constructTransformationSolidityCode(std::string name, std::string body);
 }
 
 namespace hm::parse
