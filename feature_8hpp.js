@@ -2,6 +2,7 @@ var feature_8hpp =
 [
     [ "AbslHashValue", "feature_8hpp.html#ac83b4142a74f9e4800d765066d9be945", null ],
     [ "AbslHashValue", "feature_8hpp.html#adf8c03afd93729923bd9a8c02cd3f400", null ],
+    [ "constructFeatureSolidityCode", "feature_8hpp.html#a908d59252b01e71e0cd6eb20341a61bb", null ],
     [ "parseDimensionToJson", "feature_8hpp.html#a64ef82ab70cd15d5a07cfc2508abe501", null ],
     [ "parseDimensionToJson", "feature_8hpp.html#a0766ae091bac82a11d53d969df68e6ee", null ],
     [ "parseFeatureToJson", "feature_8hpp.html#a96d581728957f7e2c7be810cfc643b28", null ],
