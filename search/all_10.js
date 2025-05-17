@@ -14,9 +14,9 @@ var searchData=
   ['post_11',['POST',['../namespacehm_1_1http.html#a1573de63d39e32e7889c0f3f74be528faa02439ec229d8be0e74b0c1602392310',1,'hm::http']]],
   ['post_5fauth_12',['POST_auth',['../namespacehm.html#ae5e0fab2908898d4dc5dcb9a61e13ab9',1,'hm']]],
   ['post_5fcondition_13',['POST_condition',['../namespacehm.html#ad6db7ba4d30fdbb9a86f271e6a1a7ec9',1,'hm']]],
-  ['post_5ffeature_14',['POST_feature',['../namespacehm.html#a485caae18883d1640dfe9fc5bb8f4908',1,'hm']]],
+  ['post_5ffeature_14',['POST_feature',['../namespacehm.html#a4fcbdf9d857413e405e16df8df45c8e2',1,'hm']]],
   ['post_5frefresh_15',['POST_refresh',['../namespacehm.html#a53c37a8d077c0ab08639ca5b2c991044',1,'hm']]],
-  ['post_5ftransformation_16',['POST_transformation',['../namespacehm.html#ad7e9e4962a2a977d099a7e78f6f3ff5d',1,'hm']]],
+  ['post_5ftransformation_16',['POST_transformation',['../namespacehm.html#a4c26907e8020dc3e956ac692905f338f',1,'hm']]],
   ['pt_2ecpp_17',['pt.cpp',['../pt_8cpp.html',1,'']]],
   ['pt_2ehpp_18',['pt.hpp',['../pt_8hpp.html',1,'']]],
   ['put_19',['PUT',['../namespacehm_1_1http.html#a1573de63d39e32e7889c0f3f74be528fa3e75383a5992a6d15fb81e872e46e256',1,'hm::http']]]

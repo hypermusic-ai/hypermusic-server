@@ -10,7 +10,7 @@ var searchData=
   ['parsetransformationtojson_7',['parsetransformationtojson',['../namespacehm_1_1parse.html#abf49ebaa89aa7989177c0f99fd578292',1,'hm::parse::parseTransformationToJson(Transformation transformation, use_json_t)'],['../namespacehm_1_1parse.html#a9f707f8e8182d6aed380d86d735ec629',1,'hm::parse::parseTransformationToJson(Transformation transformation, use_protobuf_t)']]],
   ['post_5fauth_8',['POST_auth',['../namespacehm.html#ae5e0fab2908898d4dc5dcb9a61e13ab9',1,'hm']]],
   ['post_5fcondition_9',['POST_condition',['../namespacehm.html#ad6db7ba4d30fdbb9a86f271e6a1a7ec9',1,'hm']]],
-  ['post_5ffeature_10',['POST_feature',['../namespacehm.html#a485caae18883d1640dfe9fc5bb8f4908',1,'hm']]],
+  ['post_5ffeature_10',['POST_feature',['../namespacehm.html#a4fcbdf9d857413e405e16df8df45c8e2',1,'hm']]],
   ['post_5frefresh_11',['POST_refresh',['../namespacehm.html#a53c37a8d077c0ab08639ca5b2c991044',1,'hm']]],
-  ['post_5ftransformation_12',['POST_transformation',['../namespacehm.html#ad7e9e4962a2a977d099a7e78f6f3ff5d',1,'hm']]]
+  ['post_5ftransformation_12',['POST_transformation',['../namespacehm.html#a4c26907e8020dc3e956ac692905f338f',1,'hm']]]
 ];
