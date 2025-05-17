@@ -1,3 +1,5 @@
+#pragma once
+
 #if defined(WIN32)
 #include "windows/windows.h"
 #elif defined(UNIX)
@@ -17,6 +19,7 @@ namespace hm::native
      * The command must be a valid shell command.
      *
      * @param command The command to execute in the new process
+     * @param args The arguments to pass to the command
      */
-    void spawnProcess(const std::string & command);
+    std::string runProcess(const std::string & command, std::initializer_list<std::string> args = {});
 }

@@ -196,33 +196,49 @@ set(SECP256K1_BUILD_CTIME_TESTS OFF)
 set(SECP256K1_ENABLE_MODULE_RECOVERY ON)
 FetchContent_MakeAvailable(secp256k1)
 
-    # ---------------------------------------------------------
-    # solc
-    # ---------------------------------------------------------
-    #message(STATUS "Fetching dependency `solidity` ...")
-    #set(SOLC_VERSION "v0.8.30")
-    #set(SOLC_EXE_NAME "solc-windows.exe")
-    #set(SOLC_URL "https://github.com/ethereum/solidity/releases/download/${SOLC_VERSION}/${SOLC_EXE_NAME}")
-    #set(SOLC_BIN_DIR "${CMAKE_INSTALL_PREFIX}/solidity/bin")
-    #
-    #ExternalProject_Add(solidity_bin
-    #    URL ${SOLC_URL}
-    #    PREFIX ${CMAKE_BINARY_DIR}/_deps/solidity
-    #    CONFIGURE_COMMAND ""
-    #    BUILD_COMMAND ""
-    #    INSTALL_COMMAND ${CMAKE_COMMAND} -E make_directory ${SOLC_BIN_DIR}
-    #                  && ${CMAKE_COMMAND} -E copy <DOWNLOAD_DIR>/${SOLC_EXE_NAME} ${SOLC_BIN_DIR}/solc.exe
-    #    LOG_DOWNLOAD ON
-    #)
+# ---------------------------------------------------------
+# solc
+# ---------------------------------------------------------
+message(STATUS "Fetching dependency `solidity` ...")
+set(SOLC_VERSION "v0.8.30")
+set(SOLC_EXE_NAME "solc-windows.exe")
+set(SOLC_URL "https://github.com/ethereum/solidity/releases/download/${SOLC_VERSION}/${SOLC_EXE_NAME}")
+
+set(SOLC_PREFIX "${CMAKE_BINARY_DIR}/_deps/solidity")
+set(SOLC_DOWNLOAD_DIR "${SOLC_PREFIX}/download")
+set(SOLC_INSTALL_DIR "${CMAKE_BINARY_DIR}/_install/solidity")
+
+file(MAKE_DIRECTORY "${SOLC_INSTALL_DIR}/bin")
+file(MAKE_DIRECTORY "${SOLC_INSTALL_DIR}/lib")
+file(MAKE_DIRECTORY "${SOLC_INSTALL_DIR}/include")
+
+message(STATUS "Downloading ${SOLC_EXE_NAME} from ${SOLC_URL}...")
+ExternalProject_Add(solidity_bin
+    URL             "${SOLC_URL}"
+    DOWNLOAD_DIR    "${SOLC_DOWNLOAD_DIR}"
+    PREFIX          "${SOLC_PREFIX}"
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/_deps/solidity/download/${SOLC_EXE_NAME}" "${SOLC_INSTALL_DIR}/bin/"
+    LOG_DOWNLOAD ON
+    DOWNLOAD_NO_EXTRACT ON
+)
     
-    # Create an imported executable target
-    #add_executable(solc_imported IMPORTED GLOBAL)
-    #add_dependencies(solc_imported solidity_bin)
-    
-    # Set the location of the executable
-    #set_target_properties(solc_imported PROPERTIES
-    #    IMPORTED_LOCATION "${SOLC_BIN_DIR}/solc.exe"
-    #)
+# Create an imported executable target
+add_executable(solc_imported IMPORTED GLOBAL)
+add_dependencies(solc_imported solidity_bin)
+
+# Install solc binaries
+install(DIRECTORY "${SOLC_INSTALL_DIR}/bin/"
+        DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# set solidity solc executable location
+set(Solidity_SOLC_EXECUTABLE "${SOLC_EXE_NAME}" CACHE FILEPATH "Path to solc.exe" FORCE)
+
+# Set the location of the executable
+set_target_properties(solc_imported PROPERTIES
+    IMPORTED_LOCATION "${Solidity_SOLC_EXECUTABLE}"
+)
 
 # ---------------------------------------------------------
 # evmc

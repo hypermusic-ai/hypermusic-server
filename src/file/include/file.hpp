@@ -13,7 +13,11 @@ namespace hm
      * 
      * @param bin_path The path of the binary directory.
      */
-    void setBINPath(std::filesystem::path bin_path);
+    void setBinPath(std::filesystem::path bin_path);
+
+    std::filesystem::path getBinPath();
+
+    std::filesystem::path getResourcesPath();
 
     std::optional<std::string> loadSimpleForm();
 }
