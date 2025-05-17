@@ -1,5 +1,9 @@
 var NAVTREEINDEX3 =
 {
+"structstd_1_1formatter_3_01hm_1_1RouteArgRequirement_01_4.html#a66c7625615d99bc60ebb9b860607a3a1":[1,0,1,13,0],
+"structstd_1_1formatter_3_01hm_1_1RouteArgType_01_4.html":[1,0,1,14],
+"structstd_1_1formatter_3_01hm_1_1RouteArgType_01_4.html#aeb48ae8d2a72b0759d093b84e7c089dd":[1,0,1,14,0],
+"structstd_1_1formatter_3_01hm_1_1RouteArg_01_4.html":[1,0,1,12],
 "structstd_1_1formatter_3_01hm_1_1RouteArg_01_4.html#a5560672984cda9db9254768b12ca6378":[1,0,1,12,0],
 "structstd_1_1formatter_3_01hm_1_1http_1_1Code_01_4.html":[1,0,1,5],
 "structstd_1_1formatter_3_01hm_1_1http_1_1Code_01_4.html#a29a2e81c302cd382f2a0b74437b4b31d":[1,0,1,5,0],

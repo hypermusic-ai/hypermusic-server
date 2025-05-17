@@ -155,6 +155,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a150422b5aa5b890bd61add64536a1e5d" id="r_a150422b5aa5b890bd61add64536a1e5d"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">Transformation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm_1_1parse.html#a150422b5aa5b890bd61add64536a1e5d">parseJsonToTransformation</a> (std::string <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">json_str</a>, <a class="el" href="structhm_1_1parse_1_1use__protobuf__t.html">use_protobuf_t</a>)</td></tr>
 <tr class="memdesc:a150422b5aa5b890bd61add64536a1e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a JSON string to a Transformation object using Protobuf.  <br /></td></tr>
 <tr class="separator:a150422b5aa5b890bd61add64536a1e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a008b1057c977a095f3e1f1b656c414b5" id="r_a008b1057c977a095f3e1f1b656c414b5"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a008b1057c977a095f3e1f1b656c414b5"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; std::size_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm_1_1parse.html#a008b1057c977a095f3e1f1b656c414b5">parseRouteArgAs&lt; std::size_t &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">arg</a>)</td></tr>
+<tr class="memdesc:a008b1057c977a095f3e1f1b656c414b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a <code><a class="el" href="classhm_1_1RouteArg.html" title="A class representing a route argument.">RouteArg</a></code> as a unsigned integer.  <br /></td></tr>
+<tr class="separator:a008b1057c977a095f3e1f1b656c414b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5301ba8e6021ec3a37db85738844f589" id="r_a5301ba8e6021ec3a37db85738844f589"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a5301ba8e6021ec3a37db85738844f589"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; std::string &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm_1_1parse.html#a5301ba8e6021ec3a37db85738844f589">parseRouteArgAs&lt; std::string &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">arg</a>)</td></tr>
+<tr class="memdesc:a5301ba8e6021ec3a37db85738844f589"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a <code><a class="el" href="classhm_1_1RouteArg.html" title="A class representing a route argument.">RouteArg</a></code> as a string.  <br /></td></tr>
+<tr class="separator:a5301ba8e6021ec3a37db85738844f589"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a64ef82ab70cd15d5a07cfc2508abe501" name="a64ef82ab70cd15d5a07cfc2508abe501"></a>
@@ -578,6 +586,66 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The parsed <code>Method</code> or <code>Method::Unknown</code> if the string doesn't match any of the methods. </dd></dl>
+
+</div>
+</div>
+<a id="a008b1057c977a095f3e1f1b656c414b5" name="a008b1057c977a095f3e1f1b656c414b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a008b1057c977a095f3e1f1b656c414b5">&#9670;&#160;</a></span>parseRouteArgAs&lt; std::size_t &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::size_t &gt; hm::parse::parseRouteArgAs&lt; std::size_t &gt; </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &amp;&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parses a <code><a class="el" href="classhm_1_1RouteArg.html" title="A class representing a route argument.">RouteArg</a></code> as a unsigned integer. </p>
+<p>This function takes a <code><a class="el" href="classhm_1_1RouteArg.html" title="A class representing a route argument.">RouteArg</a></code> and attempts to parse it as a unsigned integer. If the parsing is successful, it returns the unsigned integer; otherwise, it returns an empty optional.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arg</td><td>The <code><a class="el" href="classhm_1_1RouteArg.html" title="A class representing a route argument.">RouteArg</a></code> to parse. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The parsed unsigned integer or an empty optional if parsing fails. </dd></dl>
+
+</div>
+</div>
+<a id="a5301ba8e6021ec3a37db85738844f589" name="a5301ba8e6021ec3a37db85738844f589"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5301ba8e6021ec3a37db85738844f589">&#9670;&#160;</a></span>parseRouteArgAs&lt; std::string &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::string &gt; hm::parse::parseRouteArgAs&lt; std::string &gt; </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &amp;&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parses a <code><a class="el" href="classhm_1_1RouteArg.html" title="A class representing a route argument.">RouteArg</a></code> as a string. </p>
+<p>This function takes a <code><a class="el" href="classhm_1_1RouteArg.html" title="A class representing a route argument.">RouteArg</a></code> and attempts to parse it as a <code>string</code>. If the parsing is successful, it returns the <code>string</code>; otherwise, it returns an empty optional.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arg</td><td>The <code><a class="el" href="classhm_1_1RouteArg.html" title="A class representing a route argument.">RouteArg</a></code> to parse. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The parsed <code>string</code> or an empty optional if parsing fails. </dd></dl>
 
 </div>
 </div>

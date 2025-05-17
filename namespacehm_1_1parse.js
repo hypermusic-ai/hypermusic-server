@@ -14,6 +14,8 @@ var namespacehm_1_1parse =
     [ "parseJsonToTransformation", "namespacehm_1_1parse.html#ae94db058a8bbc0eb999b035f5ad3ff95", null ],
     [ "parseJsonToTransformation", "namespacehm_1_1parse.html#a150422b5aa5b890bd61add64536a1e5d", null ],
     [ "parseMethodFromString", "namespacehm_1_1parse.html#ad5650558ee1b460fd10706ca820bd893", null ],
+    [ "parseRouteArgAs< std::size_t >", "namespacehm_1_1parse.html#a008b1057c977a095f3e1f1b656c414b5", null ],
+    [ "parseRouteArgAs< std::string >", "namespacehm_1_1parse.html#a5301ba8e6021ec3a37db85738844f589", null ],
     [ "parseTransformationToJson", "namespacehm_1_1parse.html#abf49ebaa89aa7989177c0f99fd578292", null ],
     [ "parseTransformationToJson", "namespacehm_1_1parse.html#a9f707f8e8182d6aed380d86d735ec629", null ]
 ];
