@@ -122,8 +122,9 @@ namespace hm
             response.setBody("invalid token: " + verification_res.error());
             co_return std::move(response);
         }
+        const auto & address = verification_res.value();
 
-        spdlog::debug("token verified: {}", verification_res.value());
+        spdlog::debug("token verified address : {}", address);
 
         // parse feature from json_string
         auto feature_res = parse::parseJsonToFeature(request.getBody(), parse::use_protobuf);
@@ -139,6 +140,55 @@ namespace hm
 
         const Feature & feature = *feature_res;
 
+        // create file with sol code
+        // compile
+        // deploy
+        // add to EVM machine
+
+        std::filesystem::path code_path = hm::getResourcesPath() / "contracts" / "features" / (feature.name() + ".sol");
+        std::filesystem::path out_dir = hm::getResourcesPath() / "contracts" / "features" / "build";
+
+        std::filesystem::create_directories(code_path.parent_path());
+        std::filesystem::create_directories(out_dir);
+
+        // create code file
+        std::ofstream out_file(code_path); 
+        if(!out_file.is_open())
+        {
+            spdlog::error("Failed to create file");
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::InternalServerError);
+            response.setBody("Failed to create file");
+            co_return std::move(response);
+        }
+
+        //out_file << constructFeatureSolidityCode(feature.name(), feature.());
+        out_file.close();
+
+        // compile code
+        if(!co_await evm.compile(code_path, out_dir))
+        {
+            spdlog::error("Failed to compile code");
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::InternalServerError);
+            response.setBody("Failed to compile code");
+            co_return std::move(response);
+        }
+
+        // deploy code
+        auto deploy_res = co_await evm.deploy(out_dir / (feature.name() + ".bin"), address, 1000000, 0);
+        if(!deploy_res)
+        {
+            spdlog::error("Failed to deploy code : {}", deploy_res.error());
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::InternalServerError);
+            response.setBody("Failed to deploy code : " + deploy_res.error());
+            co_return std::move(response);
+        }
+
         auto version_res = co_await registry.addFeature(feature);
         if(!version_res) 
         {
@@ -148,31 +198,14 @@ namespace hm
             response.setBody("Failed to add feature");
             co_return std::move(response);
         }
-
         auto version = *version_res;
-        // create file with sol code
-        // compile
-        // deploy
-        // add to EVM machine
-
-        std::ofstream out_file(hm::getResourcesPath() / "contracts" / "features" / (feature.name() + ".sol")); 
-        if(!out_file.is_open())
-        {
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
-            response.setBody("Failed to create file");
-            co_return std::move(response);
-        }
-
-        //out_file << feature.sol_code();
-        out_file.close();
 
         spdlog::debug("feature '{}' added with hash : {}", feature.name(), std::to_string(version));
         
         json json_output;
         json_output["name"] = feature.name();
         json_output["version"] = std::to_string(version);
+        json_output["address"] = deploy_res.value();
 
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
@@ -341,7 +374,7 @@ namespace hm
             co_return std::move(response);
         }
 
-        out_file << constructTransformationSolidityCode(transformation.name(), transformation.sol_src());
+        out_file << constructTransformationSolidityCode(transformation);
         out_file.close();
 
         // compile code

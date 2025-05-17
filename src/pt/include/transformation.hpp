@@ -23,7 +23,7 @@ namespace hm
         return H::combine(std::move(h), t.name(), t.sol_src());
     }
     
-    std::string constructTransformationSolidityCode(std::string name, std::string body);
+    std::string constructTransformationSolidityCode(const Transformation & transformation);
 }
 
 namespace hm::parse

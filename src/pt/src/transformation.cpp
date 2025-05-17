@@ -2,9 +2,8 @@
 
 namespace hm
 {
-    std::string constructTransformationSolidityCode(std::string name, std::string body)
+    std::string constructTransformationSolidityCode(const Transformation & transformation)
     {
-
         /*
         // SPDX-License-Identifier: MIT
         pragma solidity ^0.8.0;
@@ -13,8 +12,7 @@ namespace hm
             // here comes the body
         }
         */
-
-        return "//SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\ncontract " + name + "{\n    " + body + "\n}";
+        return "//SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\ncontract " + transformation.name() + "{\n    " + transformation.sol_src() + "\n}";
     }
 }
 

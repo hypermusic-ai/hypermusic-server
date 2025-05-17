@@ -41,6 +41,8 @@ namespace hm
         }
         return h;
     }
+
+    std::string constructFeatureSolidityCode(const Feature & feature);
 }
 
 namespace hm::parse

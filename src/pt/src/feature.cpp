@@ -1,5 +1,14 @@
 #include "feature.hpp"
 
+namespace hm
+{
+    std::string constructFeatureSolidityCode(const Feature & feature)
+    {
+        //TODO implement
+        return "";
+    }
+}
+
 namespace hm::parse
 {
     std::optional<json> parseDimensionToJson(Dimension dimension, use_json_t)

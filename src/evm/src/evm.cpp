@@ -84,6 +84,11 @@ namespace hm
 
         const std::string code_hex = std::string(std::istreambuf_iterator<char>(code_stream), std::istreambuf_iterator<char>());
         auto bytecode = hexToBytes(code_hex);
+        if(bytecode.size() == 0)
+        {
+            spdlog::error("Empty bytecode");
+            co_return std::unexpected<std::string>("Empty bytecode");
+        }
 
         evmc_message create_msg{};
         create_msg.kind       = EVMC_CREATE2;
