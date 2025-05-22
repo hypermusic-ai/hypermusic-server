@@ -94,6 +94,18 @@ namespace hm
 
     evmc::Result EVMStorage::call(const evmc_message& msg) noexcept
     {
+        evmc::address actual_sender = msg.sender;
+
+        // Patch: if sender is zero and we are in a nested context
+        if (evmc::is_zero(msg.sender) && !_sender_stack.empty()) {
+            actual_sender = _sender_stack.top();
+            spdlog::warn(std::format("Patching missing sender with: {}", evmc::hex(actual_sender)));
+        }
+        // Push current sender onto the stack
+        _sender_stack.push(actual_sender);
+
+        spdlog::debug(std::format("CALL START: {}", evmc::hex(actual_sender)));
+
         if (msg.kind == EVMC_CALL || msg.kind == EVMC_DELEGATECALL || msg.kind == EVMC_CALLCODE) 
         {
             auto it = _accounts.find(to_key(msg.recipient));
@@ -110,12 +122,21 @@ namespace hm
                 spdlog::error(std::format("Account {} has no code", msg.recipient));
                 return evmc::Result{EVMC_FAILURE};
             }
+            
+            evmc_message patched_msg = msg;
+            patched_msg.sender = actual_sender;
+            evmc::Result result = _vm.execute(*this, _revision, patched_msg, code.data(), code.size());
+            _sender_stack.pop();
 
-            return _vm.execute(*this, _revision, msg, code.data(), code.size());
+            spdlog::debug(std::format("EVMC_CALL END: {}", evmc::hex(patched_msg.sender.bytes)));
+            return result;
         }
         else if (msg.kind == EVMC_CREATE || msg.kind == EVMC_CREATE2)
         {
-            evmc::Result result = _vm.execute(*this, _revision, msg, msg.input_data, msg.input_size);
+            evmc_message patched_msg = msg;
+            patched_msg.sender = actual_sender;
+            evmc::Result result = _vm.execute(*this, _revision, patched_msg, msg.input_data, msg.input_size);
+            _sender_stack.pop();
 
             if (result.status_code != EVMC_SUCCESS)
             {
@@ -128,15 +149,17 @@ namespace hm
             evmc_address new_address;
             if (msg.kind == EVMC_CREATE)
             {
-                new_address = derive_create_address(msg.sender, _create_nonce[msg.sender]++);
+                new_address = derive_create_address(patched_msg.sender, _create_nonce[patched_msg.sender]++);
             }
             else // CREATE2
             {
-                new_address = derive_create2_address(msg.sender, msg.create2_salt, deployed_code);
+                new_address = derive_create2_address(patched_msg.sender, msg.create2_salt, deployed_code);
             }
 
-            deploy_contract(new_address, std::move(deployed_code), msg.value, msg.sender, _create_nonce[msg.sender] - 1);
+            deploy_contract(new_address, std::move(deployed_code), msg.value, patched_msg.sender, _create_nonce[patched_msg.sender] - 1);
             result.create_address = new_address;
+            
+            spdlog::debug(std::format("EVMC_CREATE END: {}", evmc::hex(patched_msg.sender.bytes)));
             return result;
         }
 
@@ -278,10 +301,10 @@ namespace hm
         return addr;
     }
 
-    void EVMStorage::deploy_contract(const evmc::address& addr,
+    void EVMStorage::deploy_contract(evmc::address addr,
                     std::vector<std::uint8_t>&& code,
                     evmc_uint256be value,
-                    const evmc::address& creator,
+                    evmc::address creator,
                     std::uint64_t nonce)
     {
         if(account_exists(addr) == true) 

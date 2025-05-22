@@ -4,6 +4,7 @@
 #include <cstring>
 #include <vector>
 #include <format>
+#include <stack>
 
 // Undefine the conflicting macro
 #ifdef interface
@@ -120,7 +121,7 @@ namespace hm
 
         evmc_address derive_create2_address(const evmc::address& sender, const evmc::bytes32& salt, const std::vector<std::uint8_t>& code);
 
-        void deploy_contract(const evmc::address& addr, std::vector<std::uint8_t>&& code, evmc_uint256be value, const evmc::address& creator, std::uint64_t nonce);
+        void deploy_contract(evmc::address addr, std::vector<std::uint8_t>&& code, evmc_uint256be value, evmc::address creator, std::uint64_t nonce);
     
     private:
         evmc::VM & _vm;
@@ -128,6 +129,8 @@ namespace hm
 
         absl::flat_hash_map<std::string, Account> _accounts;
         absl::flat_hash_map<evmc::address, std::uint64_t> _create_nonce;
+
+        std::stack<evmc::address> _sender_stack;
     };
 
     template <typename H>

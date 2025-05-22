@@ -59,5 +59,7 @@ namespace hm
      */
     std::string bytesToHex(const std::vector<std::uint8_t> & data);
 
+    std::string escapeSolSrcQuotes(const std::string& json);
+
     std::uint64_t readBigEndianUint64(const std::uint8_t* data);
 }

@@ -2,17 +2,41 @@
 
 namespace hm
 {
+
+
+
     std::string constructTransformationSolidityCode(const Transformation & transformation)
     {
-        /*
-        // SPDX-License-Identifier: MIT
-        pragma solidity ^0.8.0;
+        /* ------------- EXAMPLE -------------
+        // SPDX-License-Identifier: GPL-3.0
 
-        contract name{
-            // here comes the body
+        pragma solidity >=0.7.0 <0.9.0;
+
+        import "../TransformationBase.sol";
+
+        contract Add is TransformationBase
+        {
+            constructor(address registryAddr) TransformationBase(registryAddr, "Add", 1)
+            {}
+
+            function run(uint32 x, uint32 [] calldata args) view external returns (uint32)
+            {
+                require(args.length == this.getArgsCount(), "wrong number of arguments");
+                return x + args[0];
+            }
         }
         */
-        return "//SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\ncontract " + transformation.name() + "{\n    " + transformation.sol_src() + "\n}";
+
+        std::uint32_t argc = 1;
+        return  "//SPDX-License-Identifier: MIT\n"
+                "pragma solidity ^0.8.0;\n"
+                "import \"transformation/TransformationBase.sol\";\n"
+                "contract " + transformation.name() + " is TransformationBase{\n" // open contract
+                "constructor(address registryAddr) TransformationBase(registryAddr, \"" + transformation.name() + "\"," +  std::to_string(argc) +"){}\n"
+                "function run(uint32 x, uint32 [] calldata args) view external returns (uint32){\n" // open function
+                "require(args.length == this.getArgsCount(), \"wrong number of arguments\");\n"
+                + transformation.sol_src() + "\n}" // close function
+                "\n}"; // close contract
     }
 }
 

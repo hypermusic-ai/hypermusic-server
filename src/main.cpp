@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 
     spdlog::info(std::format("Path to solidity solc compiler : {}", solc_path.string()));
 
-    std::string solc_version_out = hm::native::runProcess(solc_path.string(), {"--version"});
+    const auto [exit_code, solc_version_out] = hm::native::runProcess(solc_path.string(), {"--version"});
     spdlog::info(std::format("Solc info:\n{}", solc_version_out));
     
     asio::io_context io_context;
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
     //server.addRoute({hm::http::Method::GET, "/condition"},                          hm::GET_condition);
     //server.addRoute({hm::http::Method::POST, "/condition"},                         hm::POST_condition);
     
-    server.addRoute({hm::http::Method::GET, "/execute/<string>"},                hm::GET_execute, std::cref(auth_manager), std::cref(registry), std::ref(evm));
+    server.addRoute({hm::http::Method::GET, "/execute/<string>/<uint>/<uint>"},                hm::GET_execute, std::cref(auth_manager), std::cref(registry), std::ref(evm));
 
 
     asio::co_spawn(io_context, server.listen(), asio::detached);

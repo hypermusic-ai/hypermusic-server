@@ -2,6 +2,22 @@
 
 namespace hm
 {
+    std::vector<uint8_t> constructFunctionSelector(std::string signature)
+    {
+        uint8_t hash[32];
+        Keccak256::getHash(reinterpret_cast<const uint8_t*>(signature.data()), signature.size(), hash);
+        return std::vector<uint8_t>(hash, hash + 32);
+    }
+
+    template<>
+    std::vector<std::uint8_t> encodeAsArg<evmc::address>(const evmc::address & address)
+    {
+        std::vector<std::uint8_t> encoded(32, 0); // Initialize with 32 zero bytes
+        std::copy(address.bytes, address.bytes + 20, encoded.begin() + 12); // Right-align in last 20 bytes
+        return encoded;
+    }
+
+
     EVM::EVM(asio::io_context & io_context, evmc_revision rev, std::filesystem::path solc_path)
     :   _vm(evmc_create_evmone()),
         _rev(rev),
@@ -19,21 +35,18 @@ namespace hm
         co_spawn(io_context, loadPT(), asio::detached);
     }
     
-    asio::awaitable<bool> EVM::addAccount(std::string address_hex, std::uint64_t initial_gas) noexcept
+    evmc::address EVM::getRegistryAddress() const
     {
-        std::vector<std::uint8_t> address_bytes = hexToBytes(address_hex);
+        return _registry_address;
+    }
 
-        // Check size to prevent overflow
-        if (address_bytes.size() != 20) 
-        {
-            spdlog::error(std::format("Invalid address length: {}", address_bytes.size()));
-            co_return false;
-        }
+    evmc::address EVM::getRunnerAddress() const
+    {
+        return _runner_address;
+    }
 
-        // Fill address
-        evmc::address address{};
-        std::memcpy(address.bytes, address_bytes.data(), 20);
-
+    asio::awaitable<bool> EVM::addAccount(evmc::address address, std::uint64_t initial_gas) noexcept
+    {
         co_await ensureOnStrand(_strand);
 
         if(_storage.add_account(address))
@@ -56,7 +69,6 @@ namespace hm
             spdlog::error(std::format("File {} does not exist", code_path.string()));
             co_return false;
         }
-
 
         std::vector<std::string> args = {
             "--evm-version", "shanghai",
@@ -84,40 +96,31 @@ namespace hm
             args.emplace_back(includes.string());
         }
 
-        std::string compile_result = hm::native::runProcess(_solc_path.string(), std::move(args));
+        const auto [exit_code, compile_result] = hm::native::runProcess(_solc_path.string(), std::move(args));
 
-        spdlog::debug("Solc {} compilation result:\n{}", code_path.string(), compile_result);
+        spdlog::debug("Solc exited with code {},\n{}\n{}", exit_code, code_path.string(), compile_result);
 
-        // TODO
+        if(exit_code != 0)
+        {
+            co_return false;
+        }
+        
         co_return true;
     }
 
-    asio::awaitable<std::expected<std::string, std::string>> EVM::deploy(std::istream & code_stream,
-                        std::vector<uint8_t> constructor_args, 
-                        std::string sender_hex,
+    asio::awaitable<std::expected<evmc::address, evmc_status_code>> EVM::deploy(
+                        std::istream & code_stream,
+                        evmc::address sender,
+                        std::vector<std::uint8_t> constructor_args, 
                         std::uint64_t gas_limit,
                         std::uint64_t value) noexcept
     {
-        // Convert hex string to bytes
-        std::vector<std::uint8_t> sender_bytes = hexToBytes(sender_hex);
-
-        // Check size to prevent overflow
-        if (sender_bytes.size() != 20) 
-        {
-            spdlog::error(std::format("Invalid sender address length: {}", sender_bytes.size()));
-            co_return std::unexpected<std::string>("Invalid sender address length");
-        }
-
-        // Fill sender
-        evmc::address sender{};
-        std::memcpy(sender.bytes, sender_bytes.data(), 20);
-
         const std::string code_hex = std::string(std::istreambuf_iterator<char>(code_stream), std::istreambuf_iterator<char>());
         auto bytecode = hexToBytes(code_hex);
         if(bytecode.size() == 0)
         {
             spdlog::error("Empty bytecode");
-            co_return std::unexpected<std::string>("Empty bytecode");
+            co_return evmc_status_code::EVMC_FAILURE;
         }
 
         std::vector<uint8_t> deployment_input;
@@ -128,6 +131,8 @@ namespace hm
         evmc_message create_msg{};
         create_msg.kind       = EVMC_CREATE2;
         create_msg.sender     = sender;
+        std::memcpy(create_msg.sender.bytes, sender.bytes, 20);
+        
         create_msg.gas        = gas_limit;
         create_msg.input_data = deployment_input.data();
         create_msg.input_size = deployment_input.size();
@@ -148,7 +153,7 @@ namespace hm
         if (result.status_code != EVMC_SUCCESS)
         {
             spdlog::error(std::format("Failed to deploy contract: {}", result.status_code));
-            co_return std::unexpected<std::string>(evmc_status_code_to_string(result.status_code));
+            co_return std::unexpected<evmc_status_code>(result.status_code);
         }
 
         // Display result
@@ -159,50 +164,39 @@ namespace hm
             spdlog::debug("Output size: {}", result.output_size);
         }
 
-        co_return bytesToHex(result.create_address.bytes, 20);
+        co_return result.create_address;
      }
 
-    asio::awaitable<std::expected<std::string, std::string>> EVM::deploy(std::filesystem::path code_path,
+    asio::awaitable<std::expected<evmc::address, evmc_status_code>> EVM::deploy(
+                        std::filesystem::path code_path,
+                        evmc::address sender,
                         std::vector<uint8_t> constructor_args,
-                        std::string sender_hex,
                         std::uint64_t gas_limit,
                         std::uint64_t value) noexcept
     {
         spdlog::debug(std::format("Deploying contract from file: {}", code_path.string()));
         std::ifstream file(code_path, std::ios::binary);
-        co_return co_await deploy(file, std::move(constructor_args), std::move(sender_hex), gas_limit, value);
+        co_return co_await deploy(file, std::move(sender), std::move(constructor_args),  gas_limit, value);
     }
 
-    asio::awaitable<std::expected<std::string, std::string>> EVM::execute(std::string sender_hex,
-                    std::string recipient_hex,
+    asio::awaitable<std::expected<std::vector<std::uint8_t>, evmc_status_code>> EVM::execute(
+                    evmc::address sender,
+                    evmc::address recipient,
                     std::vector<std::uint8_t> input_bytes,
                     std::uint64_t gas_limit,
                     std::uint64_t value) noexcept
     {
-        // Convert hex string to bytes
-        std::vector<std::uint8_t> sender_bytes = hexToBytes(sender_hex);
-        std::vector<std::uint8_t> recipient_bytes = hexToBytes(recipient_hex);
-
-        // Check size to prevent overflow
-        if (sender_bytes.size() != 20 || recipient_bytes.size() != 20) 
-        {
-            co_return std::unexpected<std::string>("Invalid sender or recipient address length");
-        }
-
-        bool is_creation = std::ranges::all_of(recipient_bytes, [](uint8_t b) { return b == 0; });
-        if(is_creation)
+        if(std::ranges::all_of(recipient.bytes, [](uint8_t b) { return b == 0; }))
         {
             spdlog::error("Cannot create a contract with execute function. Use dedicated deploy method.");
-            co_return std::unexpected<std::string>("Cannot create a contract with execute function. Use dedicated deploy method.");
+            co_return std::unexpected<evmc_status_code>(EVMC_FAILURE);
         }
 
         evmc_message msg{};
         msg.gas = gas_limit;
         msg.kind = EVMC_CALL;
-
-        // Fill sender and recipient
-        std::memcpy(msg.sender.bytes, sender_bytes.data(), 20);
-        std::memcpy(msg.recipient.bytes, recipient_bytes.data(), 20);
+        msg.sender = sender;
+        msg.recipient = recipient;
 
         if(!input_bytes.empty())
         {
@@ -211,7 +205,6 @@ namespace hm
         }
         else
         {
-            // If input is not provided, set input_data to nullptr and input_size to 0
             msg.input_data = nullptr;
             msg.input_size = 0;
         }
@@ -225,8 +218,8 @@ namespace hm
         
         if (result.status_code != EVMC_SUCCESS)
         {
-            spdlog::error(std::format("Failed to execute contract: {}", result.status_code));
-            co_return std::unexpected<std::string>(evmc_status_code_to_string(result.status_code));
+            spdlog::error(std::format("Failed to execute contract: {}", evmc_status_code_to_string(result.status_code)));
+            co_return std::unexpected<evmc_status_code>(result.status_code);
         }
 
         // Display result
@@ -237,57 +230,61 @@ namespace hm
             spdlog::debug("Output size: {}", result.output_size);
         }
 
-        co_return bytesToHex(result.output_data, result.output_size);
+        co_return std::vector<std::uint8_t>(result.output_data, result.output_data + result.output_size);
     }
 
-    asio::awaitable<std::expected<std::string, std::string>> EVM::loadPT()
-    {
-        
-        const auto & contracts_dir = getPTPath() / "contracts";
-        const auto & out_dir = getPTPath() / "out";
-        const auto & node_modules = getPTPath() / "node_modules";
+    asio::awaitable<bool> EVM::loadPT()
+    { 
+        const auto & contracts_dir = getPTPath()    / "contracts";
+        const auto & node_modules = getPTPath()     / "node_modules";
+        const auto & out_dir = getPTPath()          / "out";
 
         std::filesystem::create_directories(out_dir);
+        
+        { // deploy registry
+            co_await compile(
+                    contracts_dir / "registry" / "RegistryBase.sol",
+                    out_dir / "registry", 
+                    contracts_dir, 
+                    node_modules);
 
-        std::vector<std::pair<std::filesystem::path, std::string>> contracts_locations{
-            {"ownable", "OwnableBase"},
-            {"registry", "RegistryBase"}
-        };
+            const auto registry_address_res = co_await deploy(
+                    out_dir / "registry" / "RegistryBase.bin", 
+                    evmc::address{},
+                    {}, 
+                    1000000, 
+                    0);
 
-        for(const auto & [prefix_path, file_name] : contracts_locations)
-        {
-            co_await compile(contracts_dir / prefix_path / (file_name + ".sol"), out_dir / prefix_path, contracts_dir, node_modules);
+            if(!registry_address_res.has_value())
+                co_return false;
+
+            _registry_address = registry_address_res.value();
+            spdlog::info("Registry address: {}", evmc::hex(_registry_address));
         }
 
-        for(const auto & [prefix_path, file_name] : contracts_locations)
-        {
-            co_await deploy(out_dir / prefix_path / (file_name + ".bin"), {}, "0x0000000000000000000000000000000000000000", 1000000, 0);
+        { // deploy runner
+            co_await compile(
+                    contracts_dir /  "Runner.sol",
+                    out_dir, 
+                    contracts_dir, 
+                    node_modules);
+        
+            const auto runner_address_res = co_await deploy(
+                    out_dir / "Runner.bin", 
+                    evmc::address{},
+                    encodeAsArg(_registry_address), 
+                    1000000, 
+                    0);
+
+            if(!runner_address_res.has_value())
+                co_return false;
+        
+            _runner_address = runner_address_res.value();
+            spdlog::info("Runner address: {}", evmc::hex(_runner_address));
+
         }
 
-        co_return "";
+        co_return true;
     }
 
-}
-
-namespace hm{
-    template<>
-    std::string decodeReturnedValueFromHex<std::string>(const std::string& hex)
-    {
-        // Convert hex string to bytes
-        std::vector<uint8_t> data = hm::hexToBytes(hex);
-
-        if (data.size() < 64)
-            return "Error: Output too small";
-
-        // Get pointer to the 32 bytes starting at offset 32
-        const uint8_t* len_ptr = data.data() + 32;
-
-        // Only last 8 bytes contain the length (big-endian)
-        uint64_t str_len = readBigEndianUint64(len_ptr + 24);
-
-        if (64 + str_len > data.size())
-            return "Error: Declared string length out of bounds";
-
-        return std::string(reinterpret_cast<const char*>(data.data() + 64), str_len);
-    }
 }

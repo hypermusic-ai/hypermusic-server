@@ -2,10 +2,16 @@ syntax = "proto3";
 
 package hm;
 
+message TransformationDef
+{
+    string name = 1;
+    repeated int32 args = 2;
+}
+
 message Dimension
 {
     string feature_name = 1;
-    repeated string transformation_name = 2;
+    repeated TransformationDef transformations = 2;
 }
 
 message Feature 

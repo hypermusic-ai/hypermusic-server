@@ -22,5 +22,5 @@ namespace hm::native
      * @param command The command to execute in the new process
      * @param args The arguments to pass to the command
      */
-    std::string runProcess(const std::string & command, std::vector<std::string> args = {});
+    std::pair<int, std::string> runProcess(const std::string & command, std::vector<std::string> args = {});
 }

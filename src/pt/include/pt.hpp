@@ -13,6 +13,5 @@
 
 namespace hm
 {
-    std::vector<uint8_t> constructFunctionSelector(std::string signature);
-    std::string escapeSolSrcQuotes(const std::string& json);
+
 }

@@ -3,7 +3,7 @@
 #include <spdlog/spdlog.h>
 
 namespace hm::native{
-    std::string runProcess(const std::string& command, std::vector<std::string> args)
+    std::pair<int, std::string> runProcess(const std::string& command, std::vector<std::string> args)
     {
         std::ostringstream oss;
 
@@ -91,10 +91,23 @@ namespace hm::native{
         // Wait until child process exits
         WaitForSingleObject(pi.hProcess, INFINITE);
 
+        // Read the return code
+        DWORD exit_code;
+        if (!GetExitCodeProcess(pi.hProcess, &exit_code))
+        {
+            CloseHandle(pi.hProcess);
+            CloseHandle(pi.hThread);
+            throw std::runtime_error("Failed to get process exit code");
+        }
+
+        if (exit_code > static_cast<DWORD>(std::numeric_limits<int>::max())) {
+            throw std::overflow_error("DWORD value exceeds int range");
+        }
+
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
         CloseHandle(read_pipe);
 
-        return output;
+        return {static_cast<int>(exit_code), output};
     }
 }

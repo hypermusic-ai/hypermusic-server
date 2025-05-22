@@ -52,34 +52,39 @@ namespace hm
         EVM(EVM&&) = delete;
         EVM& operator=(EVM&&) = delete;
 
-        asio::awaitable<bool> addAccount(std::string address_hex, std::uint64_t initial_gas) noexcept;
+        asio::awaitable<bool> addAccount(evmc::address address, std::uint64_t initial_gas) noexcept;
 
         asio::awaitable<bool> compile(std::filesystem::path code_path,
                 std::filesystem::path out_dir,
                 std::filesystem::path base_path = {},
                 std::filesystem::path includes = {}) const noexcept;
 
-        asio::awaitable<std::expected<std::string, std::string>> deploy(std::istream & code_stream, 
-                    std::vector<uint8_t> constructor_args, 
-                    std::string sender_hex,
+        asio::awaitable<std::expected<evmc::address, evmc_status_code>> deploy(  
+                    std::istream & code_stream, 
+                    evmc::address sender,
+                    std::vector<std::uint8_t> constructor_args,
                     std::uint64_t gas_limit,
                     std::uint64_t value) noexcept;
 
-        asio::awaitable<std::expected<std::string, std::string>> deploy(std::filesystem::path code_path,
-                    std::vector<uint8_t> constructor_args,    
-                    std::string sender_hex,
+        asio::awaitable<std::expected<evmc::address, evmc_status_code>> deploy(
+                    std::filesystem::path code_path,    
+                    evmc::address sender,
+                    std::vector<uint8_t> constructor_args,
                     std::uint64_t gas_limit,
                     std::uint64_t value) noexcept;
 
-        asio::awaitable<std::expected<std::string, std::string>> execute(
-                    std::string sender_hex,
-                    std::string recipient_hex, 
+        asio::awaitable<std::expected<std::vector<std::uint8_t>, evmc_status_code>> execute(
+                    evmc::address sender,
+                    evmc::address recipient, 
                     std::vector<std::uint8_t> input_bytes,
                     std::uint64_t gas_limit,
                     std::uint64_t value) noexcept;
 
+        evmc::address getRegistryAddress() const;
+        evmc::address getRunnerAddress() const;
+
     protected:
-        asio::awaitable<std::expected<std::string, std::string>> loadPT();
+        asio::awaitable<bool> loadPT();
 
     private:
         asio::strand<asio::io_context::executor_type> _strand;
@@ -90,11 +95,16 @@ namespace hm
         std::filesystem::path _solc_path;
 
         EVMStorage _storage;
+        
+        evmc::address _registry_address;
+        evmc::address _runner_address;
     };
 
+    std::vector<uint8_t> constructFunctionSelector(std::string signature);
+
     template<class T>
-    T decodeReturnedValueFromHex(const std::string& hex);
+    std::vector<std::uint8_t> encodeAsArg(const T & val);
 
     template<>
-    std::string decodeReturnedValueFromHex<std::string>(const std::string& hex);
+    std::vector<std::uint8_t> encodeAsArg<evmc::address>(const evmc::address & address);
 }

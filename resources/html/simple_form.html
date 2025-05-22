@@ -98,6 +98,11 @@
             <h2>Execute contract</h2>
             <label for="executeAddress">Contract address</label>
             <input type="text" id="executeAddress" placeholder="e.g. d8f295970180682dd71432d0399c2cff342d8bf7" />
+            <label for="executeN">Number of samples</label>
+            <input type="text" id="executeN" placeholder="e.g. 10" />
+            <label for="executeN">Starting points</label>
+            <input type="text" id="executeStartPoints" placeholder="e.g. [0,0,1]" />
+
             <button onclick="execute()">Send GET to /execute/:address</button>
             <div class="response-row">
                 <div id="executeCode" class="response-code">—</div>
@@ -192,13 +197,16 @@
 
         async function execute() {
             const address = document.getElementById('executeAddress').value.trim();
+            const N = document.getElementById('executeN').value.trim();
+            const startPoints = document.getElementById('executeStartPoints').value.trim();
+
             const codeDiv = document.getElementById('executeCode');
             const bodyDiv = document.getElementById('executeBody');
             if (!address) {
                 alert("Contract address is required.");
                 return;
             }
-            const url = `http://localhost:54321/execute/${address}`;
+            const url = `http://localhost:54321/execute/${address}/${N}/${startPoints}`;
             try {
                 const res = await fetch(url);
                 const text = await res.text();

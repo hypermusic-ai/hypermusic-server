@@ -69,7 +69,7 @@ namespace hm
             co_return response;
         }
         
-        auto json_res = parse::parseFeatureToJson(*feature_res, parse::use_protobuf);
+        auto json_res = parse::parseToJson(*feature_res, parse::use_protobuf);
 
         if(!json_res)
         {
@@ -127,7 +127,7 @@ namespace hm
         spdlog::debug("token verified address : {}", address);
 
         // parse feature from json_string
-        auto feature_res = parse::parseJsonToFeature(request.getBody(), parse::use_protobuf);
+        auto feature_res = parse::parseFromJson<Feature>(request.getBody(), parse::use_protobuf);
 
         if(!feature_res) 
         {
@@ -163,11 +163,11 @@ namespace hm
             co_return std::move(response);
         }
 
-        //out_file << constructFeatureSolidityCode(feature.name(), feature.());
+        out_file << constructFeatureSolidityCode(feature);
         out_file.close();
 
         // compile code
-        if(!co_await evm.compile(code_path, out_dir))
+        if(!co_await evm.compile(code_path, out_dir, getPTPath()/ "contracts", getPTPath() / "node_modules"))
         {
             spdlog::error("Failed to compile code");
             response.setHeader(http::Header::Connection, "close");
@@ -178,7 +178,27 @@ namespace hm
         }
 
         // deploy code
-        auto deploy_res = co_await evm.deploy(out_dir / (feature.name() + ".bin"), {}, address, 1000000, 0);
+        if(evmc::validate_hex(address) == false)
+        {
+            spdlog::error("Invalid address");
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("Invalid address");
+            co_return std::move(response);
+        }
+
+        evmc::address address_bytes{evmc::from_hex<evmc_address>(address).value_or(evmc::address{})};
+        
+        evm.addAccount(address_bytes, 1000000);
+
+        auto deploy_res = co_await evm.deploy(
+            out_dir / (feature.name() + ".bin"), 
+            address_bytes, 
+    encodeAsArg(evm.getRegistryAddress()),
+            1000000, 
+            0);
+
         if(!deploy_res)
         {
             spdlog::error("Failed to deploy code : {}", deploy_res.error());
@@ -192,6 +212,7 @@ namespace hm
         auto version_res = co_await registry.addFeature(feature);
         if(!version_res) 
         {
+            spdlog::error("Failed to add feature");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(hm::http::Code::BadRequest);
@@ -205,7 +226,7 @@ namespace hm
         json json_output;
         json_output["name"] = feature.name();
         json_output["version"] = std::to_string(version);
-        json_output["address"] = deploy_res.value();
+        json_output["address"] = evmc::hex(deploy_res.value());
 
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
@@ -378,7 +399,7 @@ namespace hm
         out_file.close();
 
         // compile code
-        if(!co_await evm.compile(code_path, out_dir))
+        if(!co_await evm.compile(code_path, out_dir, getPTPath()/ "contracts", getPTPath() / "node_modules"))
         {
             spdlog::error("Failed to compile code");
             response.setHeader(http::Header::Connection, "close");
@@ -389,7 +410,25 @@ namespace hm
         }
 
         // deploy code
-        auto deploy_res = co_await evm.deploy(out_dir / (transformation.name() + ".bin"), {}, address, 1000000, 0);
+        if(evmc::validate_hex(address) == false)
+        {
+            spdlog::error("Invalid address");
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("Invalid address");
+            co_return std::move(response);
+        }
+
+        evmc::address address_bytes{evmc::from_hex<evmc_address>(address).value_or(evmc::address{})};
+
+        auto deploy_res = co_await evm.deploy(  
+            out_dir / (transformation.name() + ".bin"), 
+            address_bytes, 
+            encodeAsArg(evm.getRegistryAddress()), 
+            1000000, 
+            0);
+        
         if(!deploy_res)
         {
             spdlog::error("Failed to deploy code");
@@ -417,7 +456,7 @@ namespace hm
         json json_output;
         json_output["name"] = transformation.name();
         json_output["version"] = std::to_string(version);
-        json_output["address"] = deploy_res.value();
+        json_output["address"] = evmc::hex(deploy_res.value());
 
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
@@ -459,25 +498,13 @@ namespace hm
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
 
-        if(args.size() > 2 || args.size() == 0)
+        if(args.size() != 3)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(hm::http::Code::BadRequest);
             response.setBody("invalid url");
             co_return response;
         }
-
-        auto receipent_result = parse::parseRouteArgAs<std::string>(args.at(0));
-
-        if(!receipent_result)
-        {
-            spdlog::error("invalid receipent");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
-            response.setBody("invalid receipent");
-            co_return response;
-        }
-        const auto & receipent = receipent_result.value();
 
         auto cookie_res = request.getHeader(http::Header::Cookie);
         if(cookie_res.empty())
@@ -514,25 +541,80 @@ namespace hm
         }
         const auto & address = verification_res.value();
 
+        // execute code
 
-        const auto selector = constructFunctionSelector("sayHello()");
+        // sender - from cookie
+        if(evmc::validate_hex(address) == false)
+        {
+            spdlog::error("Invalid address");
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("Invalid address");
+            co_return std::move(response);
+        }
+        evmc::address address_bytes{evmc::from_hex<evmc_address>(address).value_or(evmc::address{})};
 
-        const auto exec_result = co_await evm.execute(address, receipent, selector, 1000, 0);
-        // run code
+        // input arguments - from url
+
+        // name
+        auto feature_name_result = parse::parseRouteArgAs<std::string>(args.at(0));
+        if(!feature_name_result)
+        {
+            spdlog::error("invalid feature name");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("invalid feature name");
+            co_return response;
+        }
+        const auto & feature_name = feature_name_result.value();
+
+        // N
+        auto N_result = parse::parseRouteArgAs<std::size_t>(args.at(1));
+        if(!N_result)
+        {
+            spdlog::error("invalid number of samples");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("invalid number of samples");
+            co_return response;
+        }
+        const auto & N = N_result.value();
+
+        // starting points
+        auto starting_points_result = parse::parseRouteArgAs<std::size_t>(args.at(2));
+        if(!starting_points_result)
+        {
+            spdlog::error("invalid starting points");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(hm::http::Code::BadRequest);
+            response.setBody("invalid starting points");
+            co_return response;
+        }
+        const auto & starting_points = starting_points_result.value();
+
+
+        std::vector<uint8_t> input_data;
+        // runner function selector
+        const auto selector = constructFunctionSelector("gen(string,uint32,uint32[])");
+        input_data.insert(input_data.end(), selector.begin(), selector.end());
+
+        // execute call to runner
+        const auto exec_result = co_await evm.execute(address_bytes, evm.getRunnerAddress(), input_data, 1000, 0);
+        
+        // check execution status
         if(!exec_result)
         {
             spdlog::error("Failed to execute code {}", exec_result.error());
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(hm::http::Code::InternalServerError);
-            response.setBody("Failed to compile code " + exec_result.error());
+            response.setBody(std::format("Failed to execute code : {}", exec_result.error()));
             co_return std::move(response);
         }
 
-        spdlog::debug("executed code: {}", exec_result.value());
-
         json json_output;
-        json_output["output"] = decodeReturnedValueFromHex<std::string>(exec_result.value());
+        //json_output["output"] = decodeReturnedValueFromHex<std::string>(exec_result.value());
 
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");

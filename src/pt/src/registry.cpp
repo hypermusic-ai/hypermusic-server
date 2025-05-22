@@ -102,16 +102,16 @@ namespace hm
         // check if transformations exists
         for(const Dimension & dimension : feature.dimensions())
         {
-            for(const auto & transformation : dimension.transformation_name())
+            for(const auto & transformation : dimension.transformations())
             {
-                if(! co_await containsTransformationBucket(transformation))
+                if(! co_await containsTransformationBucket(transformation.name()))
                 {
-                    spdlog::error("Cannot find transformation `{}` used in feature `{}`", transformation, feature.name());
+                    spdlog::error("Cannot find transformation `{}` used in feature `{}`", transformation.name(), feature.name());
                     co_return std::nullopt;
                 }
-                if(co_await isTransformationBucketEmpty(transformation))
+                if(co_await isTransformationBucketEmpty(transformation.name()))
                 {
-                    spdlog::error("Cannot find transformation `{}` used in feature `{}`", transformation, feature.name());
+                    spdlog::error("Cannot find transformation `{}` used in feature `{}`", transformation.name(), feature.name());
                     co_return std::nullopt;
                 }
             }
