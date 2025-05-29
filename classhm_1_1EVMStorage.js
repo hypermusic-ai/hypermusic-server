@@ -8,7 +8,7 @@ var classhm_1_1EVMStorage =
     [ "add_account", "classhm_1_1EVMStorage.html#acc19f3c38e529b903f9fd299a1592421", null ],
     [ "call", "classhm_1_1EVMStorage.html#a7126dbaf2fc69bd97fcef37526cdd3ad", null ],
     [ "copy_code", "classhm_1_1EVMStorage.html#a1fd775b5a6b85ff28f2ff0984b7e4173", null ],
-    [ "deploy_contract", "classhm_1_1EVMStorage.html#a62bd05c9ea60e87e65b7b48b31de71ce", null ],
+    [ "deploy_contract", "classhm_1_1EVMStorage.html#aeb09f644d52e6dad5f951500a323d34f", null ],
     [ "derive_create2_address", "classhm_1_1EVMStorage.html#a66b1b72fcca6428ec9dbd5142069bcf9", null ],
     [ "derive_create_address", "classhm_1_1EVMStorage.html#af5f427bafe1658008a20007af3bdc9ee", null ],
     [ "emit_log", "classhm_1_1EVMStorage.html#a8eac352cde4e8e9cd26b26f2a5da833f", null ],

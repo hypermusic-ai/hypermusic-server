@@ -26,6 +26,7 @@ var annotated_dup =
     ] ],
     [ "std", null, [
       [ "formatter< evmc::address >", "structstd_1_1formatter_3_01evmc_1_1address_01_4.html", "structstd_1_1formatter_3_01evmc_1_1address_01_4" ],
+      [ "formatter< evmc::bytes32 >", "structstd_1_1formatter_3_01evmc_1_1bytes32_01_4.html", "structstd_1_1formatter_3_01evmc_1_1bytes32_01_4" ],
       [ "formatter< evmc_address >", "structstd_1_1formatter_3_01evmc__address_01_4.html", "structstd_1_1formatter_3_01evmc__address_01_4" ],
       [ "formatter< evmc_call_kind >", "structstd_1_1formatter_3_01evmc__call__kind_01_4.html", "structstd_1_1formatter_3_01evmc__call__kind_01_4" ],
       [ "formatter< evmc_flags >", "structstd_1_1formatter_3_01evmc__flags_01_4.html", "structstd_1_1formatter_3_01evmc__flags_01_4" ],
