@@ -13,7 +13,7 @@ add_module(NAME "PT"
         asio
 )
 
-add_dependencies("PT" check_protoc_version configure_pt_repo)
+add_dependencies("PT" check_protoc_version pt_configure)
 
 protobuf_generate(NAME "proto_gen" 
     PROTO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/proto

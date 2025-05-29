@@ -15,7 +15,7 @@ project("${PROJECT_NAME}"
 # --------------------------------------------------------------------------
 option(HYPERMUSIC_ENABLE_INSTALL "Enable install rule" OFF)
 option(HYPERMUSIC_BUILD_TESTS "Build tests" OFF)
-
+option(HYPERMUSIC_USE_SUBMODULE_PT "Use submodule PT" OFF)
 
 # --------------------------------------------------------------------------
 message(STATUS "Install directory ${CMAKE_INSTALL_PREFIX}")

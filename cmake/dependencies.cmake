@@ -199,34 +199,47 @@ FetchContent_MakeAvailable(secp256k1)
 # ---------------------------------------------------------
 # solc
 # ---------------------------------------------------------
-message(STATUS "Fetching dependency `solidity` ...")
+message(STATUS "Fetching dependency `solc` ...")
 set(SOLC_VERSION "v0.8.30")
 set(SOLC_EXE_NAME "solc-windows.exe")
 set(SOLC_URL "https://github.com/ethereum/solidity/releases/download/${SOLC_VERSION}/${SOLC_EXE_NAME}")
 
-set(SOLC_PREFIX "${CMAKE_BINARY_DIR}/_deps/solidity")
+set(SOLC_PREFIX "${CMAKE_BINARY_DIR}/_deps/solc")
 set(SOLC_DOWNLOAD_DIR "${SOLC_PREFIX}/download")
-set(SOLC_INSTALL_DIR "${CMAKE_BINARY_DIR}/_install/solidity")
+set(SOLC_INSTALL_DIR "${CMAKE_BINARY_DIR}/_install/solc")
+set(SOLC_CONFIG_MARKER "${SOLC_INSTALL_DIR}/solc_config_success.txt")
 
 file(MAKE_DIRECTORY "${SOLC_INSTALL_DIR}/bin")
 file(MAKE_DIRECTORY "${SOLC_INSTALL_DIR}/lib")
 file(MAKE_DIRECTORY "${SOLC_INSTALL_DIR}/include")
 
 message(STATUS "Downloading ${SOLC_EXE_NAME} from ${SOLC_URL}...")
-ExternalProject_Add(solidity_bin
-    URL             "${SOLC_URL}"
-    DOWNLOAD_DIR    "${SOLC_DOWNLOAD_DIR}"
-    PREFIX          "${SOLC_PREFIX}"
+ExternalProject_Add(solc_download
+    URL             ${SOLC_URL}
+    DOWNLOAD_DIR    ${SOLC_DOWNLOAD_DIR}
+    PREFIX          ${SOLC_PREFIX}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
-    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/_deps/solidity/download/${SOLC_EXE_NAME}" "${SOLC_INSTALL_DIR}/bin/"
+    INSTALL_COMMAND ""
     LOG_DOWNLOAD ON
     DOWNLOAD_NO_EXTRACT ON
 )
-    
+
+add_custom_command(
+    OUTPUT ${SOLC_CONFIG_MARKER}
+    COMMAND ${CMAKE_COMMAND} -E echo "Configuring Solc"
+            && cd ${SOLC_PREFIX}
+            && ${CMAKE_COMMAND} -E copy "${SOLC_DOWNLOAD_DIR}/${SOLC_EXE_NAME}" "${SOLC_INSTALL_DIR}/bin/"
+            && ${CMAKE_COMMAND} -E touch ${SOLC_CONFIG_MARKER}
+    WORKING_DIRECTORY ${SOLC_PREFIX}
+    COMMENT "Configuring Solc compiler"
+)
+
+add_custom_target(solc_configure ALL DEPENDS ${SOLC_CONFIG_MARKER})
+
 # Create an imported executable target
 add_executable(solc_imported IMPORTED GLOBAL)
-add_dependencies(solc_imported solidity_bin)
+add_dependencies(solc_imported solc_download solc_configure)
 
 # Install solc binaries
 install(DIRECTORY "${SOLC_INSTALL_DIR}/bin/"
@@ -266,26 +279,38 @@ set(EVMONE_URL "https://github.com/ethereum/evmone/releases/download/v${EVMONE_V
 set(EVMONE_PREFIX "${CMAKE_BINARY_DIR}/_deps/evmone")
 set(EVMONE_ZIP_EXTRACT_DIR "${EVMONE_PREFIX}/src/evmone_bin")
 set(EVMONE_INSTALL_DIR "${CMAKE_BINARY_DIR}/_install/evmone") # Use a binary-tree install location
+set(EVMONE_CONFIG_MARKER "${EVMONE_INSTALL_DIR}/evmone_config_success.txt")
 
 file(MAKE_DIRECTORY "${EVMONE_INSTALL_DIR}/bin")
 file(MAKE_DIRECTORY "${EVMONE_INSTALL_DIR}/lib")
 file(MAKE_DIRECTORY "${EVMONE_INSTALL_DIR}/include")
 
-ExternalProject_Add(evmone_bin
+ExternalProject_Add(evmone_bin_download
     URL ${EVMONE_URL}
     PREFIX ${EVMONE_PREFIX}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
-    INSTALL_COMMAND 
-        ${CMAKE_COMMAND} -E copy "${EVMONE_ZIP_EXTRACT_DIR}/bin/evmone.dll" "${EVMONE_INSTALL_DIR}/bin/"
-        && ${CMAKE_COMMAND} -E copy "${EVMONE_ZIP_EXTRACT_DIR}/lib/evmone.lib" "${EVMONE_INSTALL_DIR}/lib/"
-        && ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ZIP_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
+    INSTALL_COMMAND ""
     LOG_DOWNLOAD ON
 )
 
+add_custom_command(
+    OUTPUT ${EVMONE_CONFIG_MARKER}
+    COMMAND ${CMAKE_COMMAND} -E echo "Configuring Evmone"
+            && cd ${EVMONE_PREFIX}
+            && ${CMAKE_COMMAND} -E copy "${EVMONE_ZIP_EXTRACT_DIR}/bin/evmone.dll" "${EVMONE_INSTALL_DIR}/bin/"
+            && ${CMAKE_COMMAND} -E copy "${EVMONE_ZIP_EXTRACT_DIR}/lib/evmone.lib" "${EVMONE_INSTALL_DIR}/lib/"
+            && ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ZIP_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
+            && ${CMAKE_COMMAND} -E touch ${EVMONE_CONFIG_MARKER}
+    WORKING_DIRECTORY ${EVMONE_PREFIX}
+    COMMENT "Configuring Evmone"
+)
+
+add_custom_target(evmone_configure ALL DEPENDS ${EVMONE_CONFIG_MARKER})
+
 # Create imported target
 add_library(evmone IMPORTED STATIC GLOBAL)
-add_dependencies(evmone evmone_bin)
+add_dependencies(evmone evmone_bin_download evmone_configure)
 
 set_target_properties(evmone PROPERTIES
     IMPORTED_LOCATION "${EVMONE_INSTALL_DIR}/lib/evmone.lib"
@@ -310,14 +335,20 @@ install(DIRECTORY "${EVMONE_INSTALL_DIR}/include/"
 # ---------------------------------------------------------
 # PT repository
 # ---------------------------------------------------------
-message(STATUS "Fetching dependency `PT` ...")
-set(PT_REPO_PREFIX "${CMAKE_BINARY_DIR}/_deps/pt")
-include(cmake/FetchPT.cmake)
+
+if(HYPERMUSIC_USE_SUBMODULE_PT)
+    message(STATUS "Using submodule `PT`")
+    set(PT_REPO_PREFIX "${CMAKE_SOURCE_DIR}/submodule/pt")
+else()
+    message(STATUS "Fetching dependency `PT` ...")
+    set(PT_REPO_PREFIX "${CMAKE_BINARY_DIR}/_deps/pt")
+    include(cmake/FetchPT.cmake)
+endif()
 
 set(PT_SOLIDITY_DIR "${PT_REPO_PREFIX}/solidity")
 set(PT_ARTIFACTS_DIR "${PT_SOLIDITY_DIR}/artifacts")
 set(PT_INSTALL_DIR "${CMAKE_BINARY_DIR}/_install/pt")
-set(PT_BUILD_MARKER "${PT_SOLIDITY_DIR}/pt_build_success.txt")
+set(PT_CONFIG_MARKER "${PT_INSTALL_DIR}/pt_config_success.txt")
 
 message(STATUS "PT repository location : ${PT_REPO_PREFIX}")
 message (STATUS "PT solidity location : ${PT_SOLIDITY_DIR}")
@@ -328,40 +359,26 @@ file(MAKE_DIRECTORY "${PT_INSTALL_DIR}/contracts")
 file(MAKE_DIRECTORY "${PT_INSTALL_DIR}/node_modules")
 
 add_custom_command(
-    OUTPUT ${PT_BUILD_MARKER}
-    COMMAND ${CMAKE_COMMAND} -E echo "Installing dependencies for Solidity contracts..." &&
-            cd ${PT_SOLIDITY_DIR} &&
-            npm install
-            && ${CMAKE_COMMAND} -E touch ${PT_BUILD_MARKER}
+    OUTPUT ${PT_CONFIG_MARKER}
+    COMMAND ${CMAKE_COMMAND} -E echo "Configuring PT"
+            && cd ${PT_SOLIDITY_DIR}
+            && npm install
             && ${CMAKE_COMMAND} -E copy_directory "${PT_SOLIDITY_DIR}/contracts" "${PT_INSTALL_DIR}/contracts"
             && ${CMAKE_COMMAND} -E copy_directory "${PT_SOLIDITY_DIR}/node_modules" "${PT_INSTALL_DIR}/node_modules"
+            && ${CMAKE_COMMAND} -E touch ${PT_CONFIG_MARKER}
     WORKING_DIRECTORY ${PT_SOLIDITY_DIR}
     COMMENT "Configuring PT repo"
 )
 
-add_custom_target(configure_pt_repo ALL DEPENDS ${PT_BUILD_MARKER})
-add_dependencies(configure_pt_repo pt_repo)
+add_custom_target(pt_configure ALL DEPENDS ${PT_CONFIG_MARKER})
+
+if(NOT HYPERMUSIC_USE_SUBMODULE_PT)
+    add_dependencies(pt_configure pt_download)
+endif()
 
 install(DIRECTORY "${PT_INSTALL_DIR}/"
     DESTINATION "${CMAKE_INSTALL_PREFIX}/pt"
 )
-
-# Copy ABI or bytecode from artifacts if needed
-#add_custom_command(
-#    OUTPUT ${CMAKE_BINARY_DIR}/resources/abi/Runner.json
-#    COMMAND ${CMAKE_COMMAND} -E copy
-#            ${PT_ARTIFACTS_DIR}/contracts/Runner.sol/Runner.json
-#            ${CMAKE_BINARY_DIR}/resources/abi/Runner.json
-#    DEPENDS build_pt_contracts
-#    COMMENT "Copying Runner ABI to resources"
-#)
-
-#add_custom_target(copy_pt_abi ALL
-#    DEPENDS ${CMAKE_BINARY_DIR}/resources/abi/Runner.json
-#)
-
-#add_dependencies(${PROJECT_NAME} copy_pt_abi)
-
 
 # ---------------------------------------------------------
 # GTest

@@ -26,18 +26,14 @@ namespace hm
 template <>
 struct std::formatter<evmc_address> : std::formatter<std::string> {
     auto format(const evmc_address & addr, format_context& ctx) const {
-        std::ostringstream oss;
-        oss << "0x";
-        for (auto byte : addr.bytes)
-            oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
-        return formatter<std::string>::format(oss.str(), ctx);
+        return formatter<std::string>::format(evmc::hex(evmc::address(addr)), ctx);
     }
 };
 
 template <>
 struct std::formatter<evmc::address> : std::formatter<std::string> {
     auto format(const evmc::address & addr, format_context& ctx) const {
-        return formatter<evmc_address>{}.format((evmc_address)(addr), ctx);
+        return formatter<std::string>{}.format(evmc::hex(addr), ctx);
     }
 };
 
@@ -104,6 +100,16 @@ struct std::formatter<evmc_flags> : std::formatter<std::string> {
         return formatter<string>::format("", ctx);
     }
 };
+
+template <>
+struct std::formatter<evmc::bytes32> : std::formatter<std::string> {
+    auto format(const evmc::bytes32 & bytes, format_context& ctx) const {
+        std::string hex_str = evmc::hex(bytes);
+        return std::formatter<std::string>::format(hex_str, ctx);
+    }
+};
+
+
 
 //TODO evmc_revision
 

@@ -50,7 +50,7 @@ namespace hm
                 args_code = "";
                 for(unsigned int iii = 0; iii < transform.args_size(); ++iii)
                 {
-                    args_code += "\"" + std::to_string(transform.args().at(iii)) + "\"";
+                    args_code += "uint32(" + std::to_string(transform.args().at(iii)) + ")";
                     if(iii + 1 != transform.args_size())args_code += ", ";
                 }
 
@@ -71,8 +71,8 @@ namespace hm
                 "contract " + feature.name() + " is FeatureBase{\n" // open contract
                 "string[] private _composites" + composites_code + ";\n"
                 "constructor(address registryAddr) FeatureBase(registryAddr, new AlwaysTrue(), \"" + feature.name() + "\", _composites){\n" // open ctor // 
-                + "" + // transform_def_code
-                "\n}" // close ctor // initTransformations();
+                + transform_def_code + // transform_def_code
+                "super.initTransformations();\n}" // close ctor;
                 "\n}"; // close contract
     }
 }

@@ -2,11 +2,11 @@
 
 namespace hm
 {
-    std::vector<uint8_t> constructFunctionSelector(std::string signature)
+    std::vector<std::uint8_t> constructFunctionSelector(std::string signature)
     {
-        uint8_t hash[32];
+        std::uint8_t hash[32];
         Keccak256::getHash(reinterpret_cast<const uint8_t*>(signature.data()), signature.size(), hash);
-        return std::vector<uint8_t>(hash, hash + 32);
+        return std::vector<std::uint8_t>(hash, hash + 4);
     }
 
     template<>
@@ -15,6 +15,158 @@ namespace hm
         std::vector<std::uint8_t> encoded(32, 0); // Initialize with 32 zero bytes
         std::copy(address.bytes, address.bytes + 20, encoded.begin() + 12); // Right-align in last 20 bytes
         return encoded;
+    }
+
+    template<>
+    std::vector<std::uint8_t> encodeAsArg<std::uint32_t>(const std::uint32_t & value)
+    {
+        std::vector<std::uint8_t> encoded(32, 0); // Initialize with 32 zero bytes
+
+        // Encode as big-endian and place in the last 4 bytes (right-aligned)
+        encoded[28] = static_cast<std::uint8_t>((value >> 24) & 0xFF);
+        encoded[29] = static_cast<std::uint8_t>((value >> 16) & 0xFF);
+        encoded[30] = static_cast<std::uint8_t>((value >> 8) & 0xFF);
+        encoded[31] = static_cast<std::uint8_t>(value & 0xFF);
+
+        return encoded;
+    }
+
+    template<>
+    std::vector<std::uint8_t> encodeAsArg<std::vector<std::uint32_t>>(const std::vector<std::uint32_t>& vec)
+    {
+        std::vector<std::uint8_t> encoded;
+
+        // Step 1: offset to the data section (0x20 = 32)
+        encoded.resize(32, 0);
+        encoded[31] = 0x20; // offset is 32 bytes
+
+        // Step 2: dynamic data section begins
+        std::vector<std::uint8_t> data;
+
+        // 2.1: encode length (number of elements)
+        data.resize(32, 0);
+        std::uint32_t length = static_cast<std::uint32_t>(vec.size());
+        data[28] = static_cast<std::uint8_t>((length >> 24) & 0xFF);
+        data[29] = static_cast<std::uint8_t>((length >> 16) & 0xFF);
+        data[30] = static_cast<std::uint8_t>((length >> 8) & 0xFF);
+        data[31] = static_cast<std::uint8_t>(length & 0xFF);
+
+        // 2.2: encode each element (right-aligned uint32 in 32 bytes)
+        for (const std::uint32_t val : vec)
+        {
+            std::vector<std::uint8_t> element(32, 0);
+            element[28] = static_cast<std::uint8_t>((val >> 24) & 0xFF);
+            element[29] = static_cast<std::uint8_t>((val >> 16) & 0xFF);
+            element[30] = static_cast<std::uint8_t>((val >> 8) & 0xFF);
+            element[31] = static_cast<std::uint8_t>(val & 0xFF);
+            data.insert(data.end(), element.begin(), element.end());
+        }
+
+        // Step 3: append the data section after the 32-byte offset
+        encoded.insert(encoded.end(), data.begin(), data.end());
+
+        return encoded;
+    }
+
+    template<>
+    std::vector<std::uint8_t> encodeAsArg<std::string>(const std::string& str)
+    {
+        std::vector<std::uint8_t> encoded;
+
+        // Step 1: offset to data section (always 32 bytes for first arg)
+        encoded.resize(32, 0);
+        encoded[31] = 0x20;
+
+        // Step 2: encode length
+        std::vector<std::uint8_t> data(32, 0);
+        std::uint64_t length = static_cast<std::uint64_t>(str.size());
+        data[24] = static_cast<std::uint8_t>((length >> 56) & 0xFF);
+        data[25] = static_cast<std::uint8_t>((length >> 48) & 0xFF);
+        data[26] = static_cast<std::uint8_t>((length >> 40) & 0xFF);
+        data[27] = static_cast<std::uint8_t>((length >> 32) & 0xFF);
+        data[28] = static_cast<std::uint8_t>((length >> 24) & 0xFF);
+        data[29] = static_cast<std::uint8_t>((length >> 16) & 0xFF);
+        data[30] = static_cast<std::uint8_t>((length >> 8) & 0xFF);
+        data[31] = static_cast<std::uint8_t>(length & 0xFF);
+
+        // Step 3: copy string bytes and pad to 32-byte boundary
+        std::vector<std::uint8_t> content(str.begin(), str.end());
+        std::size_t padding = 32 - (content.size() % 32);
+        if (padding != 32) content.insert(content.end(), padding, 0);
+
+        // Step 4: concatenate all parts
+        encoded.insert(encoded.end(), data.begin(), data.end());
+        encoded.insert(encoded.end(), content.begin(), content.end());
+
+        return encoded;
+    }
+
+
+    static std::uint32_t _readUint32(const std::vector<std::uint8_t> & bytes, std::size_t offset) {
+        std::uint32_t value = 0;
+        for (std::size_t i = 0; i < 4; ++i) {
+            value <<= 8;
+            value |= bytes[offset + i];
+        }
+        return value;
+    }
+
+    static std::uint32_t _readUint32Padded(const std::vector<uint8_t>& bytes, std::size_t offset) {
+        // Read last 4 bytes of 32-byte ABI word
+        assert(offset + 32 <= bytes.size());
+        uint32_t value = 0;
+        for (int i = 28; i < 32; ++i) {
+            value = (value << 8) | bytes[offset + i];
+        }
+        return value;
+    }
+
+    static std::uint64_t _readUint256(const std::vector<std::uint8_t> & bytes, std::size_t offset) {
+        std::uint64_t value = 0;
+        for (std::size_t i = 0; i < 32; ++i) {
+            value <<= 8;
+            value |= bytes[offset + i];
+        }
+        return value;
+    }
+
+    template<>
+    std::vector<std::vector<uint32_t>> decodeReturnedValue(const std::vector<std::uint8_t> & bytes)
+    {
+        assert(bytes.size() % 32 == 0);
+        std::vector<std::vector<uint32_t>> result;
+
+        std::size_t base_offset = _readUint256(bytes, 0);  // normally 32
+        std::size_t offset = base_offset;
+
+        uint64_t outer_len = _readUint256(bytes, offset);
+        offset += 32;
+
+        std::vector<std::size_t> inner_offsets;
+        for (uint64_t i = 0; i < outer_len; ++i) {
+            std::uint64_t inner_offset = _readUint256(bytes, offset);
+            inner_offsets.push_back(inner_offset + base_offset + 32);
+            offset += 32;
+        }
+
+        for (std::size_t inner_offset : inner_offsets) 
+        {
+            if (inner_offset + 32 > bytes.size()) {
+                throw std::runtime_error("Inner array header out of range");
+            }
+
+            std::uint64_t inner_len = _readUint256(bytes, inner_offset);
+            inner_offset += 32;
+
+            std::vector<uint32_t> inner_array;
+            for (std::uint64_t j = 0; j < inner_len; ++j) {
+                std::uint32_t val = _readUint32Padded(bytes, inner_offset + (j * 32));
+                inner_array.push_back(val);
+            }
+            result.push_back(std::move(inner_array));
+        }
+
+        return result;
     }
 
 
@@ -32,6 +184,15 @@ namespace hm
 
         _vm.set_option("O", "0"); // disable optimizations
 
+        // Initialize the genesis account
+        std::memcpy(_genesis_address.bytes + (20 - 7), "genesis", 7);
+        addAccount(_genesis_address, 1000000000000000000);
+        spdlog::info(std::format("Genesis address: {}", _genesis_address));
+
+        // Initialize console log account
+        std::memcpy(_console_log_address.bytes + (20 - 11), "console.log", 11);
+        addAccount(_console_log_address, 1000000000000000000);
+
         co_spawn(io_context, loadPT(), asio::detached);
     }
     
@@ -48,6 +209,12 @@ namespace hm
     asio::awaitable<bool> EVM::addAccount(evmc::address address, std::uint64_t initial_gas) noexcept
     {
         co_await ensureOnStrand(_strand);
+
+        if(_storage.account_exists(address))
+        {
+            spdlog::warn(std::format("addAccount: Account {} already exists", evmc::hex(address)));
+            co_return false;
+        }
 
         if(_storage.add_account(address))
         {
@@ -121,6 +288,17 @@ namespace hm
         {
             spdlog::error("Empty bytecode");
             co_return evmc_status_code::EVMC_FAILURE;
+        }
+
+        if(!constructor_args.empty())
+        {
+            std::string hex_str;
+            for(const std::uint8_t & b : constructor_args)
+            {
+                hex_str += evmc::hex(b);
+            }
+
+            spdlog::debug(std::format("Constructor args: {}", hex_str));
         }
 
         std::vector<uint8_t> deployment_input;
@@ -250,7 +428,7 @@ namespace hm
 
             const auto registry_address_res = co_await deploy(
                     out_dir / "registry" / "RegistryBase.bin", 
-                    evmc::address{},
+                    _genesis_address,
                     {}, 
                     1000000, 
                     0);
@@ -271,7 +449,7 @@ namespace hm
         
             const auto runner_address_res = co_await deploy(
                     out_dir / "Runner.bin", 
-                    evmc::address{},
+                    _genesis_address,
                     encodeAsArg(_registry_address), 
                     1000000, 
                     0);

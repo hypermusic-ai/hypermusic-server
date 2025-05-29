@@ -190,7 +190,9 @@ namespace hm
 
         evmc::address address_bytes{evmc::from_hex<evmc_address>(address).value_or(evmc::address{})};
         
-        evm.addAccount(address_bytes, 1000000);
+        
+        co_await evm.addAccount(address_bytes, 1000000); //TODO
+        
 
         auto deploy_res = co_await evm.deploy(
             out_dir / (feature.name() + ".bin"), 
@@ -205,7 +207,7 @@ namespace hm
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(hm::http::Code::InternalServerError);
-            response.setBody("Failed to deploy code : " + deploy_res.error());
+            response.setBody(std::format("Failed to deploy code : {}",  deploy_res.error()));
             co_return std::move(response);
         }
 
@@ -570,7 +572,7 @@ namespace hm
         const auto & feature_name = feature_name_result.value();
 
         // N
-        auto N_result = parse::parseRouteArgAs<std::size_t>(args.at(1));
+        const auto N_result = parse::parseRouteArgAs<std::uint32_t>(args.at(1));
         if(!N_result)
         {
             spdlog::error("invalid number of samples");
@@ -579,10 +581,10 @@ namespace hm
             response.setBody("invalid number of samples");
             co_return response;
         }
-        const auto & N = N_result.value();
+        const std::uint32_t & N = N_result.value();
 
         // starting points
-        auto starting_points_result = parse::parseRouteArgAs<std::size_t>(args.at(2));
+        auto starting_points_result = parse::parseRouteArgAs<std::vector<std::uint32_t>>(args.at(2));
         if(!starting_points_result)
         {
             spdlog::error("invalid starting points");
@@ -591,16 +593,44 @@ namespace hm
             response.setBody("invalid starting points");
             co_return response;
         }
-        const auto & starting_points = starting_points_result.value();
+        const std::vector<std::uint32_t> & starting_points = starting_points_result.value();
 
 
         std::vector<uint8_t> input_data;
         // runner function selector
-        const auto selector = constructFunctionSelector("gen(string,uint32,uint32[])");
+        const auto selector = constructFunctionSelector("gen(string,uint32)");
         input_data.insert(input_data.end(), selector.begin(), selector.end());
 
+        // 1. Offset to start of string data (first dynamic arg): 64 (decimal) => 0x40
+        std::vector<uint8_t> offset_to_string(32, 0);
+        offset_to_string[31] = 0x40;
+        input_data.insert(input_data.end(), offset_to_string.begin(), offset_to_string.end());
+
+        // 2. uint32 argument, properly encoded as a 32-byte word
+        auto N_bytes = encodeAsArg(N);
+        input_data.insert(input_data.end(), N_bytes.begin(), N_bytes.end());
+
+        // 3. String encoding
+        std::vector<uint8_t> name_bytes;
+        {
+            const std::string& s = feature_name;
+            std::vector<uint8_t> len_enc(32, 0);
+            len_enc[31] = static_cast<uint8_t>(s.size());
+
+            name_bytes.insert(name_bytes.end(), len_enc.begin(), len_enc.end()); // string length
+            name_bytes.insert(name_bytes.end(), s.begin(), s.end());             // string bytes
+
+            // pad to multiple of 32 bytes
+            size_t pad = (32 - (s.size() % 32)) % 32;
+            name_bytes.insert(name_bytes.end(), pad, 0);
+        }
+
+        // Append the string bytes
+        input_data.insert(input_data.end(), name_bytes.begin(), name_bytes.end());
+
+
         // execute call to runner
-        const auto exec_result = co_await evm.execute(address_bytes, evm.getRunnerAddress(), input_data, 1000, 0);
+        const auto exec_result = co_await evm.execute(address_bytes, evm.getRunnerAddress(), input_data, 1'000'000, 0);
         
         // check execution status
         if(!exec_result)
@@ -614,8 +644,7 @@ namespace hm
         }
 
         json json_output;
-        //json_output["output"] = decodeReturnedValueFromHex<std::string>(exec_result.value());
-
+        json_output["output"] = decodeReturnedValue<std::vector<std::vector<std::uint32_t>>>(exec_result.value());
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(hm::http::Code::Created);

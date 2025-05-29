@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-ExternalProject_Add(pt_repo
+ExternalProject_Add(pt_download
     GIT_REPOSITORY https://github.com/hypermusic-ai/PT.git
     GIT_TAG main
     PREFIX          "${PT_REPO_PREFIX}"

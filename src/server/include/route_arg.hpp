@@ -126,6 +126,18 @@ namespace hm::parse
     std::optional<std::size_t> parseRouteArgAs<std::size_t>(const RouteArg & arg);
 
     /**
+     * @brief Parses a `RouteArg` as a 32bit unsigned integer.
+     * 
+     * This function takes a `RouteArg` and attempts to parse it as a 32bit unsigned integer.
+     * If the parsing is successful, it returns the 32bit unsigned integer; otherwise, it returns an empty optional.
+     * 
+     * @param arg The `RouteArg` to parse.
+     * @return The parsed 32bit unsigned integer or an empty optional if parsing fails.
+     */
+    template<>
+    std::optional<std::uint32_t> parseRouteArgAs<std::uint32_t>(const RouteArg & arg);
+
+    /**
      * @brief Parses a `RouteArg` as a string.
      * 
      * This function takes a `RouteArg` and attempts to parse it as a `string`.
@@ -136,6 +148,10 @@ namespace hm::parse
      */
     template<>
     std::optional<std::string> parseRouteArgAs<std::string>(const RouteArg & arg);
+
+
+    template<>
+    std::optional<std::vector<std::uint32_t>> parseRouteArgAs<std::vector<std::uint32_t>>(const RouteArg& arg);
 }
 
 template <>

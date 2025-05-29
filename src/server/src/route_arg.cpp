@@ -100,10 +100,69 @@ namespace hm::parse
         return val;
     }
 
+
+    template<>
+    std::optional<std::uint32_t> parseRouteArgAs<std::uint32_t>(const RouteArg & arg) 
+    {
+        if(arg.getType() != RouteArgType::unsigned_integer)return std::nullopt;
+
+        try {
+            std::size_t pos = 0;
+            unsigned long long parsed = std::stoull(arg.getData(), &pos);
+
+            // Ensure the whole string was parsed and the value fits in uint32_t
+            if (pos != arg.getData().size() || parsed > std::numeric_limits<uint32_t>::max())
+                return std::nullopt;
+
+            return static_cast<uint32_t>(parsed);
+        } catch (...) {
+            return std::nullopt;
+        }
+    }
+
     template<>
     std::optional<std::string> parseRouteArgAs<std::string>(const RouteArg & arg) 
     {
         if(arg.getType() != RouteArgType::string)return std::nullopt;
         return arg.getData();
     }
+
+    template<>
+    std::optional<std::vector<std::uint32_t>> parseRouteArgAs<std::vector<std::uint32_t>>(const RouteArg& arg)
+    {
+        if (arg.getType() != RouteArgType::unsigned_integer)
+            return std::nullopt;
+    
+        const std::string& data = arg.getData();
+        std::vector<std::uint32_t> result;
+        std::size_t start = 0;
+    
+        try {
+            while (start < data.size()) {
+                std::size_t end = data.find(',', start);
+                std::string token = (end == std::string::npos)
+                    ? data.substr(start)
+                    : data.substr(start, end - start);
+    
+                // Skip empty tokens (e.g., double commas)
+                if (!token.empty()) {
+                    std::size_t pos = 0;
+                    unsigned long long parsed = std::stoull(token, &pos);
+                    if (pos != token.size() || parsed > std::numeric_limits<uint32_t>::max())
+                        return std::nullopt;
+    
+                    result.push_back(static_cast<std::uint32_t>(parsed));
+                }
+    
+                if (end == std::string::npos) break;
+                start = end + 1;
+            }
+        } catch (...) {
+            return std::nullopt;
+        }
+    
+        return result;
+    }
+
+
 }

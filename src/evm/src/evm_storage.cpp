@@ -6,18 +6,18 @@ namespace hm
         :   _vm(vm),
             _revision(rev)
     {
-        // Initialize the genesis account
-        add_account(evmc::address{});
-        set_balance(evmc::address{}, 1000000000000000000);
     }
 
     bool EVMStorage::account_exists(const evmc::address& addr) const noexcept
     {
-        return _accounts.find(to_key(addr)) != _accounts.end();
+        bool val =  _accounts.find(to_key(addr)) != _accounts.end();
+        spdlog::debug(std::format("account_exists [{}]: Account {}", val, addr));
+        return val;
     }
 
     evmc::bytes32 EVMStorage::get_storage(const evmc::address& addr, const evmc::bytes32& key) const noexcept
     {
+        spdlog::debug(std::format("get_storage : Account {}, key {}", addr, key));
         if(account_exists(addr) == false) 
         {
             spdlog::error(std::format("get_storage : Account {} does not exist", addr));
@@ -29,6 +29,7 @@ namespace hm
 
     evmc_storage_status EVMStorage::set_storage(const evmc::address& address, const evmc::bytes32& key, const evmc::bytes32& value) noexcept
     {
+        spdlog::debug(std::format("set_storage : Account {}, key {}, value {}", address, key, value));
         _accounts[to_key(address)].storage[key] = value;
         return EVMC_STORAGE_MODIFIED;
     }
@@ -46,6 +47,7 @@ namespace hm
 
     std::size_t EVMStorage::get_code_size(const evmc::address& addr) const noexcept
     {
+        spdlog::debug(std::format("get_code_size : Account {}", addr));
         return _accounts.at(to_key(addr)).code.size();
     }
 
@@ -68,6 +70,7 @@ namespace hm
                              std::uint8_t* buffer_data,
                              std::size_t buffer_size) const noexcept
     {
+        spdlog::debug(std::format("copy_code : Account {}, offset {}, buffer_size {}", addr, code_offset, buffer_size));
         const auto& code = _accounts.at(to_key(addr)).code;
         if (code_offset >= code.size())
         {
@@ -99,15 +102,14 @@ namespace hm
         // Patch: if sender is zero and we are in a nested context
         if (evmc::is_zero(msg.sender) && !_sender_stack.empty()) {
             actual_sender = _sender_stack.top();
-            spdlog::warn(std::format("Patching missing sender with: {}", evmc::hex(actual_sender)));
         }
         // Push current sender onto the stack
         _sender_stack.push(actual_sender);
 
-        spdlog::debug(std::format("CALL START: {}", evmc::hex(actual_sender)));
-
         if (msg.kind == EVMC_CALL || msg.kind == EVMC_DELEGATECALL || msg.kind == EVMC_CALLCODE) 
         {
+            spdlog::info(std::format("EVMC call from {}, to {}", actual_sender, msg.recipient));
+
             auto it = _accounts.find(to_key(msg.recipient));
 
             if (it == _accounts.end())
@@ -124,18 +126,48 @@ namespace hm
             }
             
             evmc_message patched_msg = msg;
-            patched_msg.sender = actual_sender;
+            //patched_msg.sender = actual_sender;
             evmc::Result result = _vm.execute(*this, _revision, patched_msg, code.data(), code.size());
             _sender_stack.pop();
 
-            spdlog::debug(std::format("EVMC_CALL END: {}", evmc::hex(patched_msg.sender.bytes)));
+            spdlog::info(std::format("call from {}, to {} ended", patched_msg.sender, patched_msg.recipient));
             return result;
         }
         else if (msg.kind == EVMC_CREATE || msg.kind == EVMC_CREATE2)
         {
+            spdlog::info(std::format("EVMC create from {}", actual_sender));
+
+            assert(msg.recipient == evmc::address{});
             evmc_message patched_msg = msg;
-            patched_msg.sender = actual_sender;
-            evmc::Result result = _vm.execute(*this, _revision, patched_msg, msg.input_data, msg.input_size);
+
+            const std::vector<std::uint8_t> init_code(patched_msg.input_data, patched_msg.input_data + patched_msg.input_size);
+
+            // Calculate address
+            if(!_create_nonce.contains(actual_sender))
+            {
+                _create_nonce[actual_sender] = 100;
+            }
+
+            evmc_address new_address;
+            if (patched_msg.kind == EVMC_CREATE)
+            {
+                new_address = derive_create_address(actual_sender, _create_nonce[actual_sender]++);
+            }
+            else // CREATE2
+            {
+                new_address = derive_create2_address(actual_sender, patched_msg.create2_salt, init_code);
+            }
+
+            add_account(new_address);
+            set_balance(new_address, 10000000000000000000);
+
+            // at this point constructor does not have any address - so any operation - for example store ect 
+            // will use default 0x0 address, therefore we use dummy ctor account, 
+            // to which constructor code can write its sload, sstore operations ect
+            patched_msg.recipient = new_address;
+
+            //patched_msg.sender = actual_sender;
+            evmc::Result result = _vm.execute(*this, _revision, patched_msg, init_code.data(), init_code.size());
             _sender_stack.pop();
 
             if (result.status_code != EVMC_SUCCESS)
@@ -144,22 +176,12 @@ namespace hm
                 return result;
             }
 
-            std::vector<std::uint8_t> deployed_code(result.output_data, result.output_data + result.output_size);
+            deploy_contract(new_address, std::vector<std::uint8_t>(result.output_data, result.output_data + result.output_size),
+                patched_msg.value, actual_sender, _create_nonce[actual_sender] - 1);
 
-            evmc_address new_address;
-            if (msg.kind == EVMC_CREATE)
-            {
-                new_address = derive_create_address(patched_msg.sender, _create_nonce[patched_msg.sender]++);
-            }
-            else // CREATE2
-            {
-                new_address = derive_create2_address(patched_msg.sender, msg.create2_salt, deployed_code);
-            }
-
-            deploy_contract(new_address, std::move(deployed_code), msg.value, patched_msg.sender, _create_nonce[patched_msg.sender] - 1);
             result.create_address = new_address;
             
-            spdlog::debug(std::format("EVMC_CREATE END: {}", evmc::hex(patched_msg.sender.bytes)));
+            spdlog::debug(std::format("create call from {} to {} ended", actual_sender, new_address));
             return result;
         }
 
@@ -212,34 +234,60 @@ namespace hm
         return {};
     }
 
-    void EVMStorage::emit_log(const evmc::address& addr,
-                          const std::uint8_t* data,
-                          size_t data_size,
-                          const evmc::bytes32 topics[],
-                          size_t num_topics) noexcept
+    static std::string _decodeString(const std::uint8_t* data, std::size_t data_size, std::size_t offset)
     {
-        std::string ascii_str(reinterpret_cast<const char*>(data), data_size);
+        if (offset + 32 > data_size) return "<out-of-bounds>";
+
+        std::uint64_t len = 0;
+        for (int i = 0; i < 32; ++i)
+            len = (len << 8) | data[offset + i];
+
+        if (offset + 32 + len > data_size) return "<out-of-bounds>";
+
+        return std::string(reinterpret_cast<const char*>(data + offset + 32), len);
+    }
+
+
+    void EVMStorage::emit_log(const evmc::address& addr,
+                              const std::uint8_t* data,
+                              size_t data_size,
+                              const evmc::bytes32 topics[],
+                              size_t num_topics) noexcept
+    {
+        std::string label = "<n/a>";
+        std::string value = "<n/a>";
+
+        if (data_size >= 64) {
+            uint64_t offset_label = 0, offset_value = 0;
+            for (int i = 0; i < 32; ++i)
+                offset_label = (offset_label << 8) | data[i];
+            for (int i = 0; i < 32; ++i)
+                offset_value = (offset_value << 8) | data[32 + i];
+
+            label = _decodeString(data, data_size, offset_label);
+            value = _decodeString(data, data_size, offset_value);
+        }
 
         // Format topics
         std::string topics_str;
-        for (size_t i = 0; i < num_topics; ++i) {
-            topics_str += std::format("Topic[{}]: {}\n", i, evmc::hex(topics[i]));
-        }
+        for (size_t i = 0; i < num_topics; ++i)
+            topics_str += std::format("Topic[{}]: {}\n", i, topics[i]);
 
-        spdlog::info(std::format("Log from {}:\n  Data: {} bytes\n  Content: {}\n  Topics:\n{}",
-                             evmc::hex(addr),
-                             data_size,
-                             ascii_str,
-                             topics_str));
+        spdlog::info(std::format("Log from {}:\n  Data: {} bytes\n  Label: {}\n  Value: {}\n  Topics:\n{}",
+                                 addr, data_size, label, value, topics_str));
     }
 
     evmc_access_status EVMStorage::access_account(const evmc::address& addr) noexcept
     {
+        if (account_exists(addr))
+            return EVMC_ACCESS_WARM;
         return EVMC_ACCESS_COLD;
     }
 
     evmc_access_status EVMStorage::access_storage(const evmc::address& addr, const evmc::bytes32& key) noexcept
     {
+        if (account_exists(addr))
+            return EVMC_ACCESS_WARM;
         return EVMC_ACCESS_COLD;
     }
 
@@ -307,12 +355,13 @@ namespace hm
                     evmc::address creator,
                     std::uint64_t nonce)
     {
-        if(account_exists(addr) == true) 
+        if(account_exists(addr) == false) 
         {
-            spdlog::error(std::format("deploy_contract: Account {} already exists", addr));
+            spdlog::error(std::format("deploy_contract: Account {} does not exists", addr));
             return;
         }
-        spdlog::debug(std::format("Deploying contract to {} by {}", evmc::hex(addr), evmc::hex(creator)));
+
+        spdlog::debug(std::format("Deploying contract to {} by {}", addr,creator));
         auto& account = _accounts[to_key(addr)];
         account.code = std::move(code);
         account.balance = value;

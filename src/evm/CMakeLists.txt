@@ -13,5 +13,5 @@ add_module(NAME "EVM"
         evmone
 )
 
-add_dependencies("EVM" solc_imported)
+add_dependencies("EVM" solc_imported evmone)
 target_compile_definitions("EVM" PUBLIC Solidity_SOLC_EXECUTABLE=${Solidity_SOLC_EXECUTABLE})

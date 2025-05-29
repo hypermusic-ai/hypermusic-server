@@ -96,15 +96,35 @@ namespace hm
 
         EVMStorage _storage;
         
+        evmc::address _genesis_address;
+        evmc::address _console_log_address;
+
         evmc::address _registry_address;
         evmc::address _runner_address;
     };
 
-    std::vector<uint8_t> constructFunctionSelector(std::string signature);
+    std::vector<std::uint8_t> constructFunctionSelector(std::string signature);
 
     template<class T>
     std::vector<std::uint8_t> encodeAsArg(const T & val);
 
     template<>
     std::vector<std::uint8_t> encodeAsArg<evmc::address>(const evmc::address & address);
+
+    template<>
+    std::vector<std::uint8_t> encodeAsArg<std::uint32_t>(const std::uint32_t & value);
+
+    template<>
+    std::vector<std::uint8_t> encodeAsArg<std::vector<std::uint32_t>>(const std::vector<std::uint32_t> & vec);
+
+    template<>
+    std::vector<std::uint8_t> encodeAsArg<std::string>(const std::string& str);
+
+
+    template<class T>
+    T decodeReturnedValue(const std::vector<std::uint8_t> & bytes);
+
+
+    template<>
+    std::vector<std::vector<std::uint32_t>> decodeReturnedValue(const std::vector<std::uint8_t> & bytes);
 }
