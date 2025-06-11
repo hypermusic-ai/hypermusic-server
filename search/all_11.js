@@ -14,14 +14,14 @@ var searchData=
   ['route_5farg_2ehpp_11',['route_arg.hpp',['../route__arg_8hpp.html',1,'']]],
   ['route_5fkey_2ecpp_12',['route_key.cpp',['../route__key_8cpp.html',1,'']]],
   ['route_5fkey_2ehpp_13',['route_key.hpp',['../route__key_8hpp.html',1,'']]],
-  ['routearg_14',['routearg',['../classhm_1_1RouteArg.html',1,'hm::RouteArg'],['../classhm_1_1RouteArg.html#aa63e0cb2268ca4d36487fdc72374928d',1,'hm::RouteArg::RouteArg(RouteArgType type, RouteArgRequirement requirement, std::string data)'],['../classhm_1_1RouteArg.html#a14203c6d456af76fc4b480c8b0b2544e',1,'hm::RouteArg::RouteArg(RouteArgDef def, std::string data)']]],
+  ['routearg_14',['routearg',['../classhm_1_1RouteArg.html#aa63e0cb2268ca4d36487fdc72374928d',1,'hm::RouteArg::RouteArg(RouteArgType type, RouteArgRequirement requirement, std::string data)'],['../classhm_1_1RouteArg.html#a14203c6d456af76fc4b480c8b0b2544e',1,'hm::RouteArg::RouteArg(RouteArgDef def, std::string data)'],['../classhm_1_1RouteArg.html',1,'hm::RouteArg']]],
   ['routeargdef_15',['RouteArgDef',['../namespacehm.html#a58c26834c86ebe03730763bab1633784',1,'hm']]],
   ['routeargrequirement_16',['RouteArgRequirement',['../namespacehm.html#a9b7caefa124af81f61f34212a0db2948',1,'hm']]],
   ['routeargtype_17',['RouteArgType',['../namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0',1,'hm']]],
   ['routehandlerfunc_18',['routehandlerfunc',['../classhm_1_1RouteHandlerFunc.html',1,'hm::RouteHandlerFunc'],['../classhm_1_1RouteHandlerFunc.html#acb7c9e42515e303f1d2496344a64d7ec',1,'hm::RouteHandlerFunc::RouteHandlerFunc(std::function&lt; asio::awaitable&lt; http::Response &gt;(Args...)&gt; func)'],['../classhm_1_1RouteHandlerFunc.html#a78ef66a2d18e309ef14278119fa317a5',1,'hm::RouteHandlerFunc::RouteHandlerFunc(RouteHandlerFunc &amp;&amp;other)=default']]],
-  ['routekey_19',['routekey',['../classhm_1_1RouteKey.html',1,'hm::RouteKey'],['../classhm_1_1RouteKey.html#a3fdcb778ce02b8327616aba4ff4fed65',1,'hm::RouteKey::RouteKey()']]],
-  ['router_20',['router',['../classhm_1_1Router.html',1,'hm::Router'],['../classhm_1_1Router.html#a811b308191518b9e02bae1766f373282',1,'hm::Router::Router()']]],
+  ['routekey_19',['routekey',['../classhm_1_1RouteKey.html#a3fdcb778ce02b8327616aba4ff4fed65',1,'hm::RouteKey::RouteKey()'],['../classhm_1_1RouteKey.html',1,'hm::RouteKey']]],
+  ['router_20',['router',['../classhm_1_1Router.html#a811b308191518b9e02bae1766f373282',1,'hm::Router::Router()'],['../classhm_1_1Router.html',1,'hm::Router']]],
   ['runner_2ecpp_21',['runner.cpp',['../runner_8cpp.html',1,'']]],
   ['runner_2ehpp_22',['runner.hpp',['../runner_8hpp.html',1,'']]],
-  ['runprocess_23',['runProcess',['../namespacehm_1_1native.html#a5d7008c44aa9a15317939fd6c4225c46',1,'hm::native']]]
+  ['runprocess_23',['runprocess',['../namespacehm_1_1native.html#a5d7008c44aa9a15317939fd6c4225c46',1,'hm::native::runProcess(const std::string &amp;command, std::vector&lt; std::string &gt; args={})'],['../namespacehm_1_1native.html#a887069f078c8eeeeae1cf68d5176e575',1,'hm::native::runProcess(const std::string &amp;command, const std::vector&lt; std::string &gt; &amp;args)']]]
 ];
