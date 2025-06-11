@@ -24,10 +24,18 @@ function(silence_warnings)
 
         get_target_property(type ${real_target} TYPE)
 
-        if("${type}" STREQUAL "INTERFACE_LIBRARY")
-            target_compile_options(${real_target} INTERFACE /W0)
-        else()
-            target_compile_options(${real_target} PRIVATE /W0)
+        if(MSVC)
+            if("${type}" STREQUAL "INTERFACE_LIBRARY")
+                target_compile_options(${real_target} INTERFACE /W0)
+            else()
+                target_compile_options(${real_target} PRIVATE /W0)
+            endif()
+        elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+            if("${type}" STREQUAL "INTERFACE_LIBRARY")
+                target_compile_options(${real_target} INTERFACE -w)
+            else()
+                target_compile_options(${real_target} PRIVATE -w)
+            endif()
         endif()
     endforeach()
 endfunction()
@@ -55,6 +63,7 @@ FetchContent_Declare(
     OVERRIDE_FIND_PACKAGE
 )
 FetchContent_MakeAvailable(spdlog)
+silence_warnings(TARGETS spdlog::spdlog)
 
 # ---------------------------------------------------------
 # asio
@@ -69,7 +78,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(asio)
 add_library(asio INTERFACE)
-target_compile_options(asio INTERFACE /wd4459)
+if(WIN32)
+    target_compile_options(asio INTERFACE /wd4459)
+endif()
 target_include_directories(asio INTERFACE "${asio_SOURCE_DIR}/asio/include")
 install(DIRECTORY ${asio_SOURCE_DIR}/asio/include/asio DESTINATION include)
 
@@ -161,6 +172,7 @@ FetchContent_Declare(
 )
 set(JSON_BuildTests OFF)
 FetchContent_MakeAvailable(json)
+silence_warnings(TARGETS nlohmann_json)
 
 # ---------------------------------------------------------
 # jwt-cpp
@@ -176,6 +188,7 @@ FetchContent_Declare(
 set(JWT_BUILD_EXAMPLES OFF)
 set(JWT_BUILD_TESTS OFF)
 FetchContent_MakeAvailable(jwt-cpp)
+silence_warnings(TARGETS jwt-cpp::jwt-cpp)
 
 # ---------------------------------------------------------
 # secp256k1
@@ -195,13 +208,20 @@ set(SECP256K1_BUILD_EXHAUSTIVE_TESTS OFF)
 set(SECP256K1_BUILD_CTIME_TESTS OFF)
 set(SECP256K1_ENABLE_MODULE_RECOVERY ON)
 FetchContent_MakeAvailable(secp256k1)
+silence_warnings(TARGETS secp256k1)
 
 # ---------------------------------------------------------
 # solc
 # ---------------------------------------------------------
 message(STATUS "Fetching dependency `solc` ...")
 set(SOLC_VERSION "v0.8.30")
-set(SOLC_EXE_NAME "solc-windows.exe")
+
+if(WIN32)
+    set(SOLC_EXE_NAME "solc-windows.exe")
+elseif(UNIX)
+    set(SOLC_EXE_NAME "solc-static-linux")
+endif()
+
 set(SOLC_URL "https://github.com/ethereum/solidity/releases/download/${SOLC_VERSION}/${SOLC_EXE_NAME}")
 
 set(SOLC_PREFIX "${CMAKE_BINARY_DIR}/_deps/solc")
@@ -225,15 +245,24 @@ ExternalProject_Add(solc_download
     DOWNLOAD_NO_EXTRACT ON
 )
 
-add_custom_command(
-    OUTPUT ${SOLC_CONFIG_MARKER}
-    COMMAND ${CMAKE_COMMAND} -E echo "Configuring Solc"
-            && cd ${SOLC_PREFIX}
-            && ${CMAKE_COMMAND} -E copy "${SOLC_DOWNLOAD_DIR}/${SOLC_EXE_NAME}" "${SOLC_INSTALL_DIR}/bin/"
-            && ${CMAKE_COMMAND} -E touch ${SOLC_CONFIG_MARKER}
-    WORKING_DIRECTORY ${SOLC_PREFIX}
-    COMMENT "Configuring Solc compiler"
-)
+if(WIN32)
+    add_custom_command(
+        OUTPUT ${SOLC_CONFIG_MARKER}
+        COMMAND ${CMAKE_COMMAND} -E copy "${SOLC_DOWNLOAD_DIR}/${SOLC_EXE_NAME}" "${SOLC_INSTALL_DIR}/bin/${SOLC_EXE_NAME}"
+        COMMAND ${CMAKE_COMMAND} -E touch ${SOLC_CONFIG_MARKER}
+        WORKING_DIRECTORY ${SOLC_PREFIX}
+        COMMENT "Configuring Solc compiler"
+    )
+elseif(UNIX)
+    add_custom_command(
+        OUTPUT ${SOLC_CONFIG_MARKER}
+        COMMAND ${CMAKE_COMMAND} -E copy "${SOLC_DOWNLOAD_DIR}/${SOLC_EXE_NAME}" "${SOLC_INSTALL_DIR}/bin/"
+        COMMAND chmod +x "${SOLC_INSTALL_DIR}/bin/${SOLC_EXE_NAME}"
+        COMMAND ${CMAKE_COMMAND} -E touch ${SOLC_CONFIG_MARKER}
+        WORKING_DIRECTORY ${SOLC_PREFIX}
+        COMMENT "Configuring Solc compiler"
+    )
+endif()
 
 add_custom_target(solc_configure ALL DEPENDS ${SOLC_CONFIG_MARKER})
 
@@ -242,8 +271,11 @@ add_executable(solc_imported IMPORTED GLOBAL)
 add_dependencies(solc_imported solc_download solc_configure)
 
 # Install solc binaries
-install(DIRECTORY "${SOLC_INSTALL_DIR}/bin/"
-        DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES "${SOLC_INSTALL_DIR}/bin/${SOLC_EXE_NAME}"
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                GROUP_READ GROUP_EXECUTE
+                WORLD_READ WORLD_EXECUTE)
 
 # set solidity solc executable location
 set(Solidity_SOLC_EXECUTABLE "${SOLC_EXE_NAME}" CACHE FILEPATH "Path to solc.exe" FORCE)
@@ -267,17 +299,27 @@ FetchContent_Declare(
 set(EVMC_INSTALL ON)
 set(EVMC_TESTING OFF)
 FetchContent_MakeAvailable(evmc)
+silence_warnings(TARGETS evmc::evmc)
 
 # ---------------------------------------------------------
 # evmone
 # ---------------------------------------------------------
 message(STATUS "Fetching dependency `evmone` ...")
-set(EVMONE_VERSION "0.15.0")
-set(EVMONE_ZIP_NAME "evmone-${EVMONE_VERSION}-windows-amd64.zip")
-set(EVMONE_URL "https://github.com/ethereum/evmone/releases/download/v${EVMONE_VERSION}/${EVMONE_ZIP_NAME}")
+set(EVMONE_MAJOR_VERSION "0")
+set(EVMONE_MINOR_VERSION "15")
+set(EVMONE_PATCH_VERSION "0")
+set(EVMONE_VERSION "${EVMONE_MAJOR_VERSION}.${EVMONE_MINOR_VERSION}.${EVMONE_PATCH_VERSION}")
+
+if(WIN32)
+    set(EVMONE_ARCHIVE_NAME "evmone-${EVMONE_VERSION}-windows-amd64.zip")
+elseif(UNIX)
+    set(EVMONE_ARCHIVE_NAME "evmone-${EVMONE_VERSION}-linux-x86_64.tar.gz")
+endif()
+
+set(EVMONE_URL "https://github.com/ethereum/evmone/releases/download/v${EVMONE_VERSION}/${EVMONE_ARCHIVE_NAME}")
 
 set(EVMONE_PREFIX "${CMAKE_BINARY_DIR}/_deps/evmone")
-set(EVMONE_ZIP_EXTRACT_DIR "${EVMONE_PREFIX}/src/evmone_bin")
+set(EVMONE_ARCHIVE_EXTRACT_DIR "${EVMONE_PREFIX}/src/evmone_bin")
 set(EVMONE_INSTALL_DIR "${CMAKE_BINARY_DIR}/_install/evmone") # Use a binary-tree install location
 set(EVMONE_CONFIG_MARKER "${EVMONE_INSTALL_DIR}/evmone_config_success.txt")
 
@@ -287,6 +329,7 @@ file(MAKE_DIRECTORY "${EVMONE_INSTALL_DIR}/include")
 
 ExternalProject_Add(evmone_bin_download
     URL ${EVMONE_URL}
+    SOURCE_DIR ${EVMONE_ARCHIVE_EXTRACT_DIR}
     PREFIX ${EVMONE_PREFIX}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
@@ -294,43 +337,109 @@ ExternalProject_Add(evmone_bin_download
     LOG_DOWNLOAD ON
 )
 
-add_custom_command(
-    OUTPUT ${EVMONE_CONFIG_MARKER}
-    COMMAND ${CMAKE_COMMAND} -E echo "Configuring Evmone"
-            && cd ${EVMONE_PREFIX}
-            && ${CMAKE_COMMAND} -E copy "${EVMONE_ZIP_EXTRACT_DIR}/bin/evmone.dll" "${EVMONE_INSTALL_DIR}/bin/"
-            && ${CMAKE_COMMAND} -E copy "${EVMONE_ZIP_EXTRACT_DIR}/lib/evmone.lib" "${EVMONE_INSTALL_DIR}/lib/"
-            && ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ZIP_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
-            && ${CMAKE_COMMAND} -E touch ${EVMONE_CONFIG_MARKER}
-    WORKING_DIRECTORY ${EVMONE_PREFIX}
-    COMMENT "Configuring Evmone"
-)
-
+# Create configuration target
 add_custom_target(evmone_configure ALL DEPENDS ${EVMONE_CONFIG_MARKER})
 
 # Create imported target
 add_library(evmone IMPORTED STATIC GLOBAL)
 add_dependencies(evmone evmone_bin_download evmone_configure)
 
-set_target_properties(evmone PROPERTIES
-    IMPORTED_LOCATION "${EVMONE_INSTALL_DIR}/lib/evmone.lib"
-)
+if(WIN32)
+    set(EVMONE_STATIC_LIBRARY "evmone.lib")
+    set(EVMONE_STATIC_LIBRARY_PATH "${EVMONE_ARCHIVE_EXTRACT_DIR}/lib/${EVMONE_STATIC_LIBRARY}")
 
-target_include_directories(evmone INTERFACE
-    $<BUILD_INTERFACE:${EVMONE_INSTALL_DIR}/include>
-)
+    set(EVMONE_SHARED_LIBRARY "evmone.dll")
+    set(EVMONE_SHARED_LIBRARY_PATH "${EVMONE_ARCHIVE_EXTRACT_DIR}/bin/${EVMONE_SHARED_LIBRARY}")
 
-# Install evmone binaries
-install(DIRECTORY "${EVMONE_INSTALL_DIR}/bin/"
-        DESTINATION ${CMAKE_INSTALL_BINDIR}
-        FILES_MATCHING PATTERN "*.dll")
+    add_custom_command(
+        OUTPUT ${EVMONE_CONFIG_MARKER}
+        COMMAND cd "${EVMONE_PREFIX}"
+            && ${CMAKE_COMMAND} -E echo  
+                    "Copy extracted evmone includes"
+                    "${EVMONE_ARCHIVE_EXTRACT_DIR}/include"
+                    "to install directory"
+                    "${EVMONE_INSTALL_DIR}/include"
+            && ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ARCHIVE_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
+            && ${CMAKE_COMMAND} -E echo
+                    "Copy extracted evmone libraries"
+                    "${EVMONE_STATIC_LIBRARY_PATH} and ${EVMONE_SHARED_LIBRARY_PATH}"
+                    "to install directories"
+                    "${EVMONE_INSTALL_DIR}/lib/ and ${EVMONE_INSTALL_DIR}/bin/"
+            && ${CMAKE_COMMAND} -E copy "${EVMONE_STATIC_LIBRARY_PATH}" "${EVMONE_INSTALL_DIR}/lib/"
+            && ${CMAKE_COMMAND} -E copy "${EVMONE_SHARED_LIBRARY_PATH}" "${EVMONE_INSTALL_DIR}/bin/"
+            && ${CMAKE_COMMAND} -E echo 
+                    "Generate configurtaion marker ${EVMONE_CONFIG_MARKER}"
+            && ${CMAKE_COMMAND} -E touch "${EVMONE_CONFIG_MARKER}"
+        WORKING_DIRECTORY ${EVMONE_PREFIX}
+        COMMENT "Configuring Evmone"
+    )
 
-install(DIRECTORY "${EVMONE_INSTALL_DIR}/lib/"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        FILES_MATCHING PATTERN "*.lib")
+    set_target_properties(evmone PROPERTIES
+        IMPORTED_LOCATION "${EVMONE_INSTALL_DIR}/lib/${EVMONE_STATIC_LIBRARY}"         # evmone.lib
+        INTERFACE_INCLUDE_DIRECTORIES "${EVMONE_INSTALL_DIR}/include"
+    )
 
-install(DIRECTORY "${EVMONE_INSTALL_DIR}/include/"
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(FILES "${EVMONE_STATIC_LIBRARY_PATH}" DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    install(FILES "${EVMONE_SHARED_LIBRARY_PATH}" DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+elseif(UNIX)
+    set(EVMONE_SHARED_LIBRARY "libevmone.so.${EVMONE_VERSION}")
+    set(EVMONE_SHARED_LIBRARY_PATH "${EVMONE_ARCHIVE_EXTRACT_DIR}/lib/${EVMONE_SHARED_LIBRARY}")
+
+    # Copy extracted libraries to install directory & Generate configuration marker
+    add_custom_command(
+        OUTPUT ${EVMONE_CONFIG_MARKER}
+        COMMAND cd "${EVMONE_PREFIX}"
+            && ${CMAKE_COMMAND} -E echo  
+                    "Copy extracted evmone includes"
+                    "${EVMONE_ARCHIVE_EXTRACT_DIR}/include"
+                    "to install directory"
+                    "${EVMONE_INSTALL_DIR}/include"
+            && ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ARCHIVE_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
+            && ${CMAKE_COMMAND} -E echo
+                    "Copy extracted evmone library"
+                    "${EVMONE_SHARED_LIBRARY_PATH}"
+                    "to install directory"
+                    "${EVMONE_INSTALL_DIR}/lib/"
+            && ${CMAKE_COMMAND} -E copy "${EVMONE_SHARED_LIBRARY_PATH}" "${EVMONE_INSTALL_DIR}/lib/"
+            && ${CMAKE_COMMAND} -E echo 
+                    "Generate configurtaion marker ${EVMONE_CONFIG_MARKER}"
+            && ${CMAKE_COMMAND} -E touch "${EVMONE_CONFIG_MARKER}"
+        WORKING_DIRECTORY ${EVMONE_PREFIX}
+        COMMENT "Configuring Evmone"
+    )
+
+    set_target_properties(evmone PROPERTIES
+        IMPORTED_LOCATION "${EVMONE_INSTALL_DIR}/lib/${EVMONE_SHARED_LIBRARY}"          # libevmone.so
+        INTERFACE_INCLUDE_DIRECTORIES "${EVMONE_INSTALL_DIR}/include"
+    )
+
+    set(_symlink_script "
+        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E create_symlink
+            \"libevmone.so.${EVMONE_VERSION}\"
+            \"libevmone.so.${EVMONE_MAJOR_VERSION}.${EVMONE_MINOR_VERSION}\"
+            WORKING_DIRECTORY \"${CMAKE_INSTALL_LIBDIR}\")
+
+        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E create_symlink
+            \"libevmone.so.${EVMONE_MAJOR_VERSION}.${EVMONE_MINOR_VERSION}\"
+            \"libevmone.so.${EVMONE_MAJOR_VERSION}\"
+            WORKING_DIRECTORY \"${CMAKE_INSTALL_LIBDIR}\")
+
+        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E create_symlink
+            \"libevmone.so.${EVMONE_MAJOR_VERSION}\"
+            \"libevmone.so\"
+            WORKING_DIRECTORY \"${CMAKE_INSTALL_LIBDIR}\")
+    ")
+
+    install(FILES "${EVMONE_INSTALL_DIR}/lib/libevmone.so.${EVMONE_VERSION}" DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+    install(CODE "${_symlink_script}")
+
+endif()
+
+target_include_directories(evmone INTERFACE $<BUILD_INTERFACE:${EVMONE_INSTALL_DIR}/include>)
+
+install(DIRECTORY "${EVMONE_INSTALL_DIR}/include/" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
 
 # ---------------------------------------------------------
 # PT repository

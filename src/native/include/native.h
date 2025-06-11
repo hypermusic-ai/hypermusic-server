@@ -2,7 +2,7 @@
 
 #if defined(WIN32)
 #include "windows/windows.h"
-#elif defined(UNIX)
+#elif defined(__unix__)
 #include "unix/unix.h"
 #elif defined(__APPLE__)
 #include "mac/mac.h"

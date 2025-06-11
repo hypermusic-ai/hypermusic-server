@@ -1,0 +1,31 @@
+name: Build Hypermusic Server
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: sudo apt update && sudo apt install -y cmake build-essential libssl-dev npm
+
+    - name: Configure and build
+      run: |
+        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=install
+        cmake --build build --config Debug --target install
+
+    - name: Pack install directory into tarball
+      run: |
+        tar -czf hypermusic-server.tar.gz -C install .
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: hypermusic-server
+        path: hypermusic-server.tar.gz 

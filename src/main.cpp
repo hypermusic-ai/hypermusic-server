@@ -45,8 +45,9 @@ int main(int argc, char* argv[])
     const auto simple_form = hm::loadSimpleForm();
     if(simple_form)
     {
-        server.addRoute({hm::http::Method::OPTIONS, "/"},                hm::OPTIONS_SimpleForm);
-        server.addRoute({hm::http::Method::GET, "/"},                    hm::GET_SimpleForm, std::cref(simple_form.value()));
+        server.addRoute({hm::http::Method::HEAD, "/"},          hm::HEAD_SimpleForm);
+        server.addRoute({hm::http::Method::OPTIONS, "/"},       hm::OPTIONS_SimpleForm);
+        server.addRoute({hm::http::Method::GET, "/"},           hm::GET_SimpleForm, std::cref(simple_form.value()));
     }
 
     server.addRoute({hm::http::Method::GET, "/nonce/<string>"},       hm::GET_nonce, std::ref(auth_manager));

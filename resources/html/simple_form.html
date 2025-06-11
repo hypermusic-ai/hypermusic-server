@@ -4,26 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Hypermusic Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            font-family: sans-serif;
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 1rem;
-            background: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .row {
+            font-family: system-ui, sans-serif;
+            background-color: #0d0d0d;
+            color: #ffffff;
             display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            margin: 0;
         }
 
-        .column {
-            flex: 1;
-            min-width: 300px;
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
         }
 
         label,
@@ -38,17 +39,56 @@
         textarea {
             height: 150px;
             font-family: monospace;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 4px;
+        }
+
+        input {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+
+        button {
+            background-color: #1e90ff;
+            color: #fff;
+            border: none;
+            padding: 0.8rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0f66c0;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 300px;
         }
 
         .response-row {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1rem;
         }
 
         .response-code {
             flex: 1;
-            background: #eee;
+            background: #333;
+            color: #fff;
             padding: 0.5rem;
             border-radius: 6px;
             text-align: center;
@@ -57,34 +97,29 @@
 
         .response-body {
             flex: 3;
-            white-space: pre-wrap;
-            background: #eee;
+            background: #333;
+            color: #fff;
             padding: 0.5rem;
             border-radius: 6px;
             font-family: monospace;
+            white-space: pre-wrap;
         }
 
         hr {
+            width: 100%;
+            border: 1px solid #333;
             margin: 2rem 0;
         }
     </style>
 </head>
 
 <body>
-    <div class="row">
-        <div class="column">
-            <h1>Hypermusic Server</h1>
-            <p>Welcome to the Hypermusic Server! This is a simple interface to interact with the server.</p>
-        </div>
-    </div>
-    <hr>
+    <h1>Hypermusic Server</h1>
+    <p style="text-align:center; max-width:600px">Interact with the API endpoints directly from your browser.</p>
+
     <div class="row">
         <div class="column">
             <button id="login" class="response-body">Login with MetaMask</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="column">
             <div class="response-row">
                 <div id="loginStatus" class="response-body"></div>
             </div>
@@ -92,83 +127,74 @@
     </div>
 
     <hr>
-    
+
     <div class="row">
         <div class="column">
-            <h2>Execute contract</h2>
-            <label for="executeAddress">Contract address</label>
-            <input type="text" id="executeAddress" placeholder="e.g. d8f295970180682dd71432d0399c2cff342d8bf7" />
-            <label for="executeN">Number of samples</label>
-            <input type="text" id="executeN" placeholder="e.g. 10" />
-            <label for="executeN">Starting points</label>
-            <input type="text" id="executeStartPoints" placeholder="e.g. [0,0,1]" />
-
-            <button onclick="execute()">Send GET to /execute/:address</button>
+            <h2>Execute Contract</h2>
+            <label>Contract address</label>
+            <input id="executeAddress" type="text" placeholder="0x...">
+            <label>Sample count</label>
+            <input id="executeN" type="text" placeholder="10">
+            <label>Start points</label>
+            <input id="executeStartPoints" type="text" placeholder="[0,0,1]">
+            <button onclick="execute()">Execute</button>
             <div class="response-row">
-                <div id="executeCode" class="response-code">—</div>
-                <div id="executeBody" class="response-body">Waiting for response...</div>
+                <div id="executeCode" class="response-code">-</div>
+                <div id="executeBody" class="response-body">Waiting...</div>
             </div>
         </div>
     </div>
 
     <hr>
 
-    <!-- Feature Row -->
     <div class="row">
-        <!-- Feature POST -->
         <div class="column">
             <h2>Send Feature</h2>
-            <label for="featureData">Feature JSON</label>
+            <label>Feature JSON</label>
             <textarea id="featureData">{ "name": "", "dimensions": [] }</textarea>
-            <button onclick="sendFeature()">Send POST to /feature</button>
+            <button onclick="sendFeature()">Send</button>
             <div class="response-row">
-                <div id="responseCode" class="response-code">—</div>
-                <div id="responseBody" class="response-body">Waiting for response...</div>
+                <div id="responseCode" class="response-code">-</div>
+                <div id="responseBody" class="response-body">Waiting...</div>
             </div>
         </div>
-
-        <!-- Feature GET -->
         <div class="column">
             <h2>Fetch Feature</h2>
-            <label for="getFeatureName">Feature Name</label>
-            <input type="text" id="getFeatureName" placeholder="e.g. pitch" />
-            <label for="getFeatureVersion">Optional Feature Version</label>
-            <input type="text" id="getFeatureVersion" placeholder="(optional)" />
-            <button onclick="getFeature()">Send GET to /feature/:name(/:version)</button>
+            <label>Name</label>
+            <input id="getFeatureName" type="text">
+            <label>Version (optional)</label>
+            <input id="getFeatureVersion" type="text">
+            <button onclick="getFeature()">Fetch</button>
             <div class="response-row">
-                <div id="getFeatureCode" class="response-code">—</div>
-                <div id="getFeatureBody" class="response-body">Waiting for response...</div>
+                <div id="getFeatureCode" class="response-code">-</div>
+                <div id="getFeatureBody" class="response-body">Waiting...</div>
             </div>
         </div>
     </div>
 
     <hr>
 
-    <!-- Transformation Row -->
     <div class="row">
-        <!-- Transformation POST -->
         <div class="column">
             <h2>Send Transformation</h2>
-            <label for="transformationData">Transformation JSON</label>
+            <label>Transformation JSON</label>
             <textarea id="transformationData">{ "name": "", "sol_src": "" }</textarea>
-            <button onclick="sendTransformation()">Send POST to /transformation</button>
+            <button onclick="sendTransformation()">Send</button>
             <div class="response-row">
-                <div id="transformationCode" class="response-code">—</div>
-                <div id="transformationBody" class="response-body">Waiting for response...</div>
+                <div id="transformationCode" class="response-code">-</div>
+                <div id="transformationBody" class="response-body">Waiting...</div>
             </div>
         </div>
-
-        <!-- Transformation GET -->
         <div class="column">
             <h2>Fetch Transformation</h2>
-            <label for="getTransformationName">Transformation Name</label>
-            <input type="text" id="getTransformationName" placeholder="e.g. add" />
-            <label for="getTransformationVersion">Optional Transformation Version</label>
-            <input type="text" id="getTransformationVersion" placeholder="(optional)" />
-            <button onclick="getTransformation()">Send GET to /transformation/:name(/:version)</button>
+            <label>Name</label>
+            <input id="getTransformationName" type="text">
+            <label>Version (optional)</label>
+            <input id="getTransformationVersion" type="text">
+            <button onclick="getTransformation()">Fetch</button>
             <div class="response-row">
-                <div id="getTransformationCode" class="response-code">—</div>
-                <div id="getTransformationBody" class="response-body">Waiting for response...</div>
+                <div id="getTransformationCode" class="response-code">-</div>
+                <div id="getTransformationBody" class="response-body">Waiting...</div>
             </div>
         </div>
     </div>
@@ -179,7 +205,8 @@
             const codeDiv = document.getElementById('responseCode');
             const bodyDiv = document.getElementById('responseBody');
             try {
-                const res = await fetchWithRefresh('http://localhost:54321/feature', {
+                const apiBase = window.location.origin;
+                const res = await fetchWithRefresh(`${apiBase}/feature`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -206,7 +233,8 @@
                 alert("Contract address is required.");
                 return;
             }
-            const url = `http://localhost:54321/execute/${address}/${N}/${startPoints}`;
+            const apiBase = window.location.origin;
+            const url = `${apiBase}/execute/${address}/${N}/${startPoints}`;
             try {
                 const res = await fetch(url);
                 const text = await res.text();
@@ -227,7 +255,8 @@
                 alert("Feature name is required.");
                 return;
             }
-            const url = `http://localhost:54321/feature/${name}${version ? `/${version}` : ''}`;
+            const apiBase = window.location.origin;
+            const url = `${apiBase}/feature/${name}${version ? `/${version}` : ''}`;
             try {
                 const res = await fetch(url);
                 const text = await res.text();
@@ -244,7 +273,8 @@
             const codeDiv = document.getElementById('transformationCode');
             const bodyDiv = document.getElementById('transformationBody');
             try {
-                const res = await fetchWithRefresh('http://localhost:54321/transformation', {
+                const apiBase = window.location.origin;
+                const res = await fetchWithRefresh(`${apiBase}/transformation`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -269,7 +299,8 @@
                 alert("Transformation name is required.");
                 return;
             }
-            const url = `http://localhost:54321/transformation/${name}${version ? `/${version}` : ''}`;
+            const apiBase = window.location.origin;
+            const url = `${apiBase}/transformation/${name}${version ? `/${version}` : ''}`;
             try {
                 const res = await fetch(url);
                 const text = await res.text();
@@ -303,8 +334,8 @@
             }
             try {
                 const [address] = await window.ethereum.request({ method: 'eth_requestAccounts' });
-
-                const nonceRes = await fetch('http://localhost:54321/nonce/' + address);
+                const apiBase = window.location.origin;
+                const nonceRes = await fetch(`${apiBase}/nonce/` + address);
                 const { nonce } = await nonceRes.json();
 
                 const message = `Login nonce: ${nonce}`;
@@ -313,7 +344,7 @@
                     params: [message, address],
                 });
 
-                const authRes = await fetch('http://localhost:54321/auth', {
+                const authRes = await fetch(`${apiBase}/auth`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ address, signature, message }),
@@ -344,7 +375,8 @@
             }
 
             // 401 → try to refresh
-            const refreshRes = await fetch('http://localhost:54321/refresh', {
+            const apiBase = window.location.origin;
+            const refreshRes = await fetch(`${apiBase}/refresh`, {
                 method: 'POST',
                 credentials: 'include'
             });

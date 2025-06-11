@@ -16,6 +16,8 @@ namespace hm::http
      * 
      * - `GET`: method requests a representation of the specified resource.
      * 
+     * - `HEAD`: method requests headers of the response, not the actual body.
+     *
      * - `PUT`: replaces all current representations of the target resource with the request payload.
      * 
      * - `DEL`: Tdeletes the specified resource.
@@ -31,6 +33,7 @@ namespace hm::http
         Unknown = 0,
 
         GET,
+        HEAD,
         PUT,
         DEL, //DELETE collides with macro definition in winnt.h ... 
         POST,
@@ -57,6 +60,7 @@ struct std::formatter<hm::http::Method> : std::formatter<std::string> {
     switch(method)
     {
         case hm::http::Method::GET:     return formatter<string>::format("GET", ctx);
+        case hm::http::Method::HEAD:     return formatter<string>::format("HEAD", ctx);
         case hm::http::Method::PUT:     return formatter<string>::format("PUT", ctx);
         case hm::http::Method::DEL:     return formatter<string>::format("DELETE", ctx);
         case hm::http::Method::POST:    return formatter<string>::format("POST", ctx);

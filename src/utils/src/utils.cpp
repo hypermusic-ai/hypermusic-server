@@ -91,7 +91,6 @@ namespace hm
     std::string escapeSolSrcQuotes(const std::string& json)
     {
         std::string output;
-        size_t pos = 0;
 
         // Find start of "sol_src"
         size_t key_start = json.find("\"sol_src\"");

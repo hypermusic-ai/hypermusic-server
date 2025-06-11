@@ -90,6 +90,9 @@ target_link_libraries("${PROJECT_NAME}"
         "${PROJECT_NAME}Lib"
 )
 
+# sets the RPATH in the executable to search for libraries in a path relative to the executable location
+set_target_properties("${PROJECT_NAME}" PROPERTIES INSTALL_RPATH "$ORIGIN/../lib")
+
 # executable install target
 install(TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}Targets
@@ -99,11 +102,13 @@ install(TARGETS ${PROJECT_NAME}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# install debug information
-install(FILES "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    OPTIONAL
-)
+if(MSVC)
+    # install debug information
+    install(FILES "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+        OPTIONAL
+    )
+endif()
 
 # make install target of resources directory
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources/"

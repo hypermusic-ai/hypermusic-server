@@ -2,6 +2,16 @@
 
 namespace hm
 {
+    asio::awaitable<http::Response> HEAD_SimpleForm(const http::Request &, std::vector<RouteArg>)
+    {
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+        response.setCode(hm::http::Code::OK);
+        co_return response;
+    }
+
     asio::awaitable<http::Response> OPTIONS_SimpleForm(const http::Request &, std::vector<RouteArg>)
     {
         http::Response response;
@@ -19,8 +29,10 @@ namespace hm
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
-        response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+        response.setHeader(http::Header::Connection, "keep-alive");
+        response.setHeader(http::Header::ContentType, "text/html; charset=utf-8");
+        response.setCode(hm::http::Code::OK);
         response.setBody(simple_form);
         co_return response;
     }

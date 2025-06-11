@@ -114,6 +114,10 @@ namespace hm
             spdlog::debug("Send response\n{}\n", std::format("{}", response));
 
             co_await writeData(sock, std::format("{}", response));
+
+            // conection should close
+            const auto connection_header = response.getHeader(http::Header::Connection);
+            if(std::ranges::find(connection_header, "close") != connection_header.end())co_return;
         }
     }
 

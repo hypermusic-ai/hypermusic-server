@@ -1,5 +1,14 @@
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
 message(STATUS "CMAKE_CXX_COMPILER_ID: ${CMAKE_CXX_COMPILER_ID}")
 
+# ------------------------------------------------------------
+# MSVC compiler
+# ------------------------------------------------------------
 if (MSVC)
     # https://cmake.org/cmake/help/latest/policy/CMP0091.html
     cmake_policy(SET CMP0091 NEW)
@@ -82,8 +91,38 @@ if (MSVC)
 
 endif()
 
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+# ------------------------------------------------------------
+# GCC compiler
+# ------------------------------------------------------------
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "Configuring for GCC compiler")
+    message(STATUS "GCC version: ${CMAKE_CXX_COMPILER_VERSION}")
 
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+    # Common GCC warnings and options
+    add_compile_options(
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Wno-unused-parameter
+        -Wno-unknown-pragmas
+        -fdiagnostics-color=always
+
+        # Debug config
+        "$<$<CONFIG:Debug>:-O0>"
+        "$<$<CONFIG:Debug>:-g3>"
+        "$<$<CONFIG:Debug>:-DDEBUG>"
+
+        # RelWithDebInfo config
+        "$<$<CONFIG:RelWithDebInfo>:-O2>"
+        "$<$<CONFIG:RelWithDebInfo>:-g>"
+        "$<$<CONFIG:RelWithDebInfo>:-DNDEBUG>"
+
+        # Release config
+        "$<$<CONFIG:Release>:-O3>"
+        "$<$<CONFIG:Release>:-DNDEBUG>"
+    )
+
+    # Linker flags (optional, but good for optimized builds)
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,--as-needed -Wl,--gc-sections" CACHE STRING "" FORCE)
+    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE}" CACHE STRING "" FORCE)
+endif()

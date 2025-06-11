@@ -19,6 +19,15 @@ using namespace asio::experimental::awaitable_operators;
 namespace hm
 {
     /**
+     * Handles HEAD requests for a simple form by returning a response with CORS headers.
+     *
+     * @param request The incoming HTTP request (not used in this implementation)
+     * @param routeArgs Route arguments (not used in this implementation)
+     * @return An HTTP response with CORS headers for the simple form
+     */
+    asio::awaitable<http::Response> HEAD_SimpleForm(const http::Request &, std::vector<RouteArg>);
+
+    /**
      * Handles OPTIONS requests for a simple form by returning a response with CORS headers.
      *
      * @param request The incoming HTTP request (not used in this implementation)
