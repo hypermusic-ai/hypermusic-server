@@ -5,6 +5,7 @@ var api_8hpp =
     [ "GET_nonce", "api_8hpp.html#a62108fd927bd50265eabd38e6a7e4721", null ],
     [ "GET_SimpleForm", "api_8hpp.html#ab2f1d2872dacc5591eff37ba2aec16c8", null ],
     [ "GET_transformation", "api_8hpp.html#a57bb7b2654487cb862364102786f0c06", null ],
+    [ "HEAD_SimpleForm", "api_8hpp.html#a31db948cc721113d763738fd37495010", null ],
     [ "OPTIONS_feature", "api_8hpp.html#acf0974ae4ae37240c370ea2267bb5752", null ],
     [ "OPTIONS_SimpleForm", "api_8hpp.html#a18bd44d9c77dc0e2228d09befb48993f", null ],
     [ "OPTIONS_transformation", "api_8hpp.html#a8d78e663dd5e7d46d28daa5807418f1e", null ],

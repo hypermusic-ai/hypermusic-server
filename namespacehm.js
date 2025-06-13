@@ -69,6 +69,7 @@ var namespacehm =
     [ "getBinPath", "namespacehm.html#a2cf1544433bbde96b34c52064923b75f", null ],
     [ "getPTPath", "namespacehm.html#a6e783e5e09275289798625fb528535e8", null ],
     [ "getResourcesPath", "namespacehm.html#a8c3fe396ac2088c57d2e2a2834e67ed8", null ],
+    [ "HEAD_SimpleForm", "namespacehm.html#a31db948cc721113d763738fd37495010", null ],
     [ "hexToBytes", "namespacehm.html#a1982677cc158b1142a43328524e42f2d", null ],
     [ "loadSimpleForm", "namespacehm.html#a6346d98b5cdc163f9e08ccb0565bc327", null ],
     [ "OPTIONS_feature", "namespacehm.html#acf0974ae4ae37240c370ea2267bb5752", null ],

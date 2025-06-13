@@ -185,6 +185,8 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a31db948cc721113d763738fd37495010" id="r_a31db948cc721113d763738fd37495010"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classhm_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#a31db948cc721113d763738fd37495010">HEAD_SimpleForm</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &gt;)</td></tr>
+<tr class="separator:a31db948cc721113d763738fd37495010"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18bd44d9c77dc0e2228d09befb48993f" id="r_a18bd44d9c77dc0e2228d09befb48993f"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classhm_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#a18bd44d9c77dc0e2228d09befb48993f">OPTIONS_SimpleForm</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &gt;)</td></tr>
 <tr class="separator:a18bd44d9c77dc0e2228d09befb48993f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2f1d2872dacc5591eff37ba2aec16c8" id="r_ab2f1d2872dacc5591eff37ba2aec16c8"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classhm_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#ab2f1d2872dacc5591eff37ba2aec16c8">GET_SimpleForm</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">simple_form</a>)</td></tr>
@@ -1521,6 +1523,43 @@ template&lt;&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a31db948cc721113d763738fd37495010" name="a31db948cc721113d763738fd37495010"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31db948cc721113d763738fd37495010">&#9670;&#160;</a></span>HEAD_SimpleForm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">asio::awaitable&lt; <a class="el" href="classhm_1_1http_1_1Response.html">http::Response</a> &gt; hm::HEAD_SimpleForm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1http_1_1Request.html">http::Request</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Handles HEAD requests for a simple form by returning a response with CORS headers.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">request</td><td>The incoming HTTP request (not used in this implementation) </td></tr>
+    <tr><td class="paramname">routeArgs</td><td>Route arguments (not used in this implementation) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An HTTP response with CORS headers for the simple form </dd></dl>
 
 </div>
 </div>
