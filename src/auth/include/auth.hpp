@@ -21,6 +21,17 @@ using namespace asio::experimental::awaitable_operators;
 
 namespace hm
 {
+    enum class AuthenticationError
+    {
+        MissingCookie,
+        InvalidCookie,
+        MissingToken,
+        InvalidToken,
+        InvalidSignature,
+        InvalidNonce,
+        InvalidAddress
+    };
+
     class AuthManager
     {
         public:

@@ -2,7 +2,7 @@
 
 namespace hm
 {
-     asio::awaitable<http::Response> OPTIONS_feature(const http::Request &, std::vector<RouteArg>)
+    asio::awaitable<http::Response> OPTIONS_feature(const http::Request &, std::vector<RouteArg>)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");

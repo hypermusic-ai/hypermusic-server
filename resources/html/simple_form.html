@@ -131,12 +131,12 @@
     <div class="row">
         <div class="column">
             <h2>Execute Contract</h2>
-            <label>Contract address</label>
-            <input id="executeAddress" type="text" placeholder="0x...">
+            <label>Contract name</label>
+            <input id="executeName" type="text" placeholder="pitch">
             <label>Sample count</label>
-            <input id="executeN" type="text" placeholder="10">
-            <label>Start points</label>
-            <input id="executeStartPoints" type="text" placeholder="[0,0,1]">
+            <input id="executeN" type="text" placeholder="5">
+            <label>Running instances</label>
+            <input id="executeRunningInstances" type="text" placeholder="[(0,1),(0,0),(1,2)]">
             <button onclick="execute()">Execute</button>
             <div class="response-row">
                 <div id="executeCode" class="response-code">-</div>
@@ -151,7 +151,35 @@
         <div class="column">
             <h2>Send Feature</h2>
             <label>Feature JSON</label>
-            <textarea id="featureData">{ "name": "", "dimensions": [] }</textarea>
+            <textarea id="featureData"
+            placeholder =            
+'{
+    "name": "melody",
+    "dimensions": [
+      {
+        "feature_name": "pitch",
+        "transformations": [
+          {
+            "name": "add",
+            "args": [2]
+          }
+        ]
+      },
+      {
+        "feature_name": "time",
+        "transformations": [
+          {
+            "name": "multiply",
+            "args": [3]
+          },
+          {
+            "name": "add",
+            "args": [4]
+          }
+        ]
+      }
+    ]
+  }'>{ "name": "", "dimensions": [] }</textarea>
             <button onclick="sendFeature()">Send</button>
             <div class="response-row">
                 <div id="responseCode" class="response-code">-</div>
@@ -161,9 +189,9 @@
         <div class="column">
             <h2>Fetch Feature</h2>
             <label>Name</label>
-            <input id="getFeatureName" type="text">
+            <input id="getFeatureName" type="text" placeholder="pitch">
             <label>Version (optional)</label>
-            <input id="getFeatureVersion" type="text">
+            <input id="getFeatureVersion" type="text" placeholder="0x0...">
             <button onclick="getFeature()">Fetch</button>
             <div class="response-row">
                 <div id="getFeatureCode" class="response-code">-</div>
@@ -178,7 +206,7 @@
         <div class="column">
             <h2>Send Transformation</h2>
             <label>Transformation JSON</label>
-            <textarea id="transformationData">{ "name": "", "sol_src": "" }</textarea>
+            <textarea id="transformationData" placeholder='{ "name": "pitch", "sol_src": "return x + args[0];" }'>{ "name": "", "sol_src": "" }</textarea>
             <button onclick="sendTransformation()">Send</button>
             <div class="response-row">
                 <div id="transformationCode" class="response-code">-</div>
@@ -188,9 +216,9 @@
         <div class="column">
             <h2>Fetch Transformation</h2>
             <label>Name</label>
-            <input id="getTransformationName" type="text">
+            <input id="getTransformationName" type="text" placeholder="add">
             <label>Version (optional)</label>
-            <input id="getTransformationVersion" type="text">
+            <input id="getTransformationVersion" type="text" placeholder="0x0...">
             <button onclick="getTransformation()">Fetch</button>
             <div class="response-row">
                 <div id="getTransformationCode" class="response-code">-</div>
@@ -223,18 +251,18 @@
         }
 
         async function execute() {
-            const address = document.getElementById('executeAddress').value.trim();
+            const name = document.getElementById('executeName').value.trim();
             const N = document.getElementById('executeN').value.trim();
-            const startPoints = document.getElementById('executeStartPoints').value.trim();
+            const runningInstances = document.getElementById('executeRunningInstances').value.trim();
 
             const codeDiv = document.getElementById('executeCode');
             const bodyDiv = document.getElementById('executeBody');
-            if (!address) {
-                alert("Contract address is required.");
+            if (!name) {
+                alert("Contract name is required.");
                 return;
             }
             const apiBase = window.location.origin;
-            const url = `${apiBase}/execute/${address}/${N}/${startPoints}`;
+            const url = `${apiBase}/execute/${name}/${N}/${runningInstances}`;
             try {
                 const res = await fetch(url);
                 const text = await res.text();
