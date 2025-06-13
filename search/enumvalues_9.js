@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['notfound_0',['NotFound',['../namespacehm_1_1http.html#a815ddaebd2d9647fbe60b857efb98247a38c300f4fc9ce8a77aad4a30de05cad8',1,'hm::http']]]
+  ['missingcookie_0',['MissingCookie',['../namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a5bc80e1841957c53f3995b7935394411',1,'hm']]],
+  ['missingtoken_1',['MissingToken',['../namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a81d04c29639fcca11ab891fd9da60ccd',1,'hm']]]
 ];

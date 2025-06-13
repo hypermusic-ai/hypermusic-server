@@ -21,6 +21,15 @@ var namespacehm =
     [ "RouteArgDef", "namespacehm.html#a58c26834c86ebe03730763bab1633784", null ],
     [ "SessionID", "namespacehm.html#a95b6d9ead5ac776b077b5132bdfb7293", null ],
     [ "UserID", "namespacehm.html#ab00ee84312d87e650bf966b8e7b72bf3", null ],
+    [ "AuthenticationError", "namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1", [
+      [ "MissingCookie", "namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a5bc80e1841957c53f3995b7935394411", null ],
+      [ "InvalidCookie", "namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1af5a5a49c005613277acde64dadbaf194", null ],
+      [ "MissingToken", "namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a81d04c29639fcca11ab891fd9da60ccd", null ],
+      [ "InvalidToken", "namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1aa38d51bc6a4d9fa4367feb57841868f3", null ],
+      [ "InvalidSignature", "namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a351caf723532f9ba7a371b5dfa868eed", null ],
+      [ "InvalidNonce", "namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1aabf37558d388ad95fc31c40bd44e6bf2", null ],
+      [ "InvalidAddress", "namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a66196dd9678aef4aaad947e7181049c0", null ]
+    ] ],
     [ "RouteArgRequirement", "namespacehm.html#a9b7caefa124af81f61f34212a0db2948", [
       [ "Unknown", "namespacehm.html#a9b7caefa124af81f61f34212a0db2948a88183b946cc5f0e8c96b2e66e1c74a7e", null ],
       [ "optional", "namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d", null ],

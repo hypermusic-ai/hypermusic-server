@@ -14,13 +14,14 @@ var searchData=
   ['addcondition_11',['addCondition',['../classhm_1_1Registry.html#a52f578e6605bb2fa9d4360c175cc984a',1,'hm::Registry']]],
   ['addfeature_12',['addFeature',['../classhm_1_1Registry.html#a78b5a9eae65ed8916337b4c48f0d24ed',1,'hm::Registry']]],
   ['addheader_13',['addHeader',['../classhm_1_1http_1_1MessageBase.html#a4eddf5ec7b527852a5fc9caf072f751f',1,'hm::http::MessageBase']]],
-  ['addroute_14',['addroute',['../classhm_1_1Router.html#a4d9aba8daea2423dab63977e1317632b',1,'hm::Router::addRoute()'],['../classhm_1_1Server.html#a30f711e625b3b2f68bf65f77fdd4b4c5',1,'hm::Server::addRoute(RouteKey route, F &amp;&amp;handler)'],['../classhm_1_1Server.html#a76aef53a5c76a7e8fe022e375571c2ad',1,'hm::Server::addRoute(RouteKey route, F &amp;&amp;handler, Args &amp;&amp;... binded_args)']]],
+  ['addroute_14',['addroute',['../classhm_1_1Server.html#a30f711e625b3b2f68bf65f77fdd4b4c5',1,'hm::Server::addRoute(RouteKey route, F &amp;&amp;handler)'],['../classhm_1_1Server.html#a76aef53a5c76a7e8fe022e375571c2ad',1,'hm::Server::addRoute(RouteKey route, F &amp;&amp;handler, Args &amp;&amp;... binded_args)'],['../classhm_1_1Router.html#a4d9aba8daea2423dab63977e1317632b',1,'hm::Router::addRoute()']]],
   ['addtransformation_15',['addTransformation',['../classhm_1_1Registry.html#a90ac636be3a3f050daaa95930efc7a7c',1,'hm::Registry']]],
   ['api_2ecpp_16',['api.cpp',['../api_8cpp.html',1,'']]],
   ['api_2ehpp_17',['api.hpp',['../api_8hpp.html',1,'']]],
   ['api_5fauth_2ecpp_18',['api_auth.cpp',['../api__auth_8cpp.html',1,'']]],
   ['auth_2ecpp_19',['auth.cpp',['../auth_8cpp.html',1,'']]],
   ['auth_2ehpp_20',['auth.hpp',['../auth_8hpp.html',1,'']]],
-  ['authmanager_21',['authmanager',['../classhm_1_1AuthManager.html',1,'hm::AuthManager'],['../classhm_1_1AuthManager.html#a35b14d839d59aebcbc860bf57aa136c7',1,'hm::AuthManager::AuthManager(const AuthManager &amp;)=delete'],['../classhm_1_1AuthManager.html#a6ee2a67e10e9fdae9e46575f4f2ccc1f',1,'hm::AuthManager::AuthManager(asio::io_context &amp;io_context)'],['../classhm_1_1AuthManager.html#a229be5c44a397e0bdd743223a14f0860',1,'hm::AuthManager::AuthManager()=delete']]],
-  ['authorization_22',['Authorization',['../namespacehm_1_1http.html#ac27b3819754d6f0221366b8a0f24242da9cd8a2455b1839ff98ef70c05b9b5983',1,'hm::http']]]
+  ['authenticationerror_21',['AuthenticationError',['../namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1',1,'hm']]],
+  ['authmanager_22',['authmanager',['../classhm_1_1AuthManager.html',1,'hm::AuthManager'],['../classhm_1_1AuthManager.html#a35b14d839d59aebcbc860bf57aa136c7',1,'hm::AuthManager::AuthManager(const AuthManager &amp;)=delete'],['../classhm_1_1AuthManager.html#a6ee2a67e10e9fdae9e46575f4f2ccc1f',1,'hm::AuthManager::AuthManager(asio::io_context &amp;io_context)'],['../classhm_1_1AuthManager.html#a229be5c44a397e0bdd743223a14f0860',1,'hm::AuthManager::AuthManager()=delete']]],
+  ['authorization_23',['Authorization',['../namespacehm_1_1http.html#ac27b3819754d6f0221366b8a0f24242da9cd8a2455b1839ff98ef70c05b9b5983',1,'hm::http']]]
 ];

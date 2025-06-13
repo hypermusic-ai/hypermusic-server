@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['routeargrequirement_0',['RouteArgRequirement',['../namespacehm.html#a9b7caefa124af81f61f34212a0db2948',1,'hm']]],
-  ['routeargtype_1',['RouteArgType',['../namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0',1,'hm']]]
+  ['method_0',['Method',['../namespacehm_1_1http.html#a1573de63d39e32e7889c0f3f74be528f',1,'hm::http']]]
 ];

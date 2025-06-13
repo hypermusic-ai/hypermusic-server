@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['code_0',['Code',['../namespacehm_1_1http.html#a815ddaebd2d9647fbe60b857efb98247',1,'hm::http']]]
+  ['authenticationerror_0',['AuthenticationError',['../namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1',1,'hm']]]
 ];
