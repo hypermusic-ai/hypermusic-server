@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "hypermusic.hpp"
+#include "decentralised_art.hpp"
 
 using namespace std::chrono_literals;
 

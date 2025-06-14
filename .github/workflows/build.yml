@@ -1,4 +1,4 @@
-name: Build Hypermusic Server
+name: Build Decentralised Art Server
 
 on:
   push:
@@ -22,10 +22,10 @@ jobs:
 
     - name: Pack install directory into tarball
       run: |
-        tar -czf hypermusic-server.tar.gz -C install .
+        tar -czf decentralised-art-server.tar.gz -C install .
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: hypermusic-server
-        path: hypermusic-server.tar.gz 
+        name: decentralised-art-server
+        path: decentralised-art-server.tar.gz 

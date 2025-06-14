@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.30)
 
-set(PROJECT_NAME "HypermusicServer")
-set(PROJECT_PREFIX "Hypermusic")
+set(PROJECT_NAME "DecentralisedArtServer")
+set(PROJECT_PREFIX "DecentralisedArt")
 
 project("${PROJECT_NAME}"   
     VERSION "0.0.1"
-    DESCRIPTION "Hypermusic-Server"
+    DESCRIPTION "DecentralisedArt-Server"
     HOMEPAGE_URL "https://github.com/hypermusic-ai/hypermusic-server"
     LANGUAGES C CXX
 )
@@ -13,9 +13,9 @@ project("${PROJECT_NAME}"
 # --------------------------------------------------------------------------
 # Options
 # --------------------------------------------------------------------------
-option(HYPERMUSIC_ENABLE_INSTALL "Enable install rule" OFF)
-option(HYPERMUSIC_BUILD_TESTS "Build tests" OFF)
-option(HYPERMUSIC_USE_SUBMODULE_PT "Use submodule PT" OFF)
+option(DECENTRALISED_ART_ENABLE_INSTALL "Enable install rule" OFF)
+option(DECENTRALISED_ART_BUILD_TESTS "Build tests" OFF)
+option(DECENTRALISED_ART_USE_SUBMODULE_PT "Use submodule PT" OFF)
 
 # --------------------------------------------------------------------------
 message(STATUS "Install directory ${CMAKE_INSTALL_PREFIX}")
@@ -32,7 +32,7 @@ include(cmake/dependencies.cmake)
 add_subdirectory(src)
 
 # create static library target
-add_library("${PROJECT_NAME}Lib" STATIC "include/hypermusic.hpp")
+add_library("${PROJECT_NAME}Lib" STATIC "include/decentralised_art.hpp")
 
 target_include_directories("${PROJECT_NAME}Lib"     
     PUBLIC 
@@ -69,7 +69,7 @@ target_sources("${PROJECT_NAME}Lib" PUBLIC
     FILE_SET public_headers
     TYPE HEADERS
     BASE_DIRS include
-    FILES "include/hypermusic.hpp"
+    FILES "include/decentralised_art.hpp"
 )
 
 # static library install target
@@ -147,6 +147,6 @@ install(
 )
 
 # build tests
-if(HYPERMUSIC_BUILD_TESTS)
+if(DECENTRALISED_ART_BUILD_TESTS)
     add_subdirectory(tests)
 endif()

@@ -3,6 +3,7 @@
 namespace hm
 {
     static std::filesystem::path BIN_PATH = std::filesystem::path();
+    static std::filesystem::path LOGS_PATH = std::filesystem::path("logs");
     static std::filesystem::path RESOURCES_DIR = std::filesystem::path("resources");
     static std::filesystem::path PT_REPO = std::filesystem::path("pt");
 
@@ -10,7 +11,6 @@ namespace hm
     void setBinPath(std::filesystem::path bin_path)
     {
         BIN_PATH = bin_path;
-        spdlog::info("bin/ path: {}", BIN_PATH.string());
     }
 
     std::filesystem::path getBinPath()
@@ -21,6 +21,11 @@ namespace hm
     std::filesystem::path getResourcesPath()
     {
         return BIN_PATH.parent_path() / RESOURCES_DIR;
+    }
+
+    std::filesystem::path getLogsPath()
+    {
+        return BIN_PATH.parent_path() / LOGS_PATH;
     }
 
     std::filesystem::path getPTPath()

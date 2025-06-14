@@ -247,28 +247,26 @@ ExternalProject_Add(solc_download
 
 if(WIN32)
     add_custom_command(
-        OUTPUT ${SOLC_CONFIG_MARKER}
-        COMMAND ${CMAKE_COMMAND} -E copy "${SOLC_DOWNLOAD_DIR}/${SOLC_EXE_NAME}" "${SOLC_INSTALL_DIR}/bin/${SOLC_EXE_NAME}"
-        COMMAND ${CMAKE_COMMAND} -E touch ${SOLC_CONFIG_MARKER}
-        WORKING_DIRECTORY ${SOLC_PREFIX}
+        OUTPUT "${SOLC_CONFIG_MARKER}"
+        COMMAND powershell -Command "Copy-Item -Path '${SOLC_DOWNLOAD_DIR}/${SOLC_EXE_NAME}' -Destination '${SOLC_INSTALL_DIR}/bin/${SOLC_EXE_NAME}' -Force"
+        COMMAND ${CMAKE_COMMAND} -E touch "${SOLC_CONFIG_MARKER}"
         COMMENT "Configuring Solc compiler"
     )
 elseif(UNIX)
     add_custom_command(
-        OUTPUT ${SOLC_CONFIG_MARKER}
+        OUTPUT "${SOLC_CONFIG_MARKER}"
         COMMAND ${CMAKE_COMMAND} -E copy "${SOLC_DOWNLOAD_DIR}/${SOLC_EXE_NAME}" "${SOLC_INSTALL_DIR}/bin/"
         COMMAND chmod +x "${SOLC_INSTALL_DIR}/bin/${SOLC_EXE_NAME}"
-        COMMAND ${CMAKE_COMMAND} -E touch ${SOLC_CONFIG_MARKER}
-        WORKING_DIRECTORY ${SOLC_PREFIX}
+        COMMAND ${CMAKE_COMMAND} -E touch "${SOLC_CONFIG_MARKER}"
         COMMENT "Configuring Solc compiler"
     )
 endif()
 
 add_custom_target(solc_configure ALL DEPENDS ${SOLC_CONFIG_MARKER})
-
+add_dependencies(solc_configure solc_download)
 # Create an imported executable target
 add_executable(solc_imported IMPORTED GLOBAL)
-add_dependencies(solc_imported solc_download solc_configure)
+add_dependencies(solc_imported solc_configure)
 
 # Install solc binaries
 install(FILES "${SOLC_INSTALL_DIR}/bin/${SOLC_EXE_NAME}"
@@ -339,10 +337,10 @@ ExternalProject_Add(evmone_bin_download
 
 # Create configuration target
 add_custom_target(evmone_configure ALL DEPENDS ${EVMONE_CONFIG_MARKER})
-
+add_dependencies(evmone_configure evmone_bin_download)
 # Create imported target
 add_library(evmone IMPORTED STATIC GLOBAL)
-add_dependencies(evmone evmone_bin_download evmone_configure)
+add_dependencies(evmone evmone_configure)
 
 if(WIN32)
     set(EVMONE_STATIC_LIBRARY "evmone.lib")
@@ -353,24 +351,22 @@ if(WIN32)
 
     add_custom_command(
         OUTPUT ${EVMONE_CONFIG_MARKER}
-        COMMAND cd "${EVMONE_PREFIX}"
-            && ${CMAKE_COMMAND} -E echo  
+        COMMAND ${CMAKE_COMMAND} -E echo  
                     "Copy extracted evmone includes"
                     "${EVMONE_ARCHIVE_EXTRACT_DIR}/include"
                     "to install directory"
                     "${EVMONE_INSTALL_DIR}/include"
-            && ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ARCHIVE_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
-            && ${CMAKE_COMMAND} -E echo
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ARCHIVE_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
+            COMMAND ${CMAKE_COMMAND} -E echo
                     "Copy extracted evmone libraries"
                     "${EVMONE_STATIC_LIBRARY_PATH} and ${EVMONE_SHARED_LIBRARY_PATH}"
                     "to install directories"
                     "${EVMONE_INSTALL_DIR}/lib/ and ${EVMONE_INSTALL_DIR}/bin/"
-            && ${CMAKE_COMMAND} -E copy "${EVMONE_STATIC_LIBRARY_PATH}" "${EVMONE_INSTALL_DIR}/lib/"
-            && ${CMAKE_COMMAND} -E copy "${EVMONE_SHARED_LIBRARY_PATH}" "${EVMONE_INSTALL_DIR}/bin/"
-            && ${CMAKE_COMMAND} -E echo 
+            COMMAND powershell -Command "Copy-Item -Path '${EVMONE_STATIC_LIBRARY_PATH}' -Destination '${EVMONE_INSTALL_DIR}/lib/' -Force"
+            COMMAND powershell -Command "Copy-Item -Path '${EVMONE_SHARED_LIBRARY_PATH}' -Destination '${EVMONE_INSTALL_DIR}/bin/' -Force"
+            COMMAND ${CMAKE_COMMAND} -E echo 
                     "Generate configurtaion marker ${EVMONE_CONFIG_MARKER}"
-            && ${CMAKE_COMMAND} -E touch "${EVMONE_CONFIG_MARKER}"
-        WORKING_DIRECTORY ${EVMONE_PREFIX}
+            COMMAND ${CMAKE_COMMAND} -E touch "${EVMONE_CONFIG_MARKER}"
         COMMENT "Configuring Evmone"
     )
 
@@ -389,23 +385,21 @@ elseif(UNIX)
     # Copy extracted libraries to install directory & Generate configuration marker
     add_custom_command(
         OUTPUT ${EVMONE_CONFIG_MARKER}
-        COMMAND cd "${EVMONE_PREFIX}"
-            && ${CMAKE_COMMAND} -E echo  
+        COMMAND ${CMAKE_COMMAND} -E echo  
                     "Copy extracted evmone includes"
                     "${EVMONE_ARCHIVE_EXTRACT_DIR}/include"
                     "to install directory"
                     "${EVMONE_INSTALL_DIR}/include"
-            && ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ARCHIVE_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
-            && ${CMAKE_COMMAND} -E echo
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${EVMONE_ARCHIVE_EXTRACT_DIR}/include" "${EVMONE_INSTALL_DIR}/include"
+        COMMAND ${CMAKE_COMMAND} -E echo
                     "Copy extracted evmone library"
                     "${EVMONE_SHARED_LIBRARY_PATH}"
                     "to install directory"
                     "${EVMONE_INSTALL_DIR}/lib/"
-            && ${CMAKE_COMMAND} -E copy "${EVMONE_SHARED_LIBRARY_PATH}" "${EVMONE_INSTALL_DIR}/lib/"
-            && ${CMAKE_COMMAND} -E echo 
+        COMMAND ${CMAKE_COMMAND} -E copy "${EVMONE_SHARED_LIBRARY_PATH}" "${EVMONE_INSTALL_DIR}/lib/"
+        COMMAND ${CMAKE_COMMAND} -E echo 
                     "Generate configurtaion marker ${EVMONE_CONFIG_MARKER}"
-            && ${CMAKE_COMMAND} -E touch "${EVMONE_CONFIG_MARKER}"
-        WORKING_DIRECTORY ${EVMONE_PREFIX}
+        COMMAND ${CMAKE_COMMAND} -E touch "${EVMONE_CONFIG_MARKER}"
         COMMENT "Configuring Evmone"
     )
 
@@ -445,7 +439,7 @@ install(DIRECTORY "${EVMONE_INSTALL_DIR}/include/" DESTINATION ${CMAKE_INSTALL_I
 # PT repository
 # ---------------------------------------------------------
 
-if(HYPERMUSIC_USE_SUBMODULE_PT)
+if(DECENTRALISED_ART_USE_SUBMODULE_PT)
     message(STATUS "Using submodule `PT`")
     set(PT_REPO_PREFIX "${CMAKE_SOURCE_DIR}/submodule/pt")
 else()
@@ -470,18 +464,17 @@ file(MAKE_DIRECTORY "${PT_INSTALL_DIR}/node_modules")
 add_custom_command(
     OUTPUT ${PT_CONFIG_MARKER}
     COMMAND ${CMAKE_COMMAND} -E echo "Configuring PT"
-            && cd ${PT_SOLIDITY_DIR}
-            && npm install
-            && ${CMAKE_COMMAND} -E copy_directory "${PT_SOLIDITY_DIR}/contracts" "${PT_INSTALL_DIR}/contracts"
-            && ${CMAKE_COMMAND} -E copy_directory "${PT_SOLIDITY_DIR}/node_modules" "${PT_INSTALL_DIR}/node_modules"
-            && ${CMAKE_COMMAND} -E touch ${PT_CONFIG_MARKER}
-    WORKING_DIRECTORY ${PT_SOLIDITY_DIR}
+    COMMAND npm install
+    && ${CMAKE_COMMAND} -E copy_directory "${PT_SOLIDITY_DIR}/contracts" "${PT_INSTALL_DIR}/contracts"
+    && ${CMAKE_COMMAND} -E copy_directory "${PT_SOLIDITY_DIR}/node_modules" "${PT_INSTALL_DIR}/node_modules"
+    && ${CMAKE_COMMAND} -E touch "${PT_CONFIG_MARKER}"
+    WORKING_DIRECTORY "${PT_SOLIDITY_DIR}"
     COMMENT "Configuring PT repo"
 )
 
 add_custom_target(pt_configure ALL DEPENDS ${PT_CONFIG_MARKER})
 
-if(NOT HYPERMUSIC_USE_SUBMODULE_PT)
+if(NOT DECENTRALISED_ART_USE_SUBMODULE_PT)
     add_dependencies(pt_configure pt_download)
 endif()
 
@@ -492,7 +485,7 @@ install(DIRECTORY "${PT_INSTALL_DIR}/"
 # ---------------------------------------------------------
 # GTest
 # ---------------------------------------------------------
-if(HYPERMUSIC_BUILD_TESTS)
+if(DECENTRALISED_ART_BUILD_TESTS)
     message(STATUS "Fetching dependency `GTest` ...")
     FetchContent_Declare(
         googletest

@@ -2,7 +2,7 @@ name: Deploy to Server
 
 on:
   workflow_run:
-    workflows: ["Build Hypermusic Server"]
+    workflows: ["Build Decentralised Art Server"]
     types:
       - completed
 
@@ -17,7 +17,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         REPO: ${{ github.repository }}
         RUN_ID: ${{ github.event.workflow_run.id }}
-        ARTIFACT_NAME: hypermusic-server
+        ARTIFACT_NAME: decentralised-art-server
       run: |
         mkdir -p artifact
         echo "Getting artifact list..."
@@ -40,7 +40,7 @@ jobs:
 
         unzip artifact.zip -d artifact
         mkdir install
-        tar -xzf artifact/hypermusic-server.tar.gz -C install
+        tar -xzf artifact/decentralised-art-server.tar.gz -C install
 
     - name: Clear remote install directory
       uses: appleboy/ssh-action@v1.0.3
@@ -49,8 +49,8 @@ jobs:
         username: hypermusic
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          echo "Clearing /home/hypermusic/hypermusic-install..."
-          rm -rf /home/hypermusic/hypermusic-install/*
+          echo "Clearing /home/hypermusic/decentralised-art-install..."
+          rm -rf /home/hypermusic/decentralised-art-install/*
 
     - name: Install tools
       run: sudo apt update && sudo apt install -y sshpass rsync
@@ -66,7 +66,7 @@ jobs:
 
         # Use rsync to copy contents (not the 'install/' dir itself)
         rsync -az --delete -e "ssh -i $KEY_FILE -o StrictHostKeyChecking=no" \
-          install/ hypermusic@34.118.118.250:/home/hypermusic/hypermusic-install
+          install/ hypermusic@34.118.118.250:/home/hypermusic/decentralised-art-install
 
         # Clean up key file
         rm -f "$KEY_FILE"
@@ -79,4 +79,4 @@ jobs:
         username: hypermusic
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          sudo systemctl restart hypermusic-server
+          sudo systemctl restart decentralised-art-server

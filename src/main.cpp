@@ -1,4 +1,4 @@
-#include "hypermusic.hpp"
+#include "decentralised_art.hpp"
 
 #ifndef Solidity_SOLC_EXECUTABLE
     #error "Solidity_SOLC_EXECUTABLE is not defined"
@@ -6,19 +6,35 @@
 
 int main(int argc, char* argv[])
 {
-    spdlog::set_level(spdlog::level::debug);
+    hm::setBinPath(std::filesystem::path(argv[0]).parent_path());
+
+    // Create sinks
+    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
+        (hm::getLogsPath()/"DecentralisedArtServer.log").string(), true);
+
+    // set different log levels per sink
+    console_sink->set_level(spdlog::level::info);
+    file_sink->set_level(spdlog::level::debug);
+    console_sink->set_pattern("[%T] [%^%l%$] %v");
+    file_sink->set_pattern("[%Y-%m-%d %H:%M:%S] [%l] %v");
+    
+    spdlog::logger logger("multi_sink", {console_sink, file_sink});
+    logger.set_level(spdlog::level::debug);
+    logger.flush_on(spdlog::level::info);
+
+    spdlog::set_default_logger(std::make_shared<spdlog::logger>(logger));
 
     spdlog::info("{}", hm::getAsciiLogo());
 
     spdlog::info("Version: {}.{}.{}\n", hm::MAJOR_VERSION, hm::MINOR_VERSION, hm::PATCH_VERSION);
 
-    spdlog::info("Hypermusic server started with {} arguments", argc);
+    spdlog::info("Decentralised Art server started with {} arguments", argc);
     for(int i = 0; i < argc; ++i)
     {
         spdlog::info("Argument at {}={}", i, argv[i]);
     }
     
-    hm::setBinPath(std::filesystem::path(argv[0]).parent_path());
     spdlog::info("Current working path: {}", std::filesystem::current_path().string());
 
     // solidity check

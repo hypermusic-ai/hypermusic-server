@@ -5,12 +5,12 @@ enable_testing()
 include(GoogleTest)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-set(PROJECT_NAME "HypermusicServerInstallPackageTests")
-set(PROJECT_PREFIX "HypermusicServerInstallPackageTests")
+set(PROJECT_NAME "DecentralisedArtServerInstallPackageTests")
+set(PROJECT_PREFIX "DecentralisedArtServerInstallPackageTests")
 
 project("${PROJECT_NAME}"   
     VERSION "0.0.1"
-    DESCRIPTION "Hypermusic Server tests"
+    DESCRIPTION "Decentralised Art Server tests"
     HOMEPAGE_URL "https://github.com/hypermusic-ai/hypermusic-server"
     LANGUAGES CXX
 )
@@ -27,7 +27,7 @@ target_link_libraries("${PROJECT_NAME}"
         evmc::evmc
         evmone
         protobuf::libprotobuf
-        HypermusicServer
+        DecentralisedArtServer
 )
 
 set_target_properties("${PROJECT_NAME}" PROPERTIES CXX_STANDARD 23)

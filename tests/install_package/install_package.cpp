@@ -1,7 +1,7 @@
 
 #include <gtest/gtest.h>
 
-#include "hypermusic.hpp"
+#include "decentralised_art.hpp"
 
 class BaseInstallTest : public testing::Test
 {

@@ -1,4 +1,4 @@
-# 🚀 Hypermusic server
+# 🚀 Decentralised Art server
 
 ## 📚 Documentation
 
@@ -47,13 +47,13 @@ This project requires the following libraries:
 To configure the project using CMake, run the following command:
 
 ```sh
-cmake -S . -B build -DCMAKE_INSTALL_PREFIX=install -DHYPERMUSIC_BUILD_TESTS=ON
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=install -DDECENTRALIZED_ART_BUILD_TESTS=ON
 ```
 
 - `-S .`: Specifies the source directory.
 - `-B build`: Specifies the build directory.
 - `-DCMAKE_INSTALL_PREFIX=install`: Specifies install directory.
-- `-DHYPERMUSIC_BUILD_TESTS=ON`: Enables tests.
+- `-DDECENTRALIZED_ART_BUILD_TESTS=ON`: Enables tests.
 
 </br>
 
@@ -86,7 +86,7 @@ This will install the project with debugging enabled.
 ## 🖥️ Start the server
 
 ```sh
-./build/Debug/HypermusicServer.exe
+./build/Debug/DecentralisedArtServer.exe
 ```
 
 </br>

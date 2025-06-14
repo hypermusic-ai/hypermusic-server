@@ -4,12 +4,12 @@ enable_testing()
 
 include(GoogleTest)
 
-set(PROJECT_NAME "HypermusicServerTests")
-set(PROJECT_PREFIX "HypermusicServerTests")
+set(PROJECT_NAME "DecentralisedArtServerTests")
+set(PROJECT_PREFIX "DecentralisedArtServerTests")
 
 project("${PROJECT_NAME}"   
     VERSION "0.0.1"
-    DESCRIPTION "Hypermusic Server tests"
+    DESCRIPTION "Decentralised Art Server tests"
     HOMEPAGE_URL "https://github.com/hypermusic-ai/hypermusic-server"
     LANGUAGES CXX
 )
@@ -31,7 +31,7 @@ target_link_libraries("${PROJECT_NAME}"
     PRIVATE
         GTest::gtest_main
         spdlog::spdlog
-        HypermusicServerLib
+        DecentralisedArtServerLib
 )
 
 set_target_properties("${PROJECT_NAME}" PROPERTIES CXX_STANDARD 23)
