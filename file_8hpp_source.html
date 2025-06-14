@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Hypermusic Server: src/file/include/file.hpp Source File</title>
+<title>Decentralised Art Server: src/file/include/file.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,7 +31,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="pt_logo.ico"/></td>
   <td id="projectalign">
-   <div id="projectname">Hypermusic Server
+   <div id="projectname">Decentralised Art Server
    </div>
    <div id="projectbrief">High-performance C++ backend that exposes HTML interface and a secure REST API for managing Performative Transactions entities</div>
   </td>
@@ -115,17 +115,18 @@ $(document).ready(function(){initNavTree('file_8hpp_source.html',''); initResiza
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    std::filesystem::path <a class="code hl_function" href="namespacehm.html#a2cf1544433bbde96b34c52064923b75f">getBinPath</a>();</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    std::filesystem::path <a class="code hl_function" href="namespacehm.html#a8c3fe396ac2088c57d2e2a2834e67ed8">getResourcesPath</a>();</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    std::filesystem::path <a class="code hl_function" href="namespacehm.html#a13b8abd41595a0a1fc021cea58a26153">getLogsPath</a>();</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    std::filesystem::path <a class="code hl_function" href="namespacehm.html#a6e783e5e09275289798625fb528535e8">getPTPath</a>();</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    std::optional&lt;std::string&gt; <a class="code hl_function" href="namespacehm.html#a6346d98b5cdc163f9e08ccb0565bc327">loadSimpleForm</a>();</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>}</div>
-<div class="ttc" id="anamespacehm_html"><div class="ttname"><a href="namespacehm.html">hm</a></div><div class="ttdef"><b>Definition</b> hypermusic.hpp:18</div></div>
+<div class="ttc" id="anamespacehm_html"><div class="ttname"><a href="namespacehm.html">hm</a></div><div class="ttdef"><b>Definition</b> decentralised_art.hpp:21</div></div>
+<div class="ttc" id="anamespacehm_html_a13b8abd41595a0a1fc021cea58a26153"><div class="ttname"><a href="namespacehm.html#a13b8abd41595a0a1fc021cea58a26153">hm::getLogsPath</a></div><div class="ttdeci">std::filesystem::path getLogsPath()</div><div class="ttdef"><b>Definition</b> file.cpp:26</div></div>
 <div class="ttc" id="anamespacehm_html_a2cf1544433bbde96b34c52064923b75f"><div class="ttname"><a href="namespacehm.html#a2cf1544433bbde96b34c52064923b75f">hm::getBinPath</a></div><div class="ttdeci">std::filesystem::path getBinPath()</div><div class="ttdef"><b>Definition</b> file.cpp:16</div></div>
-<div class="ttc" id="anamespacehm_html_a6346d98b5cdc163f9e08ccb0565bc327"><div class="ttname"><a href="namespacehm.html#a6346d98b5cdc163f9e08ccb0565bc327">hm::loadSimpleForm</a></div><div class="ttdeci">std::optional&lt; std::string &gt; loadSimpleForm()</div><div class="ttdef"><b>Definition</b> file.cpp:31</div></div>
-<div class="ttc" id="anamespacehm_html_a6e783e5e09275289798625fb528535e8"><div class="ttname"><a href="namespacehm.html#a6e783e5e09275289798625fb528535e8">hm::getPTPath</a></div><div class="ttdeci">std::filesystem::path getPTPath()</div><div class="ttdef"><b>Definition</b> file.cpp:26</div></div>
-<div class="ttc" id="anamespacehm_html_a751ec989ebf6d69bd2789a242344c69f"><div class="ttname"><a href="namespacehm.html#a751ec989ebf6d69bd2789a242344c69f">hm::setBinPath</a></div><div class="ttdeci">void setBinPath(std::filesystem::path bin_path)</div><div class="ttdoc">Set the BIN_PATH variable to the path of the binary directory.</div><div class="ttdef"><b>Definition</b> file.cpp:10</div></div>
+<div class="ttc" id="anamespacehm_html_a6346d98b5cdc163f9e08ccb0565bc327"><div class="ttname"><a href="namespacehm.html#a6346d98b5cdc163f9e08ccb0565bc327">hm::loadSimpleForm</a></div><div class="ttdeci">std::optional&lt; std::string &gt; loadSimpleForm()</div><div class="ttdef"><b>Definition</b> file.cpp:36</div></div>
+<div class="ttc" id="anamespacehm_html_a6e783e5e09275289798625fb528535e8"><div class="ttname"><a href="namespacehm.html#a6e783e5e09275289798625fb528535e8">hm::getPTPath</a></div><div class="ttdeci">std::filesystem::path getPTPath()</div><div class="ttdef"><b>Definition</b> file.cpp:31</div></div>
+<div class="ttc" id="anamespacehm_html_a751ec989ebf6d69bd2789a242344c69f"><div class="ttname"><a href="namespacehm.html#a751ec989ebf6d69bd2789a242344c69f">hm::setBinPath</a></div><div class="ttdeci">void setBinPath(std::filesystem::path bin_path)</div><div class="ttdoc">Set the BIN_PATH variable to the path of the binary directory.</div><div class="ttdef"><b>Definition</b> file.cpp:11</div></div>
 <div class="ttc" id="anamespacehm_html_a8c3fe396ac2088c57d2e2a2834e67ed8"><div class="ttname"><a href="namespacehm.html#a8c3fe396ac2088c57d2e2a2834e67ed8">hm::getResourcesPath</a></div><div class="ttdeci">std::filesystem::path getResourcesPath()</div><div class="ttdef"><b>Definition</b> file.cpp:21</div></div>
 <div class="ttc" id="anamespacehm_html_a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d"><div class="ttname"><a href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">hm::RouteArgRequirement::optional</a></div><div class="ttdeci">@ optional</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -80,6 +80,7 @@ var namespacehm =
     [ "GET_transformation", "namespacehm.html#a57bb7b2654487cb862364102786f0c06", null ],
     [ "getAsciiLogo", "namespacehm.html#af7234023dfb2d3437f2606e847bb2ea7", null ],
     [ "getBinPath", "namespacehm.html#a2cf1544433bbde96b34c52064923b75f", null ],
+    [ "getLogsPath", "namespacehm.html#a13b8abd41595a0a1fc021cea58a26153", null ],
     [ "getPTPath", "namespacehm.html#a6e783e5e09275289798625fb528535e8", null ],
     [ "getResourcesPath", "namespacehm.html#a8c3fe396ac2088c57d2e2a2834e67ed8", null ],
     [ "HEAD_SimpleForm", "namespacehm.html#a31db948cc721113d763738fd37495010", null ],

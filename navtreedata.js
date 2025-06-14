@@ -24,7 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "Hypermusic Server", "index.html", [
+  [ "Decentralised Art Server", "index.html", [
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -62,8 +62,8 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classhm_1_1Server.html#a627ba6266d5b6a35e875356e7905db83",
-"file_8cpp.html#a6e783e5e09275289798625fb528535e8",
-"parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d"
+"feature_8hpp.html#adf8c03afd93729923bd9a8c02cd3f400",
+"pages.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
