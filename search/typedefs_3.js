@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sessionid_0',['SessionID',['../namespacehm.html#a95b6d9ead5ac776b077b5132bdfb7293',1,'hm']]]
+  ['userid_0',['UserID',['../namespacehm.html#ab00ee84312d87e650bf966b8e7b72bf3',1,'hm']]]
 ];

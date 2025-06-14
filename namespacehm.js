@@ -11,6 +11,7 @@ var namespacehm =
     [ "Keccak256", "classhm_1_1Keccak256.html", null ],
     [ "Registry", "classhm_1_1Registry.html", "classhm_1_1Registry" ],
     [ "RouteArg", "classhm_1_1RouteArg.html", "classhm_1_1RouteArg" ],
+    [ "RouteArgDef", "structhm_1_1RouteArgDef.html", "structhm_1_1RouteArgDef" ],
     [ "RouteHandlerFunc", "classhm_1_1RouteHandlerFunc.html", "classhm_1_1RouteHandlerFunc" ],
     [ "RouteKey", "classhm_1_1RouteKey.html", "classhm_1_1RouteKey" ],
     [ "Router", "classhm_1_1Router.html", "classhm_1_1Router" ],
@@ -18,7 +19,6 @@ var namespacehm =
     [ "Session", "classhm_1_1Session.html", "classhm_1_1Session" ],
     [ "SessionManager", "classhm_1_1SessionManager.html", "classhm_1_1SessionManager" ],
     [ "HandlerDefinition", "namespacehm.html#a851fd8f19975df188f6e41912fea7201", null ],
-    [ "RouteArgDef", "namespacehm.html#a58c26834c86ebe03730763bab1633784", null ],
     [ "SessionID", "namespacehm.html#a95b6d9ead5ac776b077b5132bdfb7293", null ],
     [ "UserID", "namespacehm.html#ab00ee84312d87e650bf966b8e7b72bf3", null ],
     [ "AuthenticationError", "namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1", [
@@ -40,7 +40,9 @@ var namespacehm =
       [ "character", "namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0aa956161a69928cd130a889b88082fb6e", null ],
       [ "unsigned_integer", "namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0a7383104b83254a99f5991d0ac77a6666", null ],
       [ "base58", "namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0a7b0fa6566c1595bea826217774606c2c", null ],
-      [ "string", "namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0ab45cffe084dd3d20d928bee85e7b0f21", null ]
+      [ "string", "namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0ab45cffe084dd3d20d928bee85e7b0f21", null ],
+      [ "array", "namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0af1f713c9e000f5d3f280adbd124df4f5", null ],
+      [ "object", "namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0aa8cfde6331bd59eb2ac96f8911c4b666", null ]
     ] ],
     [ "AbslHashValue", "namespacehm.html#a54da947721e8d4a49424054df7f46618", null ],
     [ "AbslHashValue", "namespacehm.html#ac83b4142a74f9e4800d765066d9be945", null ],
@@ -64,6 +66,8 @@ var namespacehm =
     [ "encodeAsArg< std::string >", "namespacehm.html#a7e66db42d70b847b458982de69f47486", null ],
     [ "encodeAsArg< std::uint32_t >", "namespacehm.html#adf8399e79cb12ca87aed7322cf94c126", null ],
     [ "encodeAsArg< std::uint32_t >", "namespacehm.html#adf8399e79cb12ca87aed7322cf94c126", null ],
+    [ "encodeAsArg< std::vector< std::tuple< std::uint32_t, std::uint32_t > > >", "namespacehm.html#a10a498c6a2951e199118e346e4e72f1a", null ],
+    [ "encodeAsArg< std::vector< std::tuple< std::uint32_t, std::uint32_t > > >", "namespacehm.html#a10a498c6a2951e199118e346e4e72f1a", null ],
     [ "encodeAsArg< std::vector< std::uint32_t > >", "namespacehm.html#a3ce38e62f1747b7bb6d4e9e3ea827735", null ],
     [ "encodeAsArg< std::vector< std::uint32_t > >", "namespacehm.html#a3ce38e62f1747b7bb6d4e9e3ea827735", null ],
     [ "ensureOnStrand", "namespacehm.html#a885a05d604b9e0cfb11799c85dfa25b8", null ],

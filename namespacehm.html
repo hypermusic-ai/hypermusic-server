@@ -133,6 +133,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1RouteArg.html">RouteArg</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class representing a route argument.  <a href="classhm_1_1RouteArg.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structhm_1_1RouteArgDef.html">RouteArgDef</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pair of RouteArgType and RouteArgRequirement.  <a href="structhm_1_1RouteArgDef.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1RouteHandlerFunc.html">RouteHandlerFunc</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class representing a route handler function.  <a href="classhm_1_1RouteHandlerFunc.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,9 +155,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a58c26834c86ebe03730763bab1633784" id="r_a58c26834c86ebe03730763bab1633784"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#a58c26834c86ebe03730763bab1633784">RouteArgDef</a> = std::pair&lt; <a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0">RouteArgType</a>, <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948">RouteArgRequirement</a> &gt;</td></tr>
-<tr class="memdesc:a58c26834c86ebe03730763bab1633784"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pair of RouteArgType and RouteArgRequirement.  <br /></td></tr>
-<tr class="separator:a58c26834c86ebe03730763bab1633784"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a851fd8f19975df188f6e41912fea7201" id="r_a851fd8f19975df188f6e41912fea7201"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#a851fd8f19975df188f6e41912fea7201">HandlerDefinition</a> = std::function&lt; asio::awaitable&lt; <a class="el" href="classhm_1_1http_1_1Response.html">hm::http::Response</a> &gt;(<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1http_1_1Request.html">hm::http::Request</a> &amp;, std::vector&lt; <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &gt;)&gt;</td></tr>
 <tr class="memdesc:a851fd8f19975df188f6e41912fea7201"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type representing a route handler function.  <br /></td></tr>
 <tr class="separator:a851fd8f19975df188f6e41912fea7201"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,6 +184,8 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0a7b0fa6566c1595bea826217774606c2c">base58</a>
 , <br />
 &#160;&#160;<a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0ab45cffe084dd3d20d928bee85e7b0f21">string</a>
+, <a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0af1f713c9e000f5d3f280adbd124df4f5">array</a>
+, <a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0aa8cfde6331bd59eb2ac96f8911c4b666">object</a>
 <br />
  }</td></tr>
 <tr class="memdesc:a21477cf9ca6ccf693acc2a5480bc67d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum to represent the type of a route argument.  <a href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0">More...</a><br /></td></tr>
@@ -246,6 +248,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a3ce38e62f1747b7bb6d4e9e3ea827735" id="r_a3ce38e62f1747b7bb6d4e9e3ea827735"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:a3ce38e62f1747b7bb6d4e9e3ea827735"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm.html#a3ce38e62f1747b7bb6d4e9e3ea827735">encodeAsArg&lt; std::vector&lt; std::uint32_t &gt; &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::vector&lt; std::uint32_t &gt; &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">vec</a>)</td></tr>
 <tr class="separator:a3ce38e62f1747b7bb6d4e9e3ea827735"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10a498c6a2951e199118e346e4e72f1a" id="r_a10a498c6a2951e199118e346e4e72f1a"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a10a498c6a2951e199118e346e4e72f1a"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm.html#a10a498c6a2951e199118e346e4e72f1a">encodeAsArg&lt; std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">vec</a>)</td></tr>
+<tr class="separator:a10a498c6a2951e199118e346e4e72f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e66db42d70b847b458982de69f47486" id="r_a7e66db42d70b847b458982de69f47486"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:a7e66db42d70b847b458982de69f47486"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm.html#a7e66db42d70b847b458982de69f47486">encodeAsArg&lt; std::string &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">str</a>)</td></tr>
 <tr class="separator:a7e66db42d70b847b458982de69f47486"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -267,6 +272,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a3ce38e62f1747b7bb6d4e9e3ea827735" id="r_a3ce38e62f1747b7bb6d4e9e3ea827735"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:a3ce38e62f1747b7bb6d4e9e3ea827735"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm.html#a3ce38e62f1747b7bb6d4e9e3ea827735">encodeAsArg&lt; std::vector&lt; std::uint32_t &gt; &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::vector&lt; std::uint32_t &gt; &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">vec</a>)</td></tr>
 <tr class="separator:a3ce38e62f1747b7bb6d4e9e3ea827735"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10a498c6a2951e199118e346e4e72f1a" id="r_a10a498c6a2951e199118e346e4e72f1a"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a10a498c6a2951e199118e346e4e72f1a"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm.html#a10a498c6a2951e199118e346e4e72f1a">encodeAsArg&lt; std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">vec</a>)</td></tr>
+<tr class="separator:a10a498c6a2951e199118e346e4e72f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e66db42d70b847b458982de69f47486" id="r_a7e66db42d70b847b458982de69f47486"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:a7e66db42d70b847b458982de69f47486"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm.html#a7e66db42d70b847b458982de69f47486">encodeAsArg&lt; std::string &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">str</a>)</td></tr>
 <tr class="separator:a7e66db42d70b847b458982de69f47486"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -361,23 +369,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Type representing a route handler function. </p>
-
-</div>
-</div>
-<a id="a58c26834c86ebe03730763bab1633784" name="a58c26834c86ebe03730763bab1633784"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58c26834c86ebe03730763bab1633784">&#9670;&#160;</a></span>RouteArgDef</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">using</a> <a class="el" href="namespacehm.html#a58c26834c86ebe03730763bab1633784">hm::RouteArgDef</a> = <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">typedef</a> std::pair&lt;<a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0">RouteArgType</a>, <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948">RouteArgRequirement</a>&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A pair of RouteArgType and RouteArgRequirement. </p>
-<p>This type represents a pair of RouteArgType and RouteArgRequirement. </p>
 
 </div>
 </div>
@@ -499,6 +490,8 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a21477cf9ca6ccf693acc2a5480bc67d0a7383104b83254a99f5991d0ac77a6666" name="a21477cf9ca6ccf693acc2a5480bc67d0a7383104b83254a99f5991d0ac77a6666"></a>unsigned_integer&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a21477cf9ca6ccf693acc2a5480bc67d0a7b0fa6566c1595bea826217774606c2c" name="a21477cf9ca6ccf693acc2a5480bc67d0a7b0fa6566c1595bea826217774606c2c"></a>base58&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a21477cf9ca6ccf693acc2a5480bc67d0ab45cffe084dd3d20d928bee85e7b0f21" name="a21477cf9ca6ccf693acc2a5480bc67d0ab45cffe084dd3d20d928bee85e7b0f21"></a>string&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a21477cf9ca6ccf693acc2a5480bc67d0af1f713c9e000f5d3f280adbd124df4f5" name="a21477cf9ca6ccf693acc2a5480bc67d0af1f713c9e000f5d3f280adbd124df4f5"></a>array&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a21477cf9ca6ccf693acc2a5480bc67d0aa8cfde6331bd59eb2ac96f8911c4b666" name="a21477cf9ca6ccf693acc2a5480bc67d0aa8cfde6331bd59eb2ac96f8911c4b666"></a>object&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -1178,6 +1171,46 @@ template&lt;&gt; </div>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::uint32_t &amp;&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10a498c6a2951e199118e346e4e72f1a" name="a10a498c6a2951e199118e346e4e72f1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10a498c6a2951e199118e346e4e72f1a">&#9670;&#160;</a></span>encodeAsArg&lt; std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &gt;() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::uint8_t &gt; <a class="el" href="namespacehm.html#a7ce61c4a1d77f5931a81b758c2d7c95a">hm::encodeAsArg</a>&lt; std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &gt; </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vec</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10a498c6a2951e199118e346e4e72f1a" name="a10a498c6a2951e199118e346e4e72f1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10a498c6a2951e199118e346e4e72f1a">&#9670;&#160;</a></span>encodeAsArg&lt; std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &gt;() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::uint8_t &gt; <a class="el" href="namespacehm.html#a7ce61c4a1d77f5931a81b758c2d7c95a">hm::encodeAsArg</a>&lt; std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &gt; </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::vector&lt; std::tuple&lt; std::uint32_t, std::uint32_t &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vec</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

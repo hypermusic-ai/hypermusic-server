@@ -17,6 +17,7 @@ var annotated_dup =
       [ "Keccak256", "classhm_1_1Keccak256.html", null ],
       [ "Registry", "classhm_1_1Registry.html", "classhm_1_1Registry" ],
       [ "RouteArg", "classhm_1_1RouteArg.html", "classhm_1_1RouteArg" ],
+      [ "RouteArgDef", "structhm_1_1RouteArgDef.html", "structhm_1_1RouteArgDef" ],
       [ "RouteHandlerFunc", "classhm_1_1RouteHandlerFunc.html", "classhm_1_1RouteHandlerFunc" ],
       [ "RouteKey", "classhm_1_1RouteKey.html", "classhm_1_1RouteKey" ],
       [ "Router", "classhm_1_1Router.html", "classhm_1_1Router" ],

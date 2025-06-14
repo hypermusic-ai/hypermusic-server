@@ -31,6 +31,7 @@ var hierarchy =
     ] ],
     [ "hm::Registry", "classhm_1_1Registry.html", null ],
     [ "hm::RouteArg", "classhm_1_1RouteArg.html", null ],
+    [ "hm::RouteArgDef", "structhm_1_1RouteArgDef.html", null ],
     [ "hm::RouteHandlerFunc", "classhm_1_1RouteHandlerFunc.html", null ],
     [ "hm::RouteKey", "classhm_1_1RouteKey.html", null ],
     [ "hm::Router", "classhm_1_1Router.html", null ],

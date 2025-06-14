@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('route__arg_8hpp.html',''); initResizab
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#concepts">Concepts</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">route_arg.hpp File Reference</div></div>
 </div><!--header-->
@@ -109,12 +109,19 @@ $(document).ready(function(){initNavTree('route__arg_8hpp.html',''); initResizab
 <code>#include &lt;optional&gt;</code><br />
 <code>#include &lt;format&gt;</code><br />
 <code>#include &lt;cassert&gt;</code><br />
+<code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;spdlog/spdlog.h&gt;</code><br />
 </div>
 <p><a href="route__arg_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structhm_1_1RouteArgDef.html">hm::RouteArgDef</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pair of RouteArgType and RouteArgRequirement.  <a href="structhm_1_1RouteArgDef.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1RouteArg.html">hm::RouteArg</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class representing a route argument.  <a href="classhm_1_1RouteArg.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,11 +139,14 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacehm_1_1parse" id="r_namespacehm_1_1parse"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm_1_1parse.html">hm::parse</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a58c26834c86ebe03730763bab1633784" id="r_a58c26834c86ebe03730763bab1633784"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#a58c26834c86ebe03730763bab1633784">hm::RouteArgDef</a> = std::pair&lt; <a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0">RouteArgType</a>, <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948">RouteArgRequirement</a> &gt;</td></tr>
-<tr class="memdesc:a58c26834c86ebe03730763bab1633784"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pair of RouteArgType and RouteArgRequirement.  <br /></td></tr>
-<tr class="separator:a58c26834c86ebe03730763bab1633784"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
+Concepts</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="concepthm_1_1parse_1_1HasValueTypeAndIterator.html">hm::parse::HasValueTypeAndIterator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="concepthm_1_1parse_1_1IsSequenceContainer.html">hm::parse::IsSequenceContainer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="concepthm_1_1parse_1_1IsTupleLike.html">hm::parse::IsTupleLike</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -147,6 +157,8 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0a7b0fa6566c1595bea826217774606c2c">hm::base58</a>
 , <br />
 &#160;&#160;<a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0ab45cffe084dd3d20d928bee85e7b0f21">hm::string</a>
+, <a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0af1f713c9e000f5d3f280adbd124df4f5">hm::array</a>
+, <a class="el" href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0aa8cfde6331bd59eb2ac96f8911c4b666">hm::object</a>
 <br />
  }</td></tr>
 <tr class="memdesc:a21477cf9ca6ccf693acc2a5480bc67d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum to represent the type of a route argument.  <a href="namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0">More...</a><br /></td></tr>

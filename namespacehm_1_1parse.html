@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('namespacehm_1_1parse.html',''); initRe
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#concepts">Concepts</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">hm::parse Namespace Reference</div></div>
 </div><!--header-->
@@ -109,6 +110,15 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structhm_1_1parse_1_1use__json__t.html">use_json_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structhm_1_1parse_1_1use__protobuf__t.html">use_protobuf_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
+Concepts</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="concepthm_1_1parse_1_1HasValueTypeAndIterator.html">HasValueTypeAndIterator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="concepthm_1_1parse_1_1IsSequenceContainer.html">IsSequenceContainer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="concepthm_1_1parse_1_1IsTupleLike.html">IsTupleLike</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -204,9 +214,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a5301ba8e6021ec3a37db85738844f589"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; std::string &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm_1_1parse.html#a5301ba8e6021ec3a37db85738844f589">parseRouteArgAs&lt; std::string &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">arg</a>)</td></tr>
 <tr class="memdesc:a5301ba8e6021ec3a37db85738844f589"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a <code><a class="el" href="classhm_1_1RouteArg.html" title="A class representing a route argument.">RouteArg</a></code> as a string.  <br /></td></tr>
 <tr class="separator:a5301ba8e6021ec3a37db85738844f589"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed933a8e4dea1695dc7037b502edcc2e" id="r_aed933a8e4dea1695dc7037b502edcc2e"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:aed933a8e4dea1695dc7037b502edcc2e"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; std::vector&lt; std::uint32_t &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacehm_1_1parse.html#aed933a8e4dea1695dc7037b502edcc2e">parseRouteArgAs&lt; std::vector&lt; std::uint32_t &gt; &gt;</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">arg</a>)</td></tr>
-<tr class="separator:aed933a8e4dea1695dc7037b502edcc2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a385839e8c3f611862800ed512c7456a5" name="a385839e8c3f611862800ed512c7456a5"></a>
@@ -907,26 +914,6 @@ template&lt;&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The parsed 32bit unsigned integer or an empty optional if parsing fails. </dd></dl>
-
-</div>
-</div>
-<a id="aed933a8e4dea1695dc7037b502edcc2e" name="aed933a8e4dea1695dc7037b502edcc2e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed933a8e4dea1695dc7037b502edcc2e">&#9670;&#160;</a></span>parseRouteArgAs&lt; std::vector&lt; std::uint32_t &gt; &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt; std::vector&lt; std::uint32_t &gt; &gt; hm::parse::parseRouteArgAs&lt; std::vector&lt; std::uint32_t &gt; &gt; </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classhm_1_1RouteArg.html">RouteArg</a> &amp;&#160;</td>
-          <td class="paramname"><em>arg</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>

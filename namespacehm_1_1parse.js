@@ -2,6 +2,9 @@ var namespacehm_1_1parse =
 [
     [ "use_json_t", "structhm_1_1parse_1_1use__json__t.html", null ],
     [ "use_protobuf_t", "structhm_1_1parse_1_1use__protobuf__t.html", null ],
+    [ "HasValueTypeAndIterator", "concepthm_1_1parse_1_1HasValueTypeAndIterator.html", null ],
+    [ "IsSequenceContainer", "concepthm_1_1parse_1_1IsSequenceContainer.html", null ],
+    [ "IsTupleLike", "concepthm_1_1parse_1_1IsTupleLike.html", null ],
     [ "parseFromJson", "namespacehm_1_1parse.html#a385839e8c3f611862800ed512c7456a5", null ],
     [ "parseFromJson", "namespacehm_1_1parse.html#a3de31ad3c5904a0411d09821dc29f923", null ],
     [ "parseFromJson", "namespacehm_1_1parse.html#acab188f5a69bff13188be5bfee56e0f6", null ],
@@ -21,7 +24,6 @@ var namespacehm_1_1parse =
     [ "parseRouteArgAs< std::size_t >", "namespacehm_1_1parse.html#a008b1057c977a095f3e1f1b656c414b5", null ],
     [ "parseRouteArgAs< std::string >", "namespacehm_1_1parse.html#a5301ba8e6021ec3a37db85738844f589", null ],
     [ "parseRouteArgAs< std::uint32_t >", "namespacehm_1_1parse.html#aab9717c716f71e8b0a595d26c4860150", null ],
-    [ "parseRouteArgAs< std::vector< std::uint32_t > >", "namespacehm_1_1parse.html#aed933a8e4dea1695dc7037b502edcc2e", null ],
     [ "parseToJson", "namespacehm_1_1parse.html#a66b9ace6bdd460ceb0190a08edb5a475", null ],
     [ "parseToJson", "namespacehm_1_1parse.html#a03e0314ea0fe74644b43e8757dea6066", null ],
     [ "parseToJson", "namespacehm_1_1parse.html#a4c738cd30aa0f7835c3b519e263da4f8", null ],

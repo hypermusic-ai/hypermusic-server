@@ -19,9 +19,10 @@ var searchData=
   ['api_2ecpp_16',['api.cpp',['../api_8cpp.html',1,'']]],
   ['api_2ehpp_17',['api.hpp',['../api_8hpp.html',1,'']]],
   ['api_5fauth_2ecpp_18',['api_auth.cpp',['../api__auth_8cpp.html',1,'']]],
-  ['auth_2ecpp_19',['auth.cpp',['../auth_8cpp.html',1,'']]],
-  ['auth_2ehpp_20',['auth.hpp',['../auth_8hpp.html',1,'']]],
-  ['authenticationerror_21',['AuthenticationError',['../namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1',1,'hm']]],
-  ['authmanager_22',['authmanager',['../classhm_1_1AuthManager.html',1,'hm::AuthManager'],['../classhm_1_1AuthManager.html#a35b14d839d59aebcbc860bf57aa136c7',1,'hm::AuthManager::AuthManager(const AuthManager &amp;)=delete'],['../classhm_1_1AuthManager.html#a6ee2a67e10e9fdae9e46575f4f2ccc1f',1,'hm::AuthManager::AuthManager(asio::io_context &amp;io_context)'],['../classhm_1_1AuthManager.html#a229be5c44a397e0bdd743223a14f0860',1,'hm::AuthManager::AuthManager()=delete']]],
-  ['authorization_23',['Authorization',['../namespacehm_1_1http.html#ac27b3819754d6f0221366b8a0f24242da9cd8a2455b1839ff98ef70c05b9b5983',1,'hm::http']]]
+  ['array_19',['array',['../namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0af1f713c9e000f5d3f280adbd124df4f5',1,'hm']]],
+  ['auth_2ecpp_20',['auth.cpp',['../auth_8cpp.html',1,'']]],
+  ['auth_2ehpp_21',['auth.hpp',['../auth_8hpp.html',1,'']]],
+  ['authenticationerror_22',['AuthenticationError',['../namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1',1,'hm']]],
+  ['authmanager_23',['authmanager',['../classhm_1_1AuthManager.html',1,'hm::AuthManager'],['../classhm_1_1AuthManager.html#a35b14d839d59aebcbc860bf57aa136c7',1,'hm::AuthManager::AuthManager(const AuthManager &amp;)=delete'],['../classhm_1_1AuthManager.html#a6ee2a67e10e9fdae9e46575f4f2ccc1f',1,'hm::AuthManager::AuthManager(asio::io_context &amp;io_context)'],['../classhm_1_1AuthManager.html#a229be5c44a397e0bdd743223a14f0860',1,'hm::AuthManager::AuthManager()=delete']]],
+  ['authorization_24',['Authorization',['../namespacehm_1_1http.html#ac27b3819754d6f0221366b8a0f24242da9cd8a2455b1839ff98ef70c05b9b5983',1,'hm::http']]]
 ];
