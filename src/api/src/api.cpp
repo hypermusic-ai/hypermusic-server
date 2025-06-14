@@ -500,7 +500,7 @@ namespace hm
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
 
-        if(args.size() != 3)
+        if(args.size() != 2 && args.size() != 3)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(hm::http::Code::BadRequest);
@@ -583,51 +583,54 @@ namespace hm
         }
         const std::uint32_t & N = N_result.value();
 
-        // starting points
-        auto starting_points_result = parse::parseRouteArgAs<std::vector<std::uint32_t>>(args.at(2));
-        if(!starting_points_result)
+        // running instaces
+        std::vector<std::tuple<std::uint32_t, std::uint32_t>> running_instances;
+        if(args.size() == 3)
         {
-            spdlog::error("invalid starting points");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
-            response.setBody("invalid starting points");
-            co_return response;
+            auto running_instances_result = parse::parseRouteArgAs<std::vector<std::tuple<std::uint32_t, std::uint32_t>>>(args.at(2));
+            if(!running_instances_result)
+            {
+                spdlog::error("invalid running instaces");
+                response.setHeader(http::Header::ContentType, "text/plain");
+                response.setCode(hm::http::Code::BadRequest);
+                response.setBody("invalid running instaces");
+                co_return response;
+            }
+            running_instances = running_instances_result.value();
         }
-        const std::vector<std::uint32_t> & starting_points = starting_points_result.value();
-
 
         std::vector<uint8_t> input_data;
         // runner function selector
-        const auto selector = constructFunctionSelector("gen(string,uint32)");
+        const auto selector = constructFunctionSelector("gen(string,uint32,(uint32,uint32)[])");
         input_data.insert(input_data.end(), selector.begin(), selector.end());
 
-        // 1. Offset to start of string data (first dynamic arg): 64 (decimal) => 0x40
+        // 1. Offset to start of string data
         std::vector<uint8_t> offset_to_string(32, 0);
-        offset_to_string[31] = 0x40;
+        offset_to_string[31] = 0x60;
         input_data.insert(input_data.end(), offset_to_string.begin(), offset_to_string.end());
 
         // 2. uint32 argument, properly encoded as a 32-byte word
-        auto N_bytes = encodeAsArg(N);
+        std::vector<std::uint8_t> N_bytes = encodeAsArg(N);
         input_data.insert(input_data.end(), N_bytes.begin(), N_bytes.end());
 
-        // 3. String encoding
-        std::vector<uint8_t> name_bytes;
-        {
-            const std::string& s = feature_name;
-            std::vector<uint8_t> len_enc(32, 0);
-            len_enc[31] = static_cast<uint8_t>(s.size());
+        // (String encoding)
+        std::vector<std::uint8_t> name_bytes = encodeAsArg(feature_name);
 
-            name_bytes.insert(name_bytes.end(), len_enc.begin(), len_enc.end()); // string length
-            name_bytes.insert(name_bytes.end(), s.begin(), s.end());             // string bytes
+        // 3. Offset to vector<tuple>, will be right after string
+        std::vector<uint8_t> offset_tuple_vec(32, 0);
+        size_t offset_to_tuple_vec = 0x60 + name_bytes.size();  // string offset + string dynamic payload
+        offset_tuple_vec[28] = (offset_to_tuple_vec >> 24) & 0xFF;
+        offset_tuple_vec[29] = (offset_to_tuple_vec >> 16) & 0xFF;
+        offset_tuple_vec[30] = (offset_to_tuple_vec >> 8) & 0xFF;
+        offset_tuple_vec[31] = (offset_to_tuple_vec) & 0xFF;
+        input_data.insert(input_data.end(), offset_tuple_vec.begin(), offset_tuple_vec.end());
 
-            // pad to multiple of 32 bytes
-            size_t pad = (32 - (s.size() % 32)) % 32;
-            name_bytes.insert(name_bytes.end(), pad, 0);
-        }
-
-        // Append the string bytes
+        // 4. Append the string bytes (dynamic)
         input_data.insert(input_data.end(), name_bytes.begin(), name_bytes.end());
-
+        
+        // 5. Append vector<tuple<uint32_t, uint32_t>> bytes (dynamic)
+        std::vector<uint8_t> tuple_vec_bytes = encodeAsArg(running_instances);
+        input_data.insert(input_data.end(), tuple_vec_bytes.begin(), tuple_vec_bytes.end());
 
         // execute call to runner
         const auto exec_result = co_await evm.execute(address_bytes, evm.getRunnerAddress(), input_data, 1'000'000, 0);

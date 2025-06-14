@@ -69,35 +69,52 @@ namespace hm
     }
 
     template<>
+    std::vector<std::uint8_t> encodeAsArg<std::vector<std::tuple<std::uint32_t, std::uint32_t>>>(const std::vector<std::tuple<std::uint32_t, std::uint32_t>>& vec)
+    {
+        std::vector<std::uint8_t> encoded;
+
+        // Encode length
+        std::vector<std::uint8_t> length(32, 0);
+        uint64_t len = vec.size();
+        for (int i = 0; i < 8; ++i)
+            length[31 - i] = static_cast<uint8_t>(len >> (i * 8));
+        
+        encoded.insert(encoded.end(), length.begin(), length.end());
+
+        // Encode each pair as two int32s in a 32-byte ABI word each
+        for (const auto& [a, b] : vec)
+        {
+            std::vector<std::uint8_t> elem(32, 0);
+            for (int i = 0; i < 4; ++i)
+                elem[31 - i] = static_cast<uint8_t>(a >> (i * 8));
+            
+            encoded.insert(encoded.end(), elem.begin(), elem.end());
+
+            std::fill(elem.begin(), elem.end(), 0);
+            for (int i = 0; i < 4; ++i)
+                elem[31 - i] = static_cast<uint8_t>(b >> (i * 8));
+            
+            encoded.insert(encoded.end(), elem.begin(), elem.end());
+        }
+
+        return encoded;
+    }
+
+    template<>
     std::vector<std::uint8_t> encodeAsArg<std::string>(const std::string& str)
     {
         std::vector<std::uint8_t> encoded;
 
-        // Step 1: offset to data section (always 32 bytes for first arg)
-        encoded.resize(32, 0);
-        encoded[31] = 0x20;
+        std::vector<uint8_t> len_enc(32, 0);
+        len_enc[31] = static_cast<uint8_t>(str.size());
 
-        // Step 2: encode length
-        std::vector<std::uint8_t> data(32, 0);
-        std::uint64_t length = static_cast<std::uint64_t>(str.size());
-        data[24] = static_cast<std::uint8_t>((length >> 56) & 0xFF);
-        data[25] = static_cast<std::uint8_t>((length >> 48) & 0xFF);
-        data[26] = static_cast<std::uint8_t>((length >> 40) & 0xFF);
-        data[27] = static_cast<std::uint8_t>((length >> 32) & 0xFF);
-        data[28] = static_cast<std::uint8_t>((length >> 24) & 0xFF);
-        data[29] = static_cast<std::uint8_t>((length >> 16) & 0xFF);
-        data[30] = static_cast<std::uint8_t>((length >> 8) & 0xFF);
-        data[31] = static_cast<std::uint8_t>(length & 0xFF);
+        encoded.insert(encoded.end(), len_enc.begin(), len_enc.end()); // string length
+        encoded.insert(encoded.end(), str.begin(), str.end());             // string bytes
 
-        // Step 3: copy string bytes and pad to 32-byte boundary
-        std::vector<std::uint8_t> content(str.begin(), str.end());
-        std::size_t padding = 32 - (content.size() % 32);
-        if (padding != 32) content.insert(content.end(), padding, 0);
-
-        // Step 4: concatenate all parts
-        encoded.insert(encoded.end(), data.begin(), data.end());
-        encoded.insert(encoded.end(), content.begin(), content.end());
-
+        // pad to multiple of 32 bytes
+        size_t pad = (32 - (str.size() % 32)) % 32;
+        encoded.insert(encoded.end(), pad, 0);
+        
         return encoded;
     }
 

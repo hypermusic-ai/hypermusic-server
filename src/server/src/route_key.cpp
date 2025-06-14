@@ -16,16 +16,16 @@ namespace hm
 
             if(arg_parse_result.has_value())
             {
-                if(optional_at_end == true && arg_parse_result.value().second == RouteArgRequirement::required)
+                if(optional_at_end == true && arg_parse_result->requirement == RouteArgRequirement::required)
                 {
                     spdlog::error("RouteKey definition error - optional values MUST appear at the end of the path");
                     throw std::runtime_error("RouteKey definition error - optional values MUST appear at the end of the path");
                 } 
 
-                if(arg_parse_result.value().second == RouteArgRequirement::optional)optional_at_end = true;
+                if(arg_parse_result->requirement == RouteArgRequirement::optional)optional_at_end = true;
                 
                 // argument
-                _path_info_segments.emplace_back(arg_parse_result.value());
+                _path_info_segments.emplace_back(std::move(*arg_parse_result));
             }
             else
             {

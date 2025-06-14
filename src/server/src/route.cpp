@@ -45,14 +45,14 @@ namespace hm
                 
                 // if argument is required but we cannot consume more path segments
                 // then the path does not match
-                if(arg_def.second == RouteArgRequirement::required && path_segments_index >= request_path_info_segments.size())
+                if(arg_def.requirement == RouteArgRequirement::required && path_segments_index >= request_path_info_segments.size())
                 {
                     return {false, std::vector<RouteArg>()};
                 }
 
                 // if argument is optional but we cannot consume more path segments
                 // then skip the argument
-                if(arg_def.second == RouteArgRequirement::optional && path_segments_index >= request_path_info_segments.size())
+                if(arg_def.requirement == RouteArgRequirement::optional && path_segments_index >= request_path_info_segments.size())
                 {
                     continue;
                 }
