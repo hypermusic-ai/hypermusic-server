@@ -1,6 +1,6 @@
 #include "feature.hpp"
 
-namespace hm
+namespace dcn
 {
     std::string constructFeatureSolidityCode(const Feature & feature)
     {
@@ -77,7 +77,7 @@ namespace hm
     }
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
 
     std::optional<json> parseToJson(TransformationDef transform_def, use_json_t)

@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace hm
+namespace dcn::utils
 {
     /**
      * @brief Get the ASCII logo string.

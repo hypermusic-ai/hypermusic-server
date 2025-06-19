@@ -1,6 +1,6 @@
 #include "http.hpp"
 
-namespace hm::http
+namespace dcn::http
 {
     MessageBase::MessageBase()
     {
@@ -96,7 +96,7 @@ namespace hm::http
     }
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
     http::Request parseRequestFromString(const std::string & request)
     {

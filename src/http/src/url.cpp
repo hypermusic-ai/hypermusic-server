@@ -1,6 +1,6 @@
 #include "url.hpp"
 
-namespace hm::http
+namespace dcn::http
 {
     URL::URL(const std::string & url) 
     : _url(url)
@@ -60,7 +60,7 @@ namespace hm::http
     }
 }
 
-namespace hm::http
+namespace dcn::http
 {
     std::vector<std::string> splitPathSegments(const std::string path)
     {

@@ -1,6 +1,6 @@
 #include "session.hpp"
 
-namespace hm
+namespace dcn
 {
     Session::Session(asio::ip::tcp::socket & socket, SessionManager & session_mgr)
     : _socket(socket), _session_mgr(session_mgr) 

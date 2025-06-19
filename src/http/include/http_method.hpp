@@ -3,7 +3,7 @@
 #include <format>
 #include <string>
 
-namespace hm::http
+namespace dcn::http
 {
     /**
      * @brief Enum to represent the request method.
@@ -41,7 +41,7 @@ namespace hm::http
     };
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
     /**
      * @brief Parse the given string to a `http::Method`.
@@ -54,20 +54,20 @@ namespace hm::parse
 }
 
 template <>
-struct std::formatter<hm::http::Method> : std::formatter<std::string> {
+struct std::formatter<dcn::http::Method> : std::formatter<std::string> {
 
-  auto format(hm::http::Method method, format_context& ctx) const {
+  auto format(dcn::http::Method method, format_context& ctx) const {
     switch(method)
     {
-        case hm::http::Method::GET:     return formatter<string>::format("GET", ctx);
-        case hm::http::Method::HEAD:     return formatter<string>::format("HEAD", ctx);
-        case hm::http::Method::PUT:     return formatter<string>::format("PUT", ctx);
-        case hm::http::Method::DEL:     return formatter<string>::format("DELETE", ctx);
-        case hm::http::Method::POST:    return formatter<string>::format("POST", ctx);
-        case hm::http::Method::OPTIONS:    return formatter<string>::format("OPTIONS", ctx);
+        case dcn::http::Method::GET:     return formatter<string>::format("GET", ctx);
+        case dcn::http::Method::HEAD:     return formatter<string>::format("HEAD", ctx);
+        case dcn::http::Method::PUT:     return formatter<string>::format("PUT", ctx);
+        case dcn::http::Method::DEL:     return formatter<string>::format("DELETE", ctx);
+        case dcn::http::Method::POST:    return formatter<string>::format("POST", ctx);
+        case dcn::http::Method::OPTIONS:    return formatter<string>::format("OPTIONS", ctx);
 
         // Unknown
-        case hm::http::Method::Unknown:    return formatter<string>::format("Unknown", ctx);
+        case dcn::http::Method::Unknown:    return formatter<string>::format("Unknown", ctx);
     }
     return formatter<string>::format("", ctx);
   }

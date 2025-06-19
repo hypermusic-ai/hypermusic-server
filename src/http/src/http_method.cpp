@@ -1,6 +1,6 @@
 #include "http_method.hpp"
 
-namespace hm::parse
+namespace dcn::parse
 {
     http::Method parseMethodFromString(const std::string & method)
     {

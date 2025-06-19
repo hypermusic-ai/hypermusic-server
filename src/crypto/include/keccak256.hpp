@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <cassert>
 
-namespace hm
+namespace dcn
 {
     class Keccak256 
     {

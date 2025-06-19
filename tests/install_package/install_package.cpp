@@ -20,10 +20,10 @@ class BaseInstallTest : public testing::Test
 TEST_F(BaseInstallTest, ut1)
 {
     asio::io_context io_context;
-    hm::Server server(io_context, {asio::ip::tcp::v4(), 54321});
+    dcn::Server server(io_context, {asio::ip::tcp::v4(), 54321});
 
     spdlog::info("ut1");
-    hm::Feature feature;
+    dcn::Feature feature;
     feature.set_name("test");
     spdlog::info("fetch feature name : {}", feature.name());
 

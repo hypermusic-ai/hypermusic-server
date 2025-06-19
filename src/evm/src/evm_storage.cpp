@@ -1,6 +1,6 @@
 #include "evm_storage.hpp"
 
-namespace hm
+namespace dcn
 {
     EVMStorage::EVMStorage(evmc::VM & vm, evmc_revision rev)
         :   _vm(vm),
@@ -61,7 +61,7 @@ namespace hm
 
         const auto& code = _accounts.at(to_key(addr)).code;
         evmc::bytes32 hash;
-        hm::Keccak256::getHash((const std::uint8_t*)code.data(), code.size(), hash.bytes);
+        dcn::Keccak256::getHash((const std::uint8_t*)code.data(), code.size(), hash.bytes);
         return hash;
     }
 
@@ -321,7 +321,7 @@ namespace hm
         std::memcpy(data.data() + 20, &nonce, sizeof(nonce));
             
         evmc::bytes32 hash;
-        hm::Keccak256::getHash((const std::uint8_t*)data.data(), 20 + sizeof(nonce), hash.bytes);
+        dcn::Keccak256::getHash((const std::uint8_t*)data.data(), 20 + sizeof(nonce), hash.bytes);
 
         evmc_address addr;
         std::memcpy(addr.bytes, &hash.bytes[12], 20);
@@ -337,12 +337,12 @@ namespace hm
         data.insert(data.end(), salt.bytes, salt.bytes + 32);
 
         evmc::bytes32 code_hash;
-        hm::Keccak256::getHash((const std::uint8_t*)code.data(), code.size(), code_hash.bytes);
+        dcn::Keccak256::getHash((const std::uint8_t*)code.data(), code.size(), code_hash.bytes);
 
         data.insert(data.end(), code_hash.bytes, code_hash.bytes + 32);
 
         evmc::bytes32 hash;
-        hm::Keccak256::getHash((const std::uint8_t*)data.data(), data.size(), hash.bytes);
+        dcn::Keccak256::getHash((const std::uint8_t*)data.data(), data.size(), hash.bytes);
 
         evmc_address addr;
         std::memcpy(addr.bytes, &hash.bytes[12], 20);

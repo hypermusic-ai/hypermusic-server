@@ -1,6 +1,6 @@
 #include "api.hpp"
 
-namespace hm
+namespace dcn
 {
     asio::awaitable<http::Response> HEAD_SimpleForm(const http::Request &, std::vector<RouteArg>)
     {
@@ -8,7 +8,7 @@ namespace hm
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
-        response.setCode(hm::http::Code::OK);
+        response.setCode(dcn::http::Code::OK);
         co_return response;
     }
 
@@ -21,7 +21,7 @@ namespace hm
         response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
-        response.setCode(hm::http::Code::OK);
+        response.setCode(dcn::http::Code::OK);
         co_return response;
     }
 
@@ -32,7 +32,7 @@ namespace hm
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
         response.setHeader(http::Header::Connection, "keep-alive");
         response.setHeader(http::Header::ContentType, "text/html; charset=utf-8");
-        response.setCode(hm::http::Code::OK);
+        response.setCode(dcn::http::Code::OK);
         response.setBody(simple_form);
         co_return response;
     }

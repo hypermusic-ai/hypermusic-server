@@ -3,7 +3,7 @@
 
 #include "condition.pb.h"
 
-namespace hm
+namespace dcn
 {
     /**
      * @brief Combines hash values for a Condition object.

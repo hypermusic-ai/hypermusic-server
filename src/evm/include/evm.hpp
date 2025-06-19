@@ -38,7 +38,7 @@
 #include "evm_storage.hpp"
 #include "evm_formatter.hpp"
 
-namespace hm
+namespace dcn
 {
     class EVM
     {
@@ -130,4 +130,7 @@ namespace hm
 
     template<>
     std::vector<std::vector<std::uint32_t>> decodeReturnedValue(const std::vector<std::uint8_t> & bytes);
+
+    template<>
+    evmc::address decodeReturnedValue(const std::vector<std::uint8_t> & bytes);
 }

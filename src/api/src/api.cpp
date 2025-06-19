@@ -1,7 +1,50 @@
 #include "api.hpp"
 
-namespace hm
+namespace dcn
 {
+    static asio::awaitable<std::expected<std::string, AuthenticationError>> _authenticate(const http::Request & request, const AuthManager & auth_manager)
+    {
+        auto cookie_res = request.getHeader(http::Header::Cookie);
+        if(cookie_res.empty())
+        {
+            spdlog::error("Missing cookie");
+            co_return std::unexpected(AuthenticationError::MissingCookie);
+        }
+        const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
+
+        const auto token_res = parse::parseAccessTokenFromCookieHeader(cookie_header);
+        if (token_res.has_value() == false) 
+        {
+            spdlog::error("Failed to parse token");
+            co_return std::unexpected(AuthenticationError::MissingToken);
+        }
+        const std::string & token = token_res.value();
+
+        auto verification_res = co_await auth_manager.verifyAccessToken(token);
+
+        if(verification_res.has_value() == false)
+        {
+            spdlog::error("Failed to verify token");
+            co_return std::unexpected(verification_res.error());
+        }
+
+        if(evmc::validate_hex(verification_res.value()) == false)
+        {
+            spdlog::error("Invalid address");
+            co_return std::unexpected(AuthenticationError::InvalidToken);
+        }
+
+        co_return verification_res.value();
+    }
+
+    static asio::awaitable<std::expected<std::vector<asio::detail::buffered_stream_storage::byte_type>, evmc_status_code>> _fetchOwner(EVM & evm, const evmc::address & address)
+    {
+        std::vector<uint8_t> input_data;
+        const auto selector = constructFunctionSelector("getOwner()");
+        input_data.insert(input_data.end(), selector.begin(), selector.end());
+        co_return  co_await evm.execute(evm.getRegistryAddress(), address, input_data, 1'000'000, 0);
+    }
+
     asio::awaitable<http::Response> OPTIONS_feature(const http::Request &, std::vector<RouteArg>)
     {
         http::Response response;
@@ -11,11 +54,11 @@ namespace hm
         response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
-        response.setCode(hm::http::Code::OK);
+        response.setCode(http::Code::OK);
         co_return response;
     }
 
-    asio::awaitable<http::Response> GET_feature(const http::Request &, std::vector<RouteArg> args, Registry & registry)
+    asio::awaitable<http::Response> GET_feature(const http::Request &, std::vector<RouteArg> args, Registry & registry, EVM & evm)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
@@ -25,7 +68,7 @@ namespace hm
         if(args.size() > 2 || args.size() == 0)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("invalid url");
             co_return response;
         }
@@ -35,26 +78,27 @@ namespace hm
         if(!feature_name_result)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("invalid url");
             co_return response;
         }
+        const auto & feature_name = feature_name_result.value();
 
         std::optional<Feature> feature_res;
 
         if(args.size() == 2)
         {
-            auto feature_id_result = parse::parseRouteArgAs<std::size_t>(args.at(1));
+            const auto feature_address_result = parse::parseRouteArgAs<std::string>(args.at(1));
 
-            if(!feature_id_result)
+            if(!feature_address_result)
             {
                 response.setHeader(http::Header::ContentType, "text/plain");
-                response.setCode(hm::http::Code::BadRequest);
+                response.setCode(http::Code::BadRequest);
                 response.setBody("invalid url");
                 co_return response;
             }
 
-            feature_res = co_await registry.getFeature(feature_name_result.value(), feature_id_result.value());
+            feature_res = co_await registry.getFeature(feature_name_result.value(), feature_address_result.value());
         }
         else if(args.size() == 1)
         {
@@ -64,24 +108,76 @@ namespace hm
         if(!feature_res) 
         {
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::NotFound);
+            response.setCode(http::Code::NotFound);
             response.setBody("feature not found");
             co_return response;
         }
         
-        auto json_res = parse::parseToJson(*feature_res, parse::use_protobuf);
+        auto json_res = parse::parseToJson(*feature_res, parse::use_json);
 
         if(!json_res)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
+            response.setCode(http::Code::InternalServerError);
             response.setBody("internal server error");
             co_return response;
         }
 
+        std::vector<uint8_t> input_data;
+        // function selector
+        const auto selector = constructFunctionSelector("getFeature(string)");
+        input_data.insert(input_data.end(), selector.begin(), selector.end());
+
+        // Step 2: Offset to string data (32 bytes with value 0x20)
+        std::vector<uint8_t> offset(32, 0);
+        offset[31] = 0x20;
+        input_data.insert(input_data.end(), offset.begin(), offset.end());
+
+        // Step 3: String length
+        std::vector<uint8_t> str_len(32, 0);
+        str_len[31] = static_cast<uint8_t>(feature_name.size());
+        input_data.insert(input_data.end(), str_len.begin(), str_len.end());
+
+        // Step 4: String bytes
+        input_data.insert(input_data.end(), feature_name.begin(), feature_name.end());
+
+        // Step 5: Padding to 32-byte boundary
+        size_t padding = (32 - (feature_name.size() % 32)) % 32;
+        input_data.insert(input_data.end(), padding, 0);
+        const auto exec_result = co_await evm.execute(evm.getRegistryAddress(), evm.getRegistryAddress(), input_data, 1'000'000, 0);
+        
+        // check execution status
+        if(!exec_result)
+        {
+            spdlog::error("Failed to fetch feature {}", exec_result.error());
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(http::Code::InternalServerError);
+            response.setBody(std::format("Failed to fetch feature : {}", exec_result.error()));
+            co_return std::move(response);
+        }
+
+        const auto feature_address = decodeReturnedValue<evmc::address>(exec_result.value());
+        const auto owner_result = co_await _fetchOwner(evm, feature_address);
+        if(!owner_result)
+        {
+            spdlog::error("Failed to fetch owner {}", owner_result.error());
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(http::Code::InternalServerError);
+            response.setBody(std::format("Failed to fetch owner : {}", owner_result.error()));
+            co_return std::move(response);
+        }
+
+        const auto owner_address = decodeReturnedValue<evmc::address>(owner_result.value());
+
+        (*json_res)["owner"] = evmc::hex(owner_address);
+        (*json_res)["local_address"] = evmc::hex(feature_address);
+        (*json_res)["address"] = "0x0";
+
         response.setHeader(http::Header::ContentType, "application/json");
-        response.setCode(hm::http::Code::OK);
-        response.setBody(std::move(*json_res));
+        response.setCode(http::Code::OK);
+        response.setBody(json_res->dump());
         co_return std::move(response);
     }
 
@@ -91,38 +187,17 @@ namespace hm
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
 
-        auto cookie_res = request.getHeader(http::Header::Cookie);
-        if(cookie_res.empty())
+        const auto auth_result = co_await _authenticate(request, auth_manager);
+
+        if(auth_result.has_value() == false)
         {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("missing cookie");
+            response.setCode(http::Code::Unauthorized);
+            response.setBody(std::format("Error: {}", auth_result.error()));
             co_return std::move(response);
         }
-        const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
-
-        const auto token_res = parse::parseAccessTokenFromCookieHeader(cookie_header);
-        if (token_res.has_value() == false) {
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("missing token");
-            co_return std::move(response);
-        }
-        const std::string & token = token_res.value();
-
-        auto verification_res = co_await auth_manager.verifyAccessToken(token);
-
-        if(verification_res.has_value() == false)
-        {
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("invalid token: " + verification_res.error());
-            co_return std::move(response);
-        }
-        const auto & address = verification_res.value();
+        const std::string & address = auth_result.value();
 
         spdlog::debug("token verified address : {}", address);
 
@@ -133,7 +208,7 @@ namespace hm
         {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("Failed to parse feature");
             co_return std::move(response);
         }
@@ -145,8 +220,8 @@ namespace hm
         // deploy
         // add to EVM machine
 
-        std::filesystem::path code_path = hm::getResourcesPath() / "contracts" / "features" / (feature.name() + ".sol");
-        std::filesystem::path out_dir = hm::getResourcesPath() / "contracts" / "features" / "build";
+        std::filesystem::path code_path = getResourcesPath() / "contracts" / "features" / (feature.name() + ".sol");
+        std::filesystem::path out_dir = getResourcesPath() / "contracts" / "features" / "build";
 
         std::filesystem::create_directories(code_path.parent_path());
         std::filesystem::create_directories(out_dir);
@@ -158,7 +233,7 @@ namespace hm
             spdlog::error("Failed to create file");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
+            response.setCode(http::Code::InternalServerError);
             response.setBody("Failed to create file");
             co_return std::move(response);
         }
@@ -172,7 +247,7 @@ namespace hm
             spdlog::error("Failed to compile code");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
+            response.setCode(http::Code::InternalServerError);
             response.setBody("Failed to compile code");
             co_return std::move(response);
         }
@@ -183,7 +258,7 @@ namespace hm
             spdlog::error("Invalid address");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("Invalid address");
             co_return std::move(response);
         }
@@ -193,7 +268,6 @@ namespace hm
         
         co_await evm.addAccount(address_bytes, 1000000); //TODO
         
-
         auto deploy_res = co_await evm.deploy(
             out_dir / (feature.name() + ".bin"), 
             address_bytes, 
@@ -206,33 +280,47 @@ namespace hm
             spdlog::error("Failed to deploy code : {}", deploy_res.error());
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
+            response.setCode(http::Code::InternalServerError);
             response.setBody(std::format("Failed to deploy code : {}",  deploy_res.error()));
             co_return std::move(response);
         }
 
-        auto version_res = co_await registry.addFeature(feature);
-        if(!version_res) 
+        const std::string deploy_address_str = evmc::hex(deploy_res.value());
+
+        const auto owner_result = co_await _fetchOwner(evm, deploy_res.value());
+
+        // check execution status
+        if(!owner_result)
+        {
+            spdlog::error("Failed to fetch owner {}", owner_result.error());
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(http::Code::InternalServerError);
+            response.setBody(std::format("Failed to fetch owner : {}", owner_result.error()));
+            co_return std::move(response);
+        }
+
+        if(!co_await registry.addFeature(feature, deploy_address_str)) 
         {
             spdlog::error("Failed to add feature");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("Failed to add feature");
             co_return std::move(response);
         }
-        auto version = *version_res;
 
-        spdlog::debug("feature '{}' added with hash : {}", feature.name(), std::to_string(version));
+        spdlog::debug("feature '{}' added", feature.name());
         
         json json_output;
         json_output["name"] = feature.name();
-        json_output["version"] = std::to_string(version);
-        json_output["address"] = evmc::hex(deploy_res.value());
+        json_output["owner"] = evmc::hex(decodeReturnedValue<evmc::address>(owner_result.value()));
+        json_output["local_address"] = deploy_address_str;
+        json_output["address"] = "0x0";
 
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
-        response.setCode(hm::http::Code::Created);
+        response.setCode(http::Code::Created);
         response.setBody(json_output.dump());
         co_return std::move(response);
     }
@@ -247,11 +335,11 @@ namespace hm
         response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
-        response.setCode(hm::http::Code::OK);
+        response.setCode(http::Code::OK);
         co_return response;
     }
 
-    asio::awaitable<http::Response> GET_transformation(const http::Request & request, std::vector<RouteArg> args, Registry & registry)
+    asio::awaitable<http::Response> GET_transformation(const http::Request & request, std::vector<RouteArg> args, Registry & registry, EVM & evm)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
@@ -261,7 +349,7 @@ namespace hm
         if(args.size() > 2 || args.size() == 0)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("invalid url");
             co_return response;
         }
@@ -271,26 +359,27 @@ namespace hm
         if(!transformation_name_result)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("invalid url");
             co_return response;
         }
+        const auto & transformation_name = transformation_name_result.value();
 
         std::optional<Transformation> transformation_res;
 
         if(args.size() == 2)
         {
-            auto transformation_id_result = parse::parseRouteArgAs<std::size_t>(args.at(1));
+            const auto transformation_address_result = parse::parseRouteArgAs<std::string>(args.at(1));
 
-            if(!transformation_id_result)
+            if(!transformation_address_result)
             {
                 response.setHeader(http::Header::ContentType, "text/plain");
-                response.setCode(hm::http::Code::BadRequest);
+                response.setCode(http::Code::BadRequest);
                 response.setBody("invalid url");
                 co_return response;
             }
 
-            transformation_res = co_await registry.getTransformation(transformation_name_result.value(), transformation_id_result.value());
+            transformation_res = co_await registry.getTransformation(transformation_name_result.value(), transformation_address_result.value());
         }
         else if(args.size() == 1)
         {
@@ -300,24 +389,76 @@ namespace hm
         if(!transformation_res) 
         {
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::NotFound);
+            response.setCode(http::Code::NotFound);
             response.setBody("transformation not found");
             co_return response;
         }
         
-        auto json_res = parse::parseTransformationToJson(*transformation_res, parse::use_protobuf);
+        auto json_res = parse::parseTransformationToJson(*transformation_res, parse::use_json);
 
         if(!json_res)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
+            response.setCode(http::Code::InternalServerError);
             response.setBody("internal server error");
             co_return response;
         }
 
+        std::vector<uint8_t> input_data;
+        // function selector
+        const auto selector = constructFunctionSelector("getTransformation(string)");
+        input_data.insert(input_data.end(), selector.begin(), selector.end());
+
+        // Step 2: Offset to string data (32 bytes with value 0x20)
+        std::vector<uint8_t> offset(32, 0);
+        offset[31] = 0x20;
+        input_data.insert(input_data.end(), offset.begin(), offset.end());
+
+        // Step 3: String length
+        std::vector<uint8_t> str_len(32, 0);
+        str_len[31] = static_cast<uint8_t>(transformation_name.size());
+        input_data.insert(input_data.end(), str_len.begin(), str_len.end());
+
+        // Step 4: String bytes
+        input_data.insert(input_data.end(), transformation_name.begin(), transformation_name.end());
+
+        // Step 5: Padding to 32-byte boundary
+        size_t padding = (32 - (transformation_name.size() % 32)) % 32;
+        input_data.insert(input_data.end(), padding, 0);
+        const auto exec_result = co_await evm.execute(evm.getRegistryAddress(), evm.getRegistryAddress(), input_data, 1'000'000, 0);
+        
+        // check execution status
+        if(!exec_result)
+        {
+            spdlog::error("Failed to fetch transformation {}", exec_result.error());
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(http::Code::InternalServerError);
+            response.setBody(std::format("Failed to fetch transformation : {}", exec_result.error()));
+            co_return std::move(response);
+        }
+
+        const auto transformation_address = decodeReturnedValue<evmc::address>(exec_result.value());
+        const auto owner_result = co_await _fetchOwner(evm, transformation_address);
+        if(!owner_result)
+        {
+            spdlog::error("Failed to fetch owner {}", owner_result.error());
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(http::Code::InternalServerError);
+            response.setBody(std::format("Failed to fetch owner : {}", owner_result.error()));
+            co_return std::move(response);
+        }
+
+        const auto owner_address = decodeReturnedValue<evmc::address>(owner_result.value());
+
+        (*json_res)["owner"] = evmc::hex(owner_address);
+        (*json_res)["local_address"] = evmc::hex(transformation_address);
+        (*json_res)["address"] = "0x0";
+
         response.setHeader(http::Header::ContentType, "application/json");
-        response.setCode(hm::http::Code::OK);
-        response.setBody(std::move(*json_res));
+        response.setCode(http::Code::OK);
+        response.setBody(json_res->dump());
         co_return std::move(response);
     }
 
@@ -327,60 +468,46 @@ namespace hm
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
 
-        auto cookie_res = request.getHeader(http::Header::Cookie);
-        if(cookie_res.empty())
-        {
-            spdlog::error("missing cookie");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("missing cookie");
-            co_return std::move(response);
-        }
-        const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
+        const auto auth_result = co_await _authenticate(request, auth_manager);
 
-        const auto token_res = parse::parseAccessTokenFromCookieHeader(cookie_header);
-        if (token_res.has_value() == false) {
-            spdlog::error("missing token");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("missing token");
-            co_return std::move(response);
-        }
-        const std::string & token = token_res.value();
-
-        auto verification_res = co_await auth_manager.verifyAccessToken(token);
-        if(verification_res.has_value() == false)
+        if(auth_result.has_value() == false)
         {
-            spdlog::error("invalid token: {}", verification_res.error());
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("invalid token: " + verification_res.error());
+            response.setCode(http::Code::Unauthorized);
+            response.setBody(std::format("Error: {}", auth_result.error()));
             co_return std::move(response);
         }
-        const auto & address = verification_res.value();
+        const std::string & address = auth_result.value();
 
         spdlog::debug("token verified address: {}", address);
         
         // every double-quote character (") is escaped with a backslash (\)
-        auto transformation_res = parse::parseJsonToTransformation(escapeSolSrcQuotes(request.getBody()), parse::use_protobuf);
+        auto transformation_res = parse::parseJsonToTransformation(utils::escapeSolSrcQuotes(request.getBody()), parse::use_protobuf);
 
         if(!transformation_res) 
         {
             spdlog::error("Failed to parse transformation");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("Failed to parse transformation");
             co_return std::move(response);
         }
 
         const Transformation & transformation = *transformation_res;
+        if(transformation.name().empty() || transformation.sol_src().empty())
+        {
+            spdlog::error("Transformation name or source is empty");
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(http::Code::BadRequest);
+            response.setBody("Transformation name or source is empty");
+            co_return std::move(response);
+        }
 
-        std::filesystem::path code_path = hm::getResourcesPath() / "contracts" / "transformations" / (transformation.name() + ".sol");
-        std::filesystem::path out_dir = hm::getResourcesPath() / "contracts" / "transformations" / "build";
+        std::filesystem::path code_path = getResourcesPath() / "contracts" / "transformations" / (transformation.name() + ".sol");
+        std::filesystem::path out_dir = getResourcesPath() / "contracts" / "transformations" / "build";
 
         std::filesystem::create_directories(code_path.parent_path());
         std::filesystem::create_directories(out_dir);
@@ -392,7 +519,7 @@ namespace hm
             spdlog::error("Failed to create file");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
+            response.setCode(http::Code::InternalServerError);
             response.setBody("Failed to create file");
             co_return std::move(response);
         }
@@ -406,7 +533,7 @@ namespace hm
             spdlog::error("Failed to compile code");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
+            response.setCode(http::Code::InternalServerError);
             response.setBody("Failed to compile code");
             co_return std::move(response);
         }
@@ -417,7 +544,7 @@ namespace hm
             spdlog::error("Invalid address");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("Invalid address");
             co_return std::move(response);
         }
@@ -436,33 +563,45 @@ namespace hm
             spdlog::error("Failed to deploy code");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
+            response.setCode(http::Code::InternalServerError);
             response.setBody("Failed to deploy code");
             co_return std::move(response);
         }
+        const auto transformation_address_str = evmc::hex(deploy_res.value());        
+        const auto owner_result = co_await _fetchOwner(evm, deploy_res.value());
 
-        auto version_res = co_await registry.addTransformation(transformation);
-        if(!version_res) 
+        // check execution status
+        if(!owner_result)
+        {
+            spdlog::error("Failed to fetch owner {}", owner_result.error());
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(http::Code::InternalServerError);
+            response.setBody(std::format("Failed to fetch owner : {}", owner_result.error()));
+            co_return std::move(response);
+        }
+
+        if(!co_await registry.addTransformation(transformation, transformation_address_str)) 
         {
             spdlog::error("Failed to add transformation to registry");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("Failed to add transformation");
             co_return std::move(response);
         }
-        auto version = *version_res;
 
-        spdlog::debug("transformation '{}' added with hash : {}", transformation.name(), std::to_string(version));
-        
+        spdlog::debug("transformation '{}' added", transformation.name());
+
         json json_output;
         json_output["name"] = transformation.name();
-        json_output["version"] = std::to_string(version);
-        json_output["address"] = evmc::hex(deploy_res.value());
+        json_output["owner"] = evmc::hex(decodeReturnedValue<evmc::address>(owner_result.value()));
+        json_output["local_address"] = transformation_address_str;
+        json_output["address"] = "0x0";
 
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
-        response.setCode(hm::http::Code::Created);
+        response.setCode(http::Code::Created);
         response.setBody(json_output.dump());
         co_return std::move(response);
     }
@@ -473,7 +612,7 @@ namespace hm
         
         http::Response response;
         response.setVersion("HTTP/1.1");
-        response.setCode(hm::http::Code::OK);
+        response.setCode(http::Code::OK);
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
         response.setBody("OK");
@@ -485,7 +624,7 @@ namespace hm
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
-        response.setCode(hm::http::Code::OK);
+        response.setCode(http::Code::OK);
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
         response.setBody("OK");
@@ -503,58 +642,24 @@ namespace hm
         if(args.size() != 2 && args.size() != 3)
         {
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("invalid url");
             co_return response;
         }
 
-        auto cookie_res = request.getHeader(http::Header::Cookie);
-        if(cookie_res.empty())
-        {
-            spdlog::error("missing cookie");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("missing cookie");
-            co_return std::move(response);
-        }
-        const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
+        const auto auth_result = co_await _authenticate(request, auth_manager);
 
-        const auto token_res = parse::parseAccessTokenFromCookieHeader(cookie_header);
-        if (token_res.has_value() == false) {
-            spdlog::error("missing token");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("missing token");
-            co_return std::move(response);
-        }
-        const std::string & token = token_res.value();
-
-        auto verification_res = co_await auth_manager.verifyAccessToken(token);
-        if(verification_res.has_value() == false)
+        if(auth_result.has_value() == false)
         {
-            spdlog::error("invalid token: {}", verification_res.error());
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("invalid token: " + verification_res.error());
+            response.setCode(http::Code::Unauthorized);
+            response.setBody(std::format("Error: {}", auth_result.error()));
             co_return std::move(response);
         }
-        const auto & address = verification_res.value();
+        const std::string & address = auth_result.value();
 
         // execute code
-
-        // sender - from cookie
-        if(evmc::validate_hex(address) == false)
-        {
-            spdlog::error("Invalid address");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
-            response.setBody("Invalid address");
-            co_return std::move(response);
-        }
         evmc::address address_bytes{evmc::from_hex<evmc_address>(address).value_or(evmc::address{})};
 
         // input arguments - from url
@@ -565,7 +670,7 @@ namespace hm
         {
             spdlog::error("invalid feature name");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("invalid feature name");
             co_return response;
         }
@@ -577,7 +682,7 @@ namespace hm
         {
             spdlog::error("invalid number of samples");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::BadRequest);
+            response.setCode(http::Code::BadRequest);
             response.setBody("invalid number of samples");
             co_return response;
         }
@@ -592,7 +697,7 @@ namespace hm
             {
                 spdlog::error("invalid running instaces");
                 response.setHeader(http::Header::ContentType, "text/plain");
-                response.setCode(hm::http::Code::BadRequest);
+                response.setCode(http::Code::BadRequest);
                 response.setBody("invalid running instaces");
                 co_return response;
             }
@@ -641,7 +746,7 @@ namespace hm
             spdlog::error("Failed to execute code {}", exec_result.error());
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::InternalServerError);
+            response.setCode(http::Code::InternalServerError);
             response.setBody(std::format("Failed to execute code : {}", exec_result.error()));
             co_return std::move(response);
         }
@@ -650,7 +755,7 @@ namespace hm
         json_output["output"] = decodeReturnedValue<std::vector<std::vector<std::uint32_t>>>(exec_result.value());
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
-        response.setCode(hm::http::Code::Created);
+        response.setCode(http::Code::Created);
         response.setBody(json_output.dump());
         co_return std::move(response);
     }

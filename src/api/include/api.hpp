@@ -16,7 +16,7 @@ using namespace asio::experimental::awaitable_operators;
 #include "evm.hpp"
 #include "file.hpp"
 
-namespace hm
+namespace dcn
 {
     /**
      * Handles HEAD requests for a simple form by returning a response with CORS headers.
@@ -140,7 +140,7 @@ namespace hm
      * 
      * - /features/<feature_name>/<feature_id>
      */
-    asio::awaitable<http::Response> GET_feature(const http::Request &, std::vector<RouteArg>, Registry & registry);
+    asio::awaitable<http::Response> GET_feature(const http::Request &, std::vector<RouteArg>, Registry & registry, EVM & evm);
 
     /**
      * @brief Handle a POST request to /features
@@ -181,7 +181,7 @@ namespace hm
      * @param registry Registry instance for retrieving transformations
      * @return An HTTP response with the transformation data as JSON, or an error response if invalid input or not found
      */
-    asio::awaitable<http::Response> GET_transformation(const http::Request &, std::vector<RouteArg> args, Registry & registry);
+    asio::awaitable<http::Response> GET_transformation(const http::Request &, std::vector<RouteArg> args, Registry & registry, EVM & evm);
 
     /**
      * Handles POST requests for the transformation endpoint.

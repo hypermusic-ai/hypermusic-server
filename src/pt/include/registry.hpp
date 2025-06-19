@@ -13,7 +13,7 @@
 #include "transformation.hpp"
 #include "condition.hpp"
 
-namespace hm
+namespace dcn
 {
     /**
      * @brief A class that represents a registry of features, transformations, and conditions.
@@ -39,15 +39,12 @@ namespace hm
              *
              * @param feature The feature to add.
              *
-             * @return An `std::optional<std::size_t>` containing the hash of the feature
-             *         if it was added, or `std::nullopt` if the feature already exists.
-             *
              * This function adds a feature to the registry. The feature is added to a
              * bucket with its name as the key. If the feature already exists, the
              * function returns `std::nullopt`. If the feature does not exist, it is
              * added and the hash of the feature is returned.
              */
-            asio::awaitable<std::optional<std::size_t>> addFeature(Feature feature);
+            asio::awaitable<bool> addFeature(Feature feature, const std::string & address);
             
             /**
              * @brief Retrieves the newest feature by name.
@@ -63,28 +60,25 @@ namespace hm
             asio::awaitable<std::optional<Feature>> getNewestFeature(const std::string& name) const;
 
             /**
-             * @brief Retrieves a specific feature by name and version.
+             * @brief Retrieves a specific feature by name and address.
              *
              * @param name The name of the feature.
-             * @param version The version of the feature.
+             * @param address The address of the feature.
              * 
              * @return An `std::optional<Feature>` containing the feature if found,
-             *         or `std::nullopt` if the feature or version does not exist.
+             *         or `std::nullopt` if the feature or address does not exist.
              *
              * This function searches for a feature in the registry by its name and
-             * version. If the feature name or version is not found, it returns
+             * address. If the feature name or address is not found, it returns
              * `std::nullopt`.
              */
-            asio::awaitable<std::optional<Feature>> getFeature(const std::string& name, std::size_t version) const;
+            asio::awaitable<std::optional<Feature>> getFeature(const std::string& name, const std::string & address) const;
 
             /**
              * @brief Adds a transformation to the registry.
              * 
              * @param transformation The transformation to add.
              * 
-             * @return An `std::optional<std::size_t>` containing the hash of the
-             *         transformation if it was added, or `std::nullopt` if the
-             *         transformation already exists.
              * 
              * This function adds a transformation to the registry. The transformation
              * is added to a bucket with its name as the key. If the transformation
@@ -92,7 +86,7 @@ namespace hm
              * transformation does not exist, it is added and the hash of the
              * transformation is returned.
              */
-            asio::awaitable<std::optional<std::size_t>> addTransformation(Transformation transformation);
+            asio::awaitable<bool> addTransformation(Transformation transformation, const std::string & address);
 
             /**
              * @brief Retrieves the newest transformation by name.
@@ -108,36 +102,32 @@ namespace hm
             asio::awaitable<std::optional<Transformation>> getNewestTransformation(const std::string& name) const;
 
             /**
-             * @brief Retrieves a specific transformation by name and version.
+             * @brief Retrieves a specific transformation by name and address.
              *
              * @param name The name of the transformation.
-             * @param version The version of the transformation.
+             * @param address The address of the transformation.
              *
              * @return An `std::optional<Transformation>` containing the transformation
-             *         if found, or `std::nullopt` if the transformation or version does
+             *         if found, or `std::nullopt` if the transformation or address does
              *         not exist.
              *
              * This function searches for a transformation in the registry by its name
-             * and version. If the transformation name or version is not found, it
+             * and address. If the transformation name or address is not found, it
              * returns `std::nullopt`.
              */
-            asio::awaitable<std::optional<Transformation>> getTransformation(const std::string& name, std::size_t version) const;
+            asio::awaitable<std::optional<Transformation>> getTransformation(const std::string& name, const std::string & address) const;
 
             /**
              * @brief Adds a condition to the registry.
              *
              * @param condition The condition to add.
              *
-             * @return An `std::optional<std::size_t>` containing the hash of the
-             *         condition if it was added, or `std::nullopt` if the condition
-             *         already exists.
-             *
              * This function adds a condition to the registry. The condition is added
              * to a bucket with its name as the key. If the condition already exists,
              * the function returns `std::nullopt`. If the condition does not exist, it
              * is added and the hash of the condition is returned.
              */
-            asio::awaitable<std::optional<std::size_t>> addCondition(Condition condition);
+            asio::awaitable<bool> addCondition(Condition condition, const std::string & address);
 
             /**
              * @brief Retrieves the newest condition by name.
@@ -153,19 +143,19 @@ namespace hm
             asio::awaitable<std::optional<Condition>> getNewestCondition(const std::string& name) const;
 
             /**
-             * @brief Retrieves a specific condition by name and version.
+             * @brief Retrieves a specific condition by name and address.
              *
              * @param name The name of the condition.
-             * @param version The version of the condition.
+             * @param address The address of the condition.
              *
              * @return An `std::optional<Condition>` containing the condition if found,
-             *         or `std::nullopt` if the condition or version does not exist.
+             *         or `std::nullopt` if the condition or address does not exist.
              *
              * This function searches for a condition in the registry by its name and
-             * version. If the condition name or version is not found, it returns
+             * address. If the condition name or address is not found, it returns
              * `std::nullopt`.
              */
-            asio::awaitable<std::optional<Condition>> getCondition(const std::string& name, std::size_t version) const;
+            asio::awaitable<std::optional<Condition>> getCondition(const std::string& name, const std::string & address) const;
 
         protected:
 
@@ -257,12 +247,12 @@ namespace hm
         private:
             asio::strand<asio::io_context::executor_type> _strand;
 
-            absl::flat_hash_map<std::string, std::size_t> _newest_feature;
-            absl::flat_hash_map<std::string, std::size_t> _newest_transformation;
-            absl::flat_hash_map<std::string, std::size_t> _newest_condition;
+            absl::flat_hash_map<std::string, std::string> _newest_feature;
+            absl::flat_hash_map<std::string, std::string> _newest_transformation;
+            absl::flat_hash_map<std::string, std::string> _newest_condition;
 
-            absl::flat_hash_map<std::string, absl::flat_hash_map<std::size_t, Feature>> _features;
-            absl::flat_hash_map<std::string, absl::flat_hash_map<std::size_t, Transformation>> _transformations;
-            absl::flat_hash_map<std::string, absl::flat_hash_map<std::size_t, Condition>> _conditions;
+            absl::flat_hash_map<std::string, absl::flat_hash_map<std::string, Feature>> _features;
+            absl::flat_hash_map<std::string, absl::flat_hash_map<std::string, Transformation>> _transformations;
+            absl::flat_hash_map<std::string, absl::flat_hash_map<std::string, Condition>> _conditions;
     };
 }

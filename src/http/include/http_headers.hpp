@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace hm::http
+namespace dcn::http
 {
     /**
      * @brief Enum of HTTP headers as defined by the standard
@@ -42,7 +42,7 @@ namespace hm::http
     using HeadersList = std::vector<std::pair<Header, std::string>>;
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
     /**
      * @brief Parse a header string to a Header enum
@@ -53,43 +53,43 @@ namespace hm::parse
 }
 
 template <>
-struct std::formatter<hm::http::Header> : std::formatter<std::string> {
-  auto format(hm::http::Header header, format_context& ctx) const {
+struct std::formatter<dcn::http::Header> : std::formatter<std::string> {
+  auto format(dcn::http::Header header, format_context& ctx) const {
     switch(header)
     {
         // A
-        case hm::http::Header::Accept:                      return formatter<string>::format("Accept", ctx);
-        case hm::http::Header::AccessControlAllowOrigin:    return formatter<string>::format("Access-Control-Allow-Origin", ctx);
-        case hm::http::Header::AccessControlAllowMethods:   return formatter<string>::format("Access-Control-Allow-Methods", ctx);
-        case hm::http::Header::AccessControlAllowHeaders:   return formatter<string>::format("Access-Control-Allow-Headers", ctx);
-        case hm::http::Header::Authorization:               return formatter<string>::format("Authorization", ctx);
+        case dcn::http::Header::Accept:                      return formatter<string>::format("Accept", ctx);
+        case dcn::http::Header::AccessControlAllowOrigin:    return formatter<string>::format("Access-Control-Allow-Origin", ctx);
+        case dcn::http::Header::AccessControlAllowMethods:   return formatter<string>::format("Access-Control-Allow-Methods", ctx);
+        case dcn::http::Header::AccessControlAllowHeaders:   return formatter<string>::format("Access-Control-Allow-Headers", ctx);
+        case dcn::http::Header::Authorization:               return formatter<string>::format("Authorization", ctx);
 
         // B
 
         // C
-        case hm::http::Header::Connection:                  return formatter<string>::format("Connection", ctx);
-        case hm::http::Header::ContentEncoding:             return formatter<string>::format("Content-Encoding", ctx);
-        case hm::http::Header::ContentLength:               return formatter<string>::format("Content-Length", ctx);
-        case hm::http::Header::ContentType:                 return formatter<string>::format("Content-Type", ctx);
-        case hm::http::Header::Cookie:                      return formatter<string>::format("Cookie", ctx);
+        case dcn::http::Header::Connection:                  return formatter<string>::format("Connection", ctx);
+        case dcn::http::Header::ContentEncoding:             return formatter<string>::format("Content-Encoding", ctx);
+        case dcn::http::Header::ContentLength:               return formatter<string>::format("Content-Length", ctx);
+        case dcn::http::Header::ContentType:                 return formatter<string>::format("Content-Type", ctx);
+        case dcn::http::Header::Cookie:                      return formatter<string>::format("Cookie", ctx);
 
         // D
-        case hm::http::Header::Date:                        return formatter<string>::format("Date", ctx);
+        case dcn::http::Header::Date:                        return formatter<string>::format("Date", ctx);
 
         // S
-        case hm::http::Header::SetCookie:                        return formatter<string>::format("Set-Cookie", ctx);
+        case dcn::http::Header::SetCookie:                        return formatter<string>::format("Set-Cookie", ctx);
 
 
         // Unknown
-        case hm::http::Header::Unknown:                     return formatter<string>::format("Unknown", ctx);
+        case dcn::http::Header::Unknown:                     return formatter<string>::format("Unknown", ctx);
     }
     return formatter<string>::format("", ctx);
   }
 };
 
 template <>
-struct std::formatter<hm::http::HeadersList> : std::formatter<std::string> {
-  auto format(hm::http::HeadersList headers_list, format_context& ctx) const {
+struct std::formatter<dcn::http::HeadersList> : std::formatter<std::string> {
+  auto format(dcn::http::HeadersList headers_list, format_context& ctx) const {
     std::string headers_str = "";
     for(const auto& [header, header_value] : headers_list)
     {

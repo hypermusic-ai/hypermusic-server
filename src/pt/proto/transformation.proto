@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package hm;
+package dcn;
 
 message Transformation {
     string name = 1;

@@ -18,7 +18,7 @@
     #define interface __STRUCT__
 #endif
 
-namespace hm
+namespace dcn
 {
 
 }

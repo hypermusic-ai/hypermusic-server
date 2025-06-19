@@ -8,5 +8,6 @@ add_module(NAME "Auth"
         absl::hash
         secp256k1
         jwt-cpp::jwt-cpp
+        evmc::evmc
 )
 

@@ -10,7 +10,7 @@
 #include <spdlog/spdlog.h>
 #include <absl/container/flat_hash_map.h>
 
-namespace hm
+namespace dcn
 {
     using SessionID = std::string;
     using UserID = std::string;

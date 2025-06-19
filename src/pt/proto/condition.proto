@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package hm;
+package dcn;
 
 message Condition {
     string name = 1;

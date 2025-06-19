@@ -29,7 +29,7 @@
 
 #include "evm_formatter.hpp"
 
-namespace hm
+namespace dcn
 {
     class EVMStorage : public evmc::Host
     {

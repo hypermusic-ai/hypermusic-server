@@ -5,7 +5,7 @@ using json = nlohmann::json;
 
 #include <google/protobuf/util/json_util.h>
 
-namespace hm::parse
+namespace dcn::parse
 {   
     struct use_protobuf_t{};
 

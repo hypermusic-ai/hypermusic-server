@@ -1,6 +1,6 @@
 #include "logo.hpp"
 
-namespace hm
+namespace dcn::utils
 {
     const std::string & getAsciiLogo()
     {

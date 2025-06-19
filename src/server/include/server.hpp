@@ -16,18 +16,18 @@ using namespace asio::experimental::awaitable_operators;
 #include "http.hpp"
 #include "route.hpp"
 
-namespace hm
+namespace dcn
 {
     /**
      * @brief Type representing a route handler function.
      */
-    using HandlerDefinition = std::function<asio::awaitable<hm::http::Response>(const hm::http::Request &, std::vector<RouteArg>)>;
+    using HandlerDefinition = std::function<asio::awaitable<dcn::http::Response>(const dcn::http::Request &, std::vector<RouteArg>)>;
 
     // TODO: Add a concept to check if the handler is callable with the expected arguments
     // template<class F, class ... Args>
     // concept HandlerCallable = requires(F handler, Args... args)
     // {
-    //     { t(args...) } -> std::same_as<asio::awaitable<hm::http::Response>>;
+    //     { t(args...) } -> std::same_as<asio::awaitable<dcn::http::Response>>;
     // };
 
     /**

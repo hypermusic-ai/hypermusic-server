@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-using namespace hm::tests;
+using namespace dcn::tests;
 
 TEST_F(UnitTest, ut0)
 {
@@ -13,7 +13,7 @@ TEST_F(UnitTest, ut0)
 TEST_F(UnitTest, ut1)
 {
     spdlog::info("ut1");
-    hm::Feature feature;
+    dcn::Feature feature;
     feature.set_name("test");
     spdlog::info("fetch feature name : {}", feature.name());
 

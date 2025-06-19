@@ -1,6 +1,6 @@
 #include "route_arg.hpp"
 
-namespace hm
+namespace dcn
 {
     RouteArg::RouteArg(RouteArgDef def, std::string data)
     :   _def(std::move(def)),
@@ -30,7 +30,7 @@ namespace hm
     }
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
     RouteArgType parseRouteArgTypeFromString(const std::string & str)
     {

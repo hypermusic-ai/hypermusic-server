@@ -12,7 +12,7 @@
 #include "http_method.hpp"
 #include "url.hpp"
 
-namespace hm::http
+namespace dcn::http
 {
     class MessageBase
     {
@@ -176,7 +176,7 @@ namespace hm::http
     };
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
     /**
      * @brief Parse the given string to a `http::Request`.
@@ -189,17 +189,17 @@ namespace hm::parse
 }
 
 template <>
-struct std::formatter<hm::http::Response> : std::formatter<std::string> {
-  auto format(const hm::http::Response & res, format_context& ctx) const {
+struct std::formatter<dcn::http::Response> : std::formatter<std::string> {
+  auto format(const dcn::http::Response & res, format_context& ctx) const {
     return formatter<string>::format(
       std::format("{} {}\n{}\r\n{}", res.getVersion(), res.getCode(), res.getHeaders(), res.getBody()), ctx);
   }
 };
 
 template <>
-struct std::formatter<hm::http::Request> : std::formatter<std::string> {
+struct std::formatter<dcn::http::Request> : std::formatter<std::string> {
 
-  auto format(const hm::http::Request & req, format_context& ctx) const {
+  auto format(const dcn::http::Request & req, format_context& ctx) const {
     return formatter<string>::format(
       std::format("{} {} {}\n{}\r\n{}", req.getVersion(), req.getMethod(), req.getPath(), req.getHeaders(), req.getBody()), ctx);
   }

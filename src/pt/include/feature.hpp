@@ -5,7 +5,7 @@
 
 #include "parser.hpp"
 
-namespace hm
+namespace dcn
 {
 
     /**
@@ -64,7 +64,7 @@ namespace hm
     std::string constructFeatureSolidityCode(const Feature & feature);
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
 
     template<class T>

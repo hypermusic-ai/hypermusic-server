@@ -2,7 +2,7 @@
 
 #include <format>
 
-namespace hm::http
+namespace dcn::http
 {
     /**
      * @brief Enum to represent HTTP response status codes.
@@ -58,27 +58,27 @@ namespace hm::http
 }
 
 template <>
-struct std::formatter<hm::http::Code> : std::formatter<std::string> {
-  auto format(hm::http::Code code, format_context& ctx) const {
+struct std::formatter<dcn::http::Code> : std::formatter<std::string> {
+  auto format(dcn::http::Code code, format_context& ctx) const {
     switch(code)
     {
         // level 200
-        case hm::http::Code::OK:                  return formatter<string>::format("200 OK", ctx);
-        case hm::http::Code::Created:             return formatter<string>::format("201 Created", ctx);
+        case dcn::http::Code::OK:                  return formatter<string>::format("200 OK", ctx);
+        case dcn::http::Code::Created:             return formatter<string>::format("201 Created", ctx);
 
         // LEVEL 400
-        case hm::http::Code::BadRequest:          return formatter<string>::format("400 Bad Request", ctx);
-        case hm::http::Code::Unauthorized:        return formatter<string>::format("401 Unauthorized", ctx);
-        case hm::http::Code::Forbidden:           return formatter<string>::format("403 Forbidden", ctx);
-        case hm::http::Code::NotFound:            return formatter<string>::format("404 Not Found", ctx);
+        case dcn::http::Code::BadRequest:          return formatter<string>::format("400 Bad Request", ctx);
+        case dcn::http::Code::Unauthorized:        return formatter<string>::format("401 Unauthorized", ctx);
+        case dcn::http::Code::Forbidden:           return formatter<string>::format("403 Forbidden", ctx);
+        case dcn::http::Code::NotFound:            return formatter<string>::format("404 Not Found", ctx);
         
         // LEVEL 500
-        case hm::http::Code::InternalServerError: return formatter<string>::format("500 Internal Server Error", ctx);
-        case hm::http::Code::ServiceUnavailable:  return formatter<string>::format("503 Service Unavailable", ctx);
-        case hm::http::Code::GatewayTimeout:      return formatter<string>::format("504 Gateway Timeout", ctx);
+        case dcn::http::Code::InternalServerError: return formatter<string>::format("500 Internal Server Error", ctx);
+        case dcn::http::Code::ServiceUnavailable:  return formatter<string>::format("503 Service Unavailable", ctx);
+        case dcn::http::Code::GatewayTimeout:      return formatter<string>::format("504 Gateway Timeout", ctx);
 
         // Unknown
-        case hm::http::Code::Unknown:      return formatter<string>::format("Unknown", ctx);
+        case dcn::http::Code::Unknown:      return formatter<string>::format("Unknown", ctx);
     }
     return formatter<string>::format("", ctx);
   }

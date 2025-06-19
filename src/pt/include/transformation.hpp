@@ -8,7 +8,7 @@
 
 #include "parser.hpp"
 
-namespace hm
+namespace dcn
 {
     /**
      * @brief Combines hash values for a Transformation object.
@@ -26,7 +26,7 @@ namespace hm
     std::string constructTransformationSolidityCode(const Transformation & transformation);
 }
 
-namespace hm::parse
+namespace dcn::parse
 {   
     /**
      * @brief Parses a Transformation object to a JSON object.

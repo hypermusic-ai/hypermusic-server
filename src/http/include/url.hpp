@@ -5,7 +5,7 @@
 #include <vector>
 #include <sstream>
 
-namespace hm::http
+namespace dcn::http
 {
     class URL
     {
@@ -69,8 +69,8 @@ namespace hm::http
 }
 
 template <>
-struct std::formatter<hm::http::URL> : std::formatter<std::string> {
-  auto format(const hm::http::URL & url, format_context& ctx) const {
+struct std::formatter<dcn::http::URL> : std::formatter<std::string> {
+  auto format(const dcn::http::URL & url, format_context& ctx) const {
     return formatter<string>::format(
       std::format("{}", url.getFullPath()), ctx);
   }

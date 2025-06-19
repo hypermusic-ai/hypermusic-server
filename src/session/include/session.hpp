@@ -7,7 +7,7 @@
 #include "session_manager.hpp"
 #include "http.hpp"
 
-namespace hm
+namespace dcn
 {
     class Session
     {

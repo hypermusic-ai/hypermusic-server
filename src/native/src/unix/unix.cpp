@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-namespace hm::native {
+namespace dcn::native {
 
     std::pair<int, std::string> runProcess(const std::string& command, std::vector<std::string> args)
     {
@@ -75,4 +75,4 @@ namespace hm::native {
 
         return {exit_code, output};
     }
-} // namespace hm::native
+} // namespace dcn::native

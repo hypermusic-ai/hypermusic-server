@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace hm::native
+namespace dcn::native
 {
     /**
      * Spawns a new process with the given command.

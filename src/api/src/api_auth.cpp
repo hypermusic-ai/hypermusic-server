@@ -1,6 +1,6 @@
 #include "api.hpp"
 
-namespace hm
+namespace dcn
 {
     asio::awaitable<http::Response> GET_nonce(const http::Request & request, std::vector<RouteArg> args, AuthManager & auth_manager)
     {
@@ -125,7 +125,7 @@ namespace hm
         {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
+            response.setCode(dcn::http::Code::Unauthorized);
             response.setBody("missing cookie");
             co_return std::move(response);
         }
@@ -135,7 +135,7 @@ namespace hm
         if (refresh_token_res.has_value() == false) {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
+            response.setCode(dcn::http::Code::Unauthorized);
             response.setBody("missing refresh token");
             co_return std::move(response);
         }
@@ -146,8 +146,8 @@ namespace hm
         {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
-            response.setBody("invalid refresh token: " + refresh_verification_res.error());
+            response.setCode(dcn::http::Code::Unauthorized);
+            response.setBody(std::format("Error: {}", refresh_verification_res.error()));
             co_return std::move(response);
         }
         spdlog::debug("refresh token verified: {}", refresh_verification_res.value());
@@ -160,7 +160,7 @@ namespace hm
         if (access_token_res.has_value() == false) {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
+            response.setCode(dcn::http::Code::Unauthorized);
             response.setBody("missing access token");
             co_return std::move(response);
         }
@@ -169,7 +169,7 @@ namespace hm
         {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(hm::http::Code::Unauthorized);
+            response.setCode(dcn::http::Code::Unauthorized);
             response.setBody("invalid access token");
             co_return std::move(response);
         }

@@ -11,13 +11,12 @@
 #include "session.hpp"
 #include "evm.hpp"
 #include "pt.hpp"
-#include "runner.hpp"
 #include "file.hpp"
 #include "api.hpp"
 #include "auth.hpp"
 #include "utils.hpp"
 
-namespace hm
+namespace dcn
 {
     const short int MAJOR_VERSION = 0;
     const short int MINOR_VERSION = 0;

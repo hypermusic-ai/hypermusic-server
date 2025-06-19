@@ -11,7 +11,7 @@
 #include "condition.hpp"
 #include "keccak256.hpp"
 
-namespace hm
+namespace dcn
 {
 
 }

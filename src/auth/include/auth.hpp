@@ -3,6 +3,7 @@
 #include <random>
 #include <string>
 #include <expected>
+#include <format>
 #include <regex>
 
 #include "native.h"
@@ -15,14 +16,16 @@ using namespace asio::experimental::awaitable_operators;
 #include <secp256k1.h>
 #include <secp256k1_recovery.h>
 #include <jwt-cpp/jwt.h>
+#include <evmc/hex.hpp>
 
 #include "utils.hpp"
 #include "keccak256.hpp"
 
-namespace hm
+namespace dcn
 {
-    enum class AuthenticationError
+    enum class AuthenticationError : std::uint8_t
     {
+        Unknown = 0,
         MissingCookie,
         InvalidCookie,
         MissingToken,
@@ -51,13 +54,13 @@ namespace hm
 
             asio::awaitable<std::string> generateAccessToken(const std::string& address);
 
-            asio::awaitable<std::expected<std::string, std::string>> verifyAccessToken(std::string token) const;
+            asio::awaitable<std::expected<std::string, AuthenticationError>> verifyAccessToken(std::string token) const;
 
             asio::awaitable<bool> compareAccessToken(std::string address, std::string token) const;
 
             asio::awaitable<std::string> generateRefreshToken(const std::string& address);
 
-            asio::awaitable<std::expected<std::string, std::string>> verifyRefreshToken(std::string token) const;
+            asio::awaitable<std::expected<std::string, AuthenticationError>> verifyRefreshToken(std::string token) const;
 
         protected:
 
@@ -76,7 +79,7 @@ namespace hm
     };
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
     std::string parseEthAddressFromPublicKey(const std::uint8_t* pubkey, std::size_t len);
     std::string parseNonceFromMessage(const std::string & msg);
@@ -87,3 +90,22 @@ namespace hm::parse
     std::optional<std::string> parseRefreshTokenFromCookieHeader(const std::string & cookie_str);
     std::string parseRefreshTokenToCookieHeader(const std::string & token_str);
 }
+
+template <>
+struct std::formatter<dcn::AuthenticationError> : std::formatter<std::string> {
+    auto format(const dcn::AuthenticationError & err, format_context& ctx) const {
+        switch(err)
+        {
+            case dcn::AuthenticationError::MissingCookie : return formatter<string>::format("MissingCookie", ctx);
+            case dcn::AuthenticationError::InvalidCookie : return formatter<string>::format("InvalidCookie", ctx);
+            case dcn::AuthenticationError::MissingToken : return formatter<string>::format("MissingToken", ctx);
+            case dcn::AuthenticationError::InvalidToken : return formatter<string>::format("InvalidToken", ctx);
+            case dcn::AuthenticationError::InvalidSignature : return formatter<string>::format("InvalidSignature", ctx);
+            case dcn::AuthenticationError::InvalidNonce : return formatter<string>::format("InvalidNonce", ctx);
+            case dcn::AuthenticationError::InvalidAddress : return formatter<string>::format("InvalidAddress", ctx);
+
+            default:  return formatter<string>::format("Unknown", ctx);
+        }
+        return formatter<string>::format("", ctx);
+    }
+};

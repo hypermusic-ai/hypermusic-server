@@ -1,6 +1,6 @@
 #include "auth.hpp"
 
-namespace hm
+namespace dcn
 {
     AuthManager::AuthManager(asio::io_context & io_context)
     :   _strand(asio::make_strand(io_context)),
@@ -15,7 +15,7 @@ namespace hm
     {
         std::string nonce =  std::to_string(_dist(_rng));
         
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
 
         _nonces[address] = nonce;
         co_return nonce;
@@ -23,7 +23,7 @@ namespace hm
 
     asio::awaitable<bool> AuthManager::verifyNonce(const std::string& address, const std::string & nonce)
     {
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
 
         auto it = _nonces.find(address);
         if (it == _nonces.end()) co_return false;
@@ -42,16 +42,19 @@ namespace hm
 
     asio::awaitable<bool> AuthManager::verifySignature(const std::string& address, const std::string& sig_hex, const std::string& message)
     {
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
         
         // verify signature
-        std::vector<uint8_t> signature_bytes = hexToBytes(sig_hex.substr(2, sig_hex.size() - 2)); // remove 0x prefix
+        const std::optional<evmc::bytes> signature_bytes_result = evmc::from_hex(sig_hex);
+        if(!signature_bytes_result) co_return false;
+        const auto & signature_bytes = *signature_bytes_result;
+
         if (signature_bytes.size() != 65) co_return false;
 
         uint8_t hash[Keccak256::HASH_LEN];
         std::string prefix(1, '\x19');
         prefix += "Ethereum Signed Message:\n" + std::to_string(message.size()) + message;
-        hm::Keccak256::getHash((const uint8_t*)prefix.data(), prefix.size(), hash);
+        dcn::Keccak256::getHash((const uint8_t*)prefix.data(), prefix.size(), hash);
 
         // Adjust v
         int recid = signature_bytes[64];
@@ -88,7 +91,7 @@ namespace hm
 
     asio::awaitable<std::string> AuthManager::generateAccessToken(const std::string& address)
     {
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
 
         auto token = jwt::create()
             .set_issuer("eth-auth-demo")
@@ -103,11 +106,11 @@ namespace hm
         co_return token;
     }
 
-    asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyAccessToken(std::string token) const
+    asio::awaitable<std::expected<std::string, AuthenticationError>> AuthManager::verifyAccessToken(std::string token) const
     {
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
 
-        if(token.empty()) co_return std::unexpected("Access token is empty");
+        if(token.empty()) co_return std::unexpected(AuthenticationError::InvalidToken);
         if(token.back() == '\r')token.pop_back(); // remove \r if present
 
         try 
@@ -124,25 +127,26 @@ namespace hm
 
             if(_access_tokens.contains(address) == false)
             {
-                co_return std::unexpected("Access token not found");
+                co_return std::unexpected(AuthenticationError::MissingToken);
             }
 
             if(token != _access_tokens.at(address))
             {
-                co_return std::unexpected("Access token mismatch");
+                co_return std::unexpected(AuthenticationError::InvalidToken);
             }
 
             co_return address;
 
         } catch (const std::exception& e) 
         {
-            co_return std::unexpected(std::string("Access token verification failed: ") + std::string(e.what()));
+            spdlog::error("Access token verification failed: {}", e.what());
+            co_return std::unexpected(AuthenticationError::Unknown);
         }
     }
 
     asio::awaitable<bool> AuthManager::compareAccessToken(std::string address, std::string token) const
     {
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
 
         if(token.empty()) co_return false;
         if(token.back() == '\r')token.pop_back(); // remove \r if present
@@ -159,7 +163,7 @@ namespace hm
 
     asio::awaitable<std::string> AuthManager::generateRefreshToken(const std::string& address)
     {
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
 
         auto token = jwt::create()
             .set_issuer("eth-auth-demo")
@@ -174,11 +178,11 @@ namespace hm
         co_return token;
     }
 
-    asio::awaitable<std::expected<std::string, std::string>> AuthManager::verifyRefreshToken(std::string token) const
+    asio::awaitable<std::expected<std::string, AuthenticationError>> AuthManager::verifyRefreshToken(std::string token) const
     {
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
 
-        if(token.empty()) co_return std::unexpected("Refresh token is empty");
+        if(token.empty()) co_return std::unexpected(AuthenticationError::InvalidToken);
         if(token.back() == '\r')token.pop_back(); // remove \r if present
 
         try 
@@ -195,33 +199,34 @@ namespace hm
 
             if(_refresh_tokens.contains(address) == false)
             {
-                co_return std::unexpected("Refresh token not found");
+                co_return std::unexpected(AuthenticationError::MissingToken);
             }
 
             if(token != _refresh_tokens.at(address))
             {
-                co_return std::unexpected("Refresh token mismatch");
+                co_return std::unexpected(AuthenticationError::InvalidToken);
             }
 
             co_return address;
 
         } catch (const std::exception& e) 
         {
-            co_return std::unexpected(std::string("Refresh token verification failed: ") + std::string(e.what()));
+            spdlog::error("Refresh token verification failed: {}", e.what());
+            co_return std::unexpected(AuthenticationError::Unknown);
         }
     }
 }
 
 
-namespace hm::parse
+namespace dcn::parse
 {
     // Get Ethereum address from public key (last 20 bytes of Keccak256(pubkey))
     std::string parseEthAddressFromPublicKey(const std::uint8_t* pubkey, std::size_t len) 
     {
         uint8_t hash[Keccak256::HASH_LEN];
         // skip 0x04 prefix
-        hm::Keccak256::getHash(pubkey + 1, len - 1, hash);
-        return "0x" + bytesToHex(hash + 12, 20); // last 20 bytes
+        dcn::Keccak256::getHash(pubkey + 1, len - 1, hash);
+        return "0x" + evmc::hex(evmc::bytes_view{hash + 12, 20}); // last 20 bytes
     }
 
     std::string parseNonceFromMessage(const std::string& nonce_str) 

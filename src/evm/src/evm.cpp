@@ -1,6 +1,6 @@
 #include "evm.hpp"
 
-namespace hm
+namespace dcn
 {
     std::vector<std::uint8_t> constructFunctionSelector(std::string signature)
     {
@@ -186,6 +186,18 @@ namespace hm
         return result;
     }
 
+    template<>
+    evmc::address decodeReturnedValue(const std::vector<std::uint8_t> & bytes)
+    {
+        if (bytes.size() < 32)
+            throw std::runtime_error("Invalid ABI data: less than 32 bytes");
+
+        evmc::address result;
+        // Copy last 20 bytes from the 32-byte word (ABI stores address in the last 20 bytes)
+        std::copy(bytes.begin() + 12, bytes.begin() + 32, result.bytes);
+        return result;
+    }
+
 
     EVM::EVM(asio::io_context & io_context, evmc_revision rev, std::filesystem::path solc_path)
     :   _vm(evmc_create_evmone()),
@@ -225,7 +237,7 @@ namespace hm
 
     asio::awaitable<bool> EVM::addAccount(evmc::address address, std::uint64_t initial_gas) noexcept
     {
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
 
         if(_storage.account_exists(address))
         {
@@ -247,6 +259,7 @@ namespace hm
 
     asio::awaitable<bool> EVM::compile(std::filesystem::path code_path, std::filesystem::path out_dir, std::filesystem::path base_path, std::filesystem::path includes) const noexcept
     {
+        co_await utils::ensureOnStrand(_strand);
 
         if(!std::filesystem::exists(code_path))
         {
@@ -280,7 +293,7 @@ namespace hm
             args.emplace_back(includes.string());
         }
 
-        const auto [exit_code, compile_result] = hm::native::runProcess(_solc_path.string(), std::move(args));
+        const auto [exit_code, compile_result] = dcn::native::runProcess(_solc_path.string(), std::move(args));
 
         spdlog::debug("Solc exited with code {},\n{}\n{}", exit_code, code_path.string(), compile_result);
 
@@ -300,7 +313,14 @@ namespace hm
                         std::uint64_t value) noexcept
     {
         const std::string code_hex = std::string(std::istreambuf_iterator<char>(code_stream), std::istreambuf_iterator<char>());
-        auto bytecode = hexToBytes(code_hex);
+        const std::optional<evmc::bytes> bytecode_result = evmc::from_hex(code_hex);
+        if(!bytecode_result)
+        {
+            spdlog::error("Cannot parse bytecode");
+            co_return evmc_status_code::EVMC_FAILURE;
+        }
+        const auto & bytecode = *bytecode_result;
+
         if(bytecode.size() == 0)
         {
             spdlog::error("Empty bytecode");
@@ -341,7 +361,7 @@ namespace hm
         std::memcpy(&value256.bytes[24], &value, sizeof(value));  // Big endian: last 8 bytes hold the value
         create_msg.value = value256;
 
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
 
         evmc::Result result = _storage.call(create_msg);        
 
@@ -408,7 +428,7 @@ namespace hm
         std::memcpy(&value256.bytes[24], &value, sizeof(value));  // Big endian: last 8 bytes hold the value
         msg.value = value256;
 
-        co_await ensureOnStrand(_strand);
+        co_await utils::ensureOnStrand(_strand);
         evmc::Result result = _storage.call(msg);
         
         if (result.status_code != EVMC_SUCCESS)

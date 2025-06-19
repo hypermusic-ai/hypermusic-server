@@ -6,7 +6,7 @@
 
 using namespace std::chrono_literals;
 
-namespace hm::tests
+namespace dcn::tests
 {
     class BaseUnitTest : public testing::Test
     {

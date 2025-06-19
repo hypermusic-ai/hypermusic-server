@@ -12,7 +12,7 @@
 
 #include <spdlog/spdlog.h>
 
-namespace hm
+namespace dcn
 {
     /**
      * @brief Enum to represent the type of a route argument.
@@ -129,7 +129,7 @@ namespace hm
     };
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
     constexpr static const char ARRAY_START_IDENTIFIER = '[';
     constexpr static const char ARRAY_END_IDENTIFIER = ']';
@@ -239,7 +239,7 @@ namespace hm::parse
     template <IsTupleLike TupleT>
     struct TupleParser<TupleT, 2>
     {
-        std::optional<TupleT> operator()(const std::vector<std::unique_ptr<hm::RouteArgDef>> &defs, const std::vector<std::string> & values_str)
+        std::optional<TupleT> operator()(const std::vector<std::unique_ptr<dcn::RouteArgDef>> &defs, const std::vector<std::string> & values_str)
         {
             if(values_str.size() != std::tuple_size<TupleT>::value)return std::nullopt;
             if(defs.size() != std::tuple_size<TupleT>::value)return std::nullopt;
@@ -256,7 +256,7 @@ namespace hm::parse
     template <IsTupleLike TupleT>
     struct TupleParser<TupleT, 3>
     {
-        std::optional<TupleT> operator()(const std::vector<std::unique_ptr<hm::RouteArgDef>> &defs, const std::vector<std::string> & values_str)
+        std::optional<TupleT> operator()(const std::vector<std::unique_ptr<dcn::RouteArgDef>> &defs, const std::vector<std::string> & values_str)
         {
             if(values_str.size() != std::tuple_size<TupleT>::value)return std::nullopt;
             if(defs.size() != std::tuple_size<TupleT>::value)return std::nullopt;
@@ -274,7 +274,7 @@ namespace hm::parse
     template <IsTupleLike TupleT>
     struct TupleParser<TupleT, 4>
     {
-        std::optional<TupleT> operator()(const std::vector<std::unique_ptr<hm::RouteArgDef>> &defs, const std::vector<std::string> & values_str)
+        std::optional<TupleT> operator()(const std::vector<std::unique_ptr<dcn::RouteArgDef>> &defs, const std::vector<std::string> & values_str)
         {
             if(values_str.size() != std::tuple_size<TupleT>::value)return std::nullopt;
             if(defs.size() != std::tuple_size<TupleT>::value)return std::nullopt;
@@ -370,42 +370,42 @@ namespace hm::parse
 }
 
 template <>
-struct std::formatter<hm::RouteArgType> : std::formatter<std::string> {
-  auto format(const hm::RouteArgType & arg_type, format_context& ctx) const {
+struct std::formatter<dcn::RouteArgType> : std::formatter<std::string> {
+  auto format(const dcn::RouteArgType & arg_type, format_context& ctx) const {
     switch(arg_type)
     {
-        case hm::RouteArgType::character:           return formatter<string>::format("char", ctx);
-        case hm::RouteArgType::unsigned_integer:    return formatter<string>::format("uint", ctx);
-        case hm::RouteArgType::string:              return formatter<string>::format("string", ctx);
-        case hm::RouteArgType::base58:              return formatter<string>::format("base58", ctx);
-        case hm::RouteArgType::array:               return formatter<string>::format("array", ctx);
-        case hm::RouteArgType::object:               return formatter<string>::format("object", ctx);
+        case dcn::RouteArgType::character:           return formatter<string>::format("char", ctx);
+        case dcn::RouteArgType::unsigned_integer:    return formatter<string>::format("uint", ctx);
+        case dcn::RouteArgType::string:              return formatter<string>::format("string", ctx);
+        case dcn::RouteArgType::base58:              return formatter<string>::format("base58", ctx);
+        case dcn::RouteArgType::array:               return formatter<string>::format("array", ctx);
+        case dcn::RouteArgType::object:               return formatter<string>::format("object", ctx);
 
         // Unknown
-        case hm::RouteArgType::Unknown:             return formatter<string>::format("Unknown", ctx);
+        case dcn::RouteArgType::Unknown:             return formatter<string>::format("Unknown", ctx);
     }
     return formatter<string>::format("", ctx);
   }
 };
 
 template <>
-struct std::formatter<hm::RouteArgRequirement> : std::formatter<std::string> {
-  auto format(const hm::RouteArgRequirement & req, format_context& ctx) const {
+struct std::formatter<dcn::RouteArgRequirement> : std::formatter<std::string> {
+  auto format(const dcn::RouteArgRequirement & req, format_context& ctx) const {
     switch(req)
     {
-        case hm::RouteArgRequirement::required:    return formatter<string>::format("required", ctx);
-        case hm::RouteArgRequirement::optional:    return formatter<string>::format("(optional)", ctx);
+        case dcn::RouteArgRequirement::required:    return formatter<string>::format("required", ctx);
+        case dcn::RouteArgRequirement::optional:    return formatter<string>::format("(optional)", ctx);
 
         // Unknown
-        case hm::RouteArgRequirement::Unknown:      return formatter<string>::format("Unknown", ctx);
+        case dcn::RouteArgRequirement::Unknown:      return formatter<string>::format("Unknown", ctx);
     }
     return formatter<string>::format("", ctx);
   }
 };
 
 template <>
-struct std::formatter<hm::RouteArg> : std::formatter<std::string> {
-  auto format(const hm::RouteArg & arg, format_context& ctx) const {
+struct std::formatter<dcn::RouteArg> : std::formatter<std::string> {
+  auto format(const dcn::RouteArg & arg, format_context& ctx) const {
     return formatter<string>::format(
       std::format("({}) [{}] {}", arg.getRequirement(), arg.getType(), arg.getData()), ctx);
   }

@@ -1,6 +1,6 @@
 #include "unit-tests.hpp"
 
-namespace hm::tests
+namespace dcn::tests
 {    
 }
 

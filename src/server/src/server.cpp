@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-namespace hm
+namespace dcn
 {
     Server::Server(asio::io_context & io_context, asio::ip::tcp::endpoint endpoint)
     :   _io_context(io_context),
@@ -29,7 +29,7 @@ namespace hm
         while (_close == false)
         {
             listen_deadline = std::chrono::steady_clock::now() + _idle_interval;
-            auto socket_result = co_await (_acceptor.async_accept(asio::use_awaitable) || watchdog(listen_deadline));
+            auto socket_result = co_await (_acceptor.async_accept(asio::use_awaitable) || utils::watchdog(listen_deadline));
             if(std::holds_alternative<asio::ip::tcp::socket>(socket_result))
             {
                 // spawn handleConnection to _io_context - not use server strand
@@ -50,7 +50,7 @@ namespace hm
         std::chrono::steady_clock::time_point deadline{};
 
         // read data
-        co_await (readData(sock, deadline) || watchdog(deadline));
+        co_await (readData(sock, deadline) || utils::watchdog(deadline));
 
         spdlog::info("Connection ended");
     }

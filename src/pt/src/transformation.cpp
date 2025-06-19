@@ -1,6 +1,6 @@
 #include "transformation.hpp"
 
-namespace hm
+namespace dcn
 {
 
 
@@ -40,7 +40,7 @@ namespace hm
     }
 }
 
-namespace hm::parse
+namespace dcn::parse
 {
     std::optional<json> parseTransformationToJson(Transformation transformation, use_json_t)
     {

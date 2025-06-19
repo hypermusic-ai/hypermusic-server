@@ -2,18 +2,18 @@
 
 #include <spdlog/spdlog.h>
 
-using namespace hm::tests;
+using namespace dcn::tests;
 
 
 TEST_F(UnitTest, RouterParsingPath)
 {
-    hm::Router router;
+    dcn::Router router;
 
-    auto in_handler = std::function([]()->asio::awaitable<hm::http::Response> {co_return hm::http::Response();});
-    router.addRoute({hm::http::Method::POST, "/nonce/<string>"}, hm::RouteHandlerFunc(in_handler));
+    auto in_handler = std::function([]()->asio::awaitable<dcn::http::Response> {co_return dcn::http::Response();});
+    router.addRoute({dcn::http::Method::POST, "/nonce/<string>"}, dcn::RouteHandlerFunc(in_handler));
 
-    hm::http::Request request;
-    request.setMethod(hm::http::Method::POST);
+    dcn::http::Request request;
+    request.setMethod(dcn::http::Method::POST);
     request.setPath("/nonce/0xfa71ff2394596f824d69961293d095a50d322e4e");
     auto [handler, args] = router.findRoute(request);
 
