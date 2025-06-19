@@ -107,6 +107,7 @@ $(document).ready(function(){initNavTree('auth_8hpp.html',''); initResizable(); 
 <div class="textblock"><code>#include &lt;random&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;expected&gt;</code><br />
+<code>#include &lt;format&gt;</code><br />
 <code>#include &lt;regex&gt;</code><br />
 <code>#include &quot;<a class="el" href="native_8h_source.html">native.h</a>&quot;</code><br />
 <code>#include &lt;asio.hpp&gt;</code><br />
@@ -116,6 +117,7 @@ $(document).ready(function(){initNavTree('auth_8hpp.html',''); initResizable(); 
 <code>#include &lt;secp256k1.h&gt;</code><br />
 <code>#include &lt;secp256k1_recovery.h&gt;</code><br />
 <code>#include &lt;jwt-cpp/jwt.h&gt;</code><br />
+<code>#include &lt;evmc/hex.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="utils_8hpp_source.html">utils.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="keccak256_8hpp_source.html">keccak256.hpp</a>&quot;</code><br />
 </div>
@@ -123,30 +125,33 @@ $(document).ready(function(){initNavTree('auth_8hpp.html',''); initResizable(); 
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhm_1_1AuthManager.html">hm::AuthManager</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdcn_1_1AuthManager.html">dcn::AuthManager</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1formatter_3_01dcn_1_1AuthenticationError_01_4.html">std::formatter&lt; dcn::AuthenticationError &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacehm" id="r_namespacehm"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html">hm</a></td></tr>
+<tr class="memitem:namespacedcn" id="r_namespacedcn"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html">dcn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacehm_1_1parse" id="r_namespacehm_1_1parse"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm_1_1parse.html">hm::parse</a></td></tr>
+<tr class="memitem:namespacedcn_1_1parse" id="r_namespacedcn_1_1parse"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1parse.html">dcn::parse</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a57399fb40eed382c3fc50e563b4f58e1" id="r_a57399fb40eed382c3fc50e563b4f58e1"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1">hm::AuthenticationError</a> { <br />
-&#160;&#160;<a class="el" href="namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a5bc80e1841957c53f3995b7935394411">hm::MissingCookie</a>
-, <a class="el" href="namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1af5a5a49c005613277acde64dadbaf194">hm::InvalidCookie</a>
-, <a class="el" href="namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a81d04c29639fcca11ab891fd9da60ccd">hm::MissingToken</a>
-, <a class="el" href="namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1aa38d51bc6a4d9fa4367feb57841868f3">hm::InvalidToken</a>
+<tr class="memitem:af3418672c6c7daf5f09a7155aaf54d10" id="r_af3418672c6c7daf5f09a7155aaf54d10"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10">dcn::AuthenticationError</a> : std::uint8_t { <br />
+&#160;&#160;<a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10a88183b946cc5f0e8c96b2e66e1c74a7e">dcn::Unknown</a> = 0
+, <a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10a5bc80e1841957c53f3995b7935394411">dcn::MissingCookie</a>
+, <a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10af5a5a49c005613277acde64dadbaf194">dcn::InvalidCookie</a>
+, <a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10a81d04c29639fcca11ab891fd9da60ccd">dcn::MissingToken</a>
 , <br />
-&#160;&#160;<a class="el" href="namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a351caf723532f9ba7a371b5dfa868eed">hm::InvalidSignature</a>
-, <a class="el" href="namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1aabf37558d388ad95fc31c40bd44e6bf2">hm::InvalidNonce</a>
-, <a class="el" href="namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a66196dd9678aef4aaad947e7181049c0">hm::InvalidAddress</a>
+&#160;&#160;<a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10aa38d51bc6a4d9fa4367feb57841868f3">dcn::InvalidToken</a>
+, <a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10a351caf723532f9ba7a371b5dfa868eed">dcn::InvalidSignature</a>
+, <a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10aabf37558d388ad95fc31c40bd44e6bf2">dcn::InvalidNonce</a>
+, <a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10a66196dd9678aef4aaad947e7181049c0">dcn::InvalidAddress</a>
 <br />
  }</td></tr>
-<tr class="separator:a57399fb40eed382c3fc50e563b4f58e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:af3418672c6c7daf5f09a7155aaf54d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

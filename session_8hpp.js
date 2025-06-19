@@ -1,4 +1,4 @@
 var session_8hpp =
 [
-    [ "hm::Session", "classhm_1_1Session.html", "classhm_1_1Session" ]
+    [ "dcn::Session", "classdcn_1_1Session.html", "classdcn_1_1Session" ]
 ];

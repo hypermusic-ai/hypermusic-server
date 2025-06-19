@@ -1,8 +1,8 @@
 var http_8hpp =
 [
-    [ "hm::http::MessageBase", "classhm_1_1http_1_1MessageBase.html", "classhm_1_1http_1_1MessageBase" ],
-    [ "hm::http::Request", "classhm_1_1http_1_1Request.html", "classhm_1_1http_1_1Request" ],
-    [ "hm::http::Response", "classhm_1_1http_1_1Response.html", "classhm_1_1http_1_1Response" ],
-    [ "std::formatter< hm::http::Response >", "structstd_1_1formatter_3_01hm_1_1http_1_1Response_01_4.html", "structstd_1_1formatter_3_01hm_1_1http_1_1Response_01_4" ],
-    [ "std::formatter< hm::http::Request >", "structstd_1_1formatter_3_01hm_1_1http_1_1Request_01_4.html", "structstd_1_1formatter_3_01hm_1_1http_1_1Request_01_4" ]
+    [ "dcn::http::MessageBase", "classdcn_1_1http_1_1MessageBase.html", "classdcn_1_1http_1_1MessageBase" ],
+    [ "dcn::http::Request", "classdcn_1_1http_1_1Request.html", "classdcn_1_1http_1_1Request" ],
+    [ "dcn::http::Response", "classdcn_1_1http_1_1Response.html", "classdcn_1_1http_1_1Response" ],
+    [ "std::formatter< dcn::http::Response >", "structstd_1_1formatter_3_01dcn_1_1http_1_1Response_01_4.html", "structstd_1_1formatter_3_01dcn_1_1http_1_1Response_01_4" ],
+    [ "std::formatter< dcn::http::Request >", "structstd_1_1formatter_3_01dcn_1_1http_1_1Request_01_4.html", "structstd_1_1formatter_3_01dcn_1_1http_1_1Request_01_4" ]
 ];

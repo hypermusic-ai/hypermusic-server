@@ -4,10 +4,10 @@ var searchData=
   ['mac_2eh_1',['mac.h',['../mac_8h.html',1,'']]],
   ['main_2',['main',['../main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main.cpp']]],
   ['main_2ecpp_3',['main.cpp',['../main_8cpp.html',1,'']]],
-  ['major_5fversion_4',['MAJOR_VERSION',['../namespacehm.html#a3c1d68fb9225d36f577d2b0c51dfbde3',1,'hm']]],
-  ['messagebase_5',['messagebase',['../classhm_1_1http_1_1MessageBase.html',1,'hm::http::MessageBase'],['../classhm_1_1http_1_1MessageBase.html#a144b6b9329c126392c1e0e6c0e6f3cde',1,'hm::http::MessageBase::MessageBase()'],['../classhm_1_1http_1_1MessageBase.html#af99b701944aeea5853ea6d5e41f26b61',1,'hm::http::MessageBase::MessageBase(MessageBase &amp;&amp;other)=default'],['../classhm_1_1http_1_1MessageBase.html#a5053fd760a233fd7c6a5d3c69299d0e6',1,'hm::http::MessageBase::MessageBase(const MessageBase &amp;other)=delete']]],
-  ['method_6',['Method',['../namespacehm_1_1http.html#a1573de63d39e32e7889c0f3f74be528f',1,'hm::http']]],
-  ['minor_5fversion_7',['MINOR_VERSION',['../namespacehm.html#ad32de4be5aad0553480caac2334b7770',1,'hm']]],
-  ['missingcookie_8',['MissingCookie',['../namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a5bc80e1841957c53f3995b7935394411',1,'hm']]],
-  ['missingtoken_9',['MissingToken',['../namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1a81d04c29639fcca11ab891fd9da60ccd',1,'hm']]]
+  ['major_5fversion_4',['MAJOR_VERSION',['../namespacedcn.html#a184b90896887dec190467e00f2cd1bdb',1,'dcn']]],
+  ['messagebase_5',['messagebase',['../classdcn_1_1http_1_1MessageBase.html',1,'dcn::http::MessageBase'],['../classdcn_1_1http_1_1MessageBase.html#a4c985271948b1014a91fe8d730381751',1,'dcn::http::MessageBase::MessageBase()'],['../classdcn_1_1http_1_1MessageBase.html#ad5c847f708a79a381063ae393d3c5e2a',1,'dcn::http::MessageBase::MessageBase(MessageBase &amp;&amp;other)=default'],['../classdcn_1_1http_1_1MessageBase.html#a763c087ac4d284675544b745e4b0a4b5',1,'dcn::http::MessageBase::MessageBase(const MessageBase &amp;other)=delete']]],
+  ['method_6',['Method',['../namespacedcn_1_1http.html#a4f682cd7b59ded888fa0d767b29cf172',1,'dcn::http']]],
+  ['minor_5fversion_7',['MINOR_VERSION',['../namespacedcn.html#a2189fb32e969cdf09866dc9fe0ad3fee',1,'dcn']]],
+  ['missingcookie_8',['MissingCookie',['../namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10a5bc80e1841957c53f3995b7935394411',1,'dcn']]],
+  ['missingtoken_9',['MissingToken',['../namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10a81d04c29639fcca11ab891fd9da60ccd',1,'dcn']]]
 ];

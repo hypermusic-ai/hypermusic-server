@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['unauthorized_0',['Unauthorized',['../namespacehm_1_1http.html#a815ddaebd2d9647fbe60b857efb98247ae06d1ba70f1331e9f9a113cc2f887d3f',1,'hm::http']]],
-  ['unknown_1',['unknown',['../namespacehm_1_1http.html#a815ddaebd2d9647fbe60b857efb98247a88183b946cc5f0e8c96b2e66e1c74a7e',1,'hm::http::Unknown'],['../namespacehm_1_1http.html#ac27b3819754d6f0221366b8a0f24242da88183b946cc5f0e8c96b2e66e1c74a7e',1,'hm::http::Unknown'],['../namespacehm_1_1http.html#a1573de63d39e32e7889c0f3f74be528fa88183b946cc5f0e8c96b2e66e1c74a7e',1,'hm::http::Unknown'],['../namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0a88183b946cc5f0e8c96b2e66e1c74a7e',1,'hm::Unknown'],['../namespacehm.html#a9b7caefa124af81f61f34212a0db2948a88183b946cc5f0e8c96b2e66e1c74a7e',1,'hm::Unknown']]],
-  ['unsigned_5finteger_2',['unsigned_integer',['../namespacehm.html#a21477cf9ca6ccf693acc2a5480bc67d0a7383104b83254a99f5991d0ac77a6666',1,'hm']]]
+  ['unauthorized_0',['Unauthorized',['../namespacedcn_1_1http.html#a85103dcaf4539b1939d3a039e2f7e4ffae06d1ba70f1331e9f9a113cc2f887d3f',1,'dcn::http']]],
+  ['unknown_1',['unknown',['../namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10a88183b946cc5f0e8c96b2e66e1c74a7e',1,'dcn::Unknown'],['../namespacedcn_1_1http.html#a85103dcaf4539b1939d3a039e2f7e4ffa88183b946cc5f0e8c96b2e66e1c74a7e',1,'dcn::http::Unknown'],['../namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a88183b946cc5f0e8c96b2e66e1c74a7e',1,'dcn::http::Unknown'],['../namespacedcn_1_1http.html#a4f682cd7b59ded888fa0d767b29cf172a88183b946cc5f0e8c96b2e66e1c74a7e',1,'dcn::http::Unknown'],['../namespacedcn.html#a73f6cd1f34fc64548d4b6b8749ed6f68a88183b946cc5f0e8c96b2e66e1c74a7e',1,'dcn::Unknown'],['../namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844ba88183b946cc5f0e8c96b2e66e1c74a7e',1,'dcn::Unknown']]],
+  ['unsigned_5finteger_2',['unsigned_integer',['../namespacedcn.html#a73f6cd1f34fc64548d4b6b8749ed6f68a7383104b83254a99f5991d0ac77a6666',1,'dcn']]]
 ];

@@ -1,5 +1,5 @@
 var server_8hpp =
 [
-    [ "hm::Server", "classhm_1_1Server.html", "classhm_1_1Server" ],
-    [ "HandlerDefinition", "server_8hpp.html#a851fd8f19975df188f6e41912fea7201", null ]
+    [ "dcn::Server", "classdcn_1_1Server.html", "classdcn_1_1Server" ],
+    [ "HandlerDefinition", "server_8hpp.html#a95cbb2c96065bd6b4d712e346a0436f8", null ]
 ];

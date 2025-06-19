@@ -1,6 +1,6 @@
 var api__auth_8cpp =
 [
-    [ "GET_nonce", "api__auth_8cpp.html#a62108fd927bd50265eabd38e6a7e4721", null ],
-    [ "POST_auth", "api__auth_8cpp.html#ae5e0fab2908898d4dc5dcb9a61e13ab9", null ],
-    [ "POST_refresh", "api__auth_8cpp.html#a53c37a8d077c0ab08639ca5b2c991044", null ]
+    [ "GET_nonce", "api__auth_8cpp.html#ac3751c4b02df4c86c564697360400c7e", null ],
+    [ "POST_auth", "api__auth_8cpp.html#a7b01c305af180e2e18bf5c9f88409bc1", null ],
+    [ "POST_refresh", "api__auth_8cpp.html#a001262759f7cebe268aab7b60436f555", null ]
 ];

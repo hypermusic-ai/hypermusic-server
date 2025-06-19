@@ -108,6 +108,9 @@ $(document).ready(function(){initNavTree('utils_8hpp.html',''); initResizable();
 <code>#include &lt;cstdlib&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
 <code>#include &lt;iomanip&gt;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
+<code>#include &lt;format&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &quot;<a class="el" href="native_8h_source.html">native.h</a>&quot;</code><br />
 <code>#include &lt;asio.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="logo_8hpp_source.html">logo.hpp</a>&quot;</code><br />
@@ -117,7 +120,9 @@ $(document).ready(function(){initNavTree('utils_8hpp.html',''); initResizable();
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacehm" id="r_namespacehm"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html">hm</a></td></tr>
+<tr class="memitem:namespacedcn" id="r_namespacedcn"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html">dcn</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacedcn_1_1utils" id="r_namespacedcn_1_1utils"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1utils.html">dcn::utils</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -129,24 +134,15 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afcbcd4d5713f2827400fe2c95959d28e" id="r_afcbcd4d5713f2827400fe2c95959d28e"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">void</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#afcbcd4d5713f2827400fe2c95959d28e">hm::watchdog</a> (std::chrono::steady_clock::time_point &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">deadline</a>)</td></tr>
-<tr class="memdesc:afcbcd4d5713f2827400fe2c95959d28e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Suspends the coroutine until the given deadline is reached.  <br /></td></tr>
-<tr class="separator:afcbcd4d5713f2827400fe2c95959d28e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a885a05d604b9e0cfb11799c85dfa25b8" id="r_a885a05d604b9e0cfb11799c85dfa25b8"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">void</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#a885a05d604b9e0cfb11799c85dfa25b8">hm::ensureOnStrand</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> asio::strand&lt; asio::io_context::executor_type &gt; &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">strand</a>)</td></tr>
-<tr class="separator:a885a05d604b9e0cfb11799c85dfa25b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1982677cc158b1142a43328524e42f2d" id="r_a1982677cc158b1142a43328524e42f2d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#a1982677cc158b1142a43328524e42f2d">hm::hexToBytes</a> (std::string <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">hex</a>)</td></tr>
-<tr class="memdesc:a1982677cc158b1142a43328524e42f2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a hex string to a vector of bytes.  <br /></td></tr>
-<tr class="separator:a1982677cc158b1142a43328524e42f2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a046d25e380c7769b0ba5f8af051e3133" id="r_a046d25e380c7769b0ba5f8af051e3133"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#a046d25e380c7769b0ba5f8af051e3133">hm::bytesToHex</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::uint8_t *<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">data</a>, std::size_t <a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">len</a>)</td></tr>
-<tr class="memdesc:a046d25e380c7769b0ba5f8af051e3133"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a vector of bytes to a hex string.  <br /></td></tr>
-<tr class="separator:a046d25e380c7769b0ba5f8af051e3133"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af360e6e2d68baeaccfa9061966b43c68" id="r_af360e6e2d68baeaccfa9061966b43c68"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#af360e6e2d68baeaccfa9061966b43c68">hm::bytesToHex</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::vector&lt; std::uint8_t &gt; &amp;<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">data</a>)</td></tr>
-<tr class="memdesc:af360e6e2d68baeaccfa9061966b43c68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a vector of bytes to a hex string.  <br /></td></tr>
-<tr class="separator:af360e6e2d68baeaccfa9061966b43c68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acece1c5842a08b74c470d44a2bb0ea54" id="r_acece1c5842a08b74c470d44a2bb0ea54"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#acece1c5842a08b74c470d44a2bb0ea54">hm::escapeSolSrcQuotes</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a>)</td></tr>
-<tr class="separator:acece1c5842a08b74c470d44a2bb0ea54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeeed6231751c7e8049a8f622a8f1708d" id="r_aeeed6231751c7e8049a8f622a8f1708d"><td class="memItemLeft" align="right" valign="top">std::uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehm.html#aeeed6231751c7e8049a8f622a8f1708d">hm::readBigEndianUint64</a> (<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">const</a> std::uint8_t *<a class="el" href="namespacehm.html#a9b7caefa124af81f61f34212a0db2948ad57c24f3fe52d16e7169b912dd647f0d">data</a>)</td></tr>
-<tr class="separator:aeeed6231751c7e8049a8f622a8f1708d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07545fa1ab2d1ccc349667eae8ba746f" id="r_a07545fa1ab2d1ccc349667eae8ba746f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1utils.html#a07545fa1ab2d1ccc349667eae8ba746f">dcn::utils::currentTimestamp</a> ()</td></tr>
+<tr class="separator:a07545fa1ab2d1ccc349667eae8ba746f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d90cd25bc6985e0d5d00227bf125b3e" id="r_a3d90cd25bc6985e0d5d00227bf125b3e"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">void</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1utils.html#a3d90cd25bc6985e0d5d00227bf125b3e">dcn::utils::watchdog</a> (std::chrono::steady_clock::time_point &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">deadline</a>)</td></tr>
+<tr class="memdesc:a3d90cd25bc6985e0d5d00227bf125b3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Suspends the coroutine until the given deadline is reached.  <br /></td></tr>
+<tr class="separator:a3d90cd25bc6985e0d5d00227bf125b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae9b2c4db93b9f4d05974a60179eb86a" id="r_aae9b2c4db93b9f4d05974a60179eb86a"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">void</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1utils.html#aae9b2c4db93b9f4d05974a60179eb86a">dcn::utils::ensureOnStrand</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> asio::strand&lt; asio::io_context::executor_type &gt; &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">strand</a>)</td></tr>
+<tr class="separator:aae9b2c4db93b9f4d05974a60179eb86a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad50838f255d0cc53abf48456e8a1ec8c" id="r_ad50838f255d0cc53abf48456e8a1ec8c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1utils.html#ad50838f255d0cc53abf48456e8a1ec8c">dcn::utils::escapeSolSrcQuotes</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a>)</td></tr>
+<tr class="separator:ad50838f255d0cc53abf48456e8a1ec8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a6df1d22fb5f09eccc23b9f399670cfd7" name="a6df1d22fb5f09eccc23b9f399670cfd7"></a>

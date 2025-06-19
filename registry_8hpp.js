@@ -1,4 +1,4 @@
 var registry_8hpp =
 [
-    [ "hm::Registry", "classhm_1_1Registry.html", "classhm_1_1Registry" ]
+    [ "dcn::Registry", "classdcn_1_1Registry.html", "classdcn_1_1Registry" ]
 ];

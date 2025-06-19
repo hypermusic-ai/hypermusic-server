@@ -1,5 +1,5 @@
 var route_8hpp =
 [
-    [ "hm::RouteHandlerFunc", "classhm_1_1RouteHandlerFunc.html", "classhm_1_1RouteHandlerFunc" ],
-    [ "hm::Router", "classhm_1_1Router.html", "classhm_1_1Router" ]
+    [ "dcn::RouteHandlerFunc", "classdcn_1_1RouteHandlerFunc.html", "classdcn_1_1RouteHandlerFunc" ],
+    [ "dcn::Router", "classdcn_1_1Router.html", "classdcn_1_1Router" ]
 ];

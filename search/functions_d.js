@@ -1,14 +1,20 @@
 var searchData=
 [
-  ['readbigendianuint64_0',['readBigEndianUint64',['../namespacehm.html#aeeed6231751c7e8049a8f622a8f1708d',1,'hm']]],
-  ['readdata_1',['readData',['../classhm_1_1Server.html#ac14e1608516926f75afa5f442e5b189e',1,'hm::Server']]],
-  ['registry_2',['registry',['../classhm_1_1Registry.html#a967b2716280800eb223377c184b3e31e',1,'hm::Registry::Registry()=delete'],['../classhm_1_1Registry.html#a594d88bf8da3a6301d070f88f411228d',1,'hm::Registry::Registry(asio::io_context &amp;io_context)'],['../classhm_1_1Registry.html#a366c88763a29a36bc5ae03f5d44682be',1,'hm::Registry::Registry(const Registry &amp;)=delete']]],
-  ['request_3',['request',['../classhm_1_1http_1_1Request.html#ae1af6f0b6098387c138c4704e2927261',1,'hm::http::Request::Request()=default'],['../classhm_1_1http_1_1Request.html#aad9c7cdae1d3acccaaf238bd20f892de',1,'hm::http::Request::Request(Request &amp;&amp;other)=default'],['../classhm_1_1http_1_1Request.html#a0b3d6b59699d1e3061c08cf30f4915c8',1,'hm::http::Request::Request(const Request &amp;other)=delete']]],
-  ['response_4',['response',['../classhm_1_1http_1_1Response.html#a06f5e8012711a3316fd115bb06431aba',1,'hm::http::Response::Response()=default'],['../classhm_1_1http_1_1Response.html#a02824f6adad36bd4d6d86a42e036f819',1,'hm::http::Response::Response(Response &amp;&amp;other)=default'],['../classhm_1_1http_1_1Response.html#a3d6c0e8a807bc9304f5f644c49a48b8e',1,'hm::http::Response::Response(const Response &amp;other)=delete']]],
-  ['routearg_5',['RouteArg',['../classhm_1_1RouteArg.html#a14203c6d456af76fc4b480c8b0b2544e',1,'hm::RouteArg']]],
-  ['routeargdef_6',['routeargdef',['../structhm_1_1RouteArgDef.html#aba09d921c42f20a467cf39aefa31cc38',1,'hm::RouteArgDef::RouteArgDef(RouteArgType type, RouteArgRequirement requirement, std::vector&lt; std::unique_ptr&lt; RouteArgDef &gt; &gt; children)'],['../structhm_1_1RouteArgDef.html#a130db4544b7cca9b11186333b3a1d2b0',1,'hm::RouteArgDef::RouteArgDef(const RouteArgDef &amp;other)'],['../structhm_1_1RouteArgDef.html#a36e089e2c9150a240a9590a270384a6f',1,'hm::RouteArgDef::RouteArgDef(RouteArgDef &amp;&amp;other) noexcept'],['../structhm_1_1RouteArgDef.html#a4f1a9ad8d3b2d13537505815051f0976',1,'hm::RouteArgDef::RouteArgDef(RouteArgType type, RouteArgRequirement requirement)']]],
-  ['routehandlerfunc_7',['routehandlerfunc',['../classhm_1_1RouteHandlerFunc.html#acb7c9e42515e303f1d2496344a64d7ec',1,'hm::RouteHandlerFunc::RouteHandlerFunc(std::function&lt; asio::awaitable&lt; http::Response &gt;(Args...)&gt; func)'],['../classhm_1_1RouteHandlerFunc.html#a78ef66a2d18e309ef14278119fa317a5',1,'hm::RouteHandlerFunc::RouteHandlerFunc(RouteHandlerFunc &amp;&amp;other)=default']]],
-  ['routekey_8',['RouteKey',['../classhm_1_1RouteKey.html#a3fdcb778ce02b8327616aba4ff4fed65',1,'hm::RouteKey']]],
-  ['router_9',['Router',['../classhm_1_1Router.html#a811b308191518b9e02bae1766f373282',1,'hm::Router']]],
-  ['runprocess_10',['runProcess',['../namespacehm_1_1native.html#a5d7008c44aa9a15317939fd6c4225c46',1,'hm::native']]]
+  ['selfdestruct_0',['selfdestruct',['../classdcn_1_1EVMStorage.html#ae7dc99c7118ddeaf021faf0fe63cc8ae',1,'dcn::EVMStorage']]],
+  ['server_1',['Server',['../classdcn_1_1Server.html#aa061d02a30b83fb9fec546f8febcb77a',1,'dcn::Server']]],
+  ['session_2',['Session',['../classdcn_1_1Session.html#a59766460200a6d3c03976c6d04b2a378',1,'dcn::Session']]],
+  ['sessionmanager_3',['SessionManager',['../classdcn_1_1SessionManager.html#add5cfd7792567697ca77fc7a28b6a0ab',1,'dcn::SessionManager']]],
+  ['set_5fbalance_4',['set_balance',['../classdcn_1_1EVMStorage.html#ab51767200181638e7c59ee3569b3d15d',1,'dcn::EVMStorage']]],
+  ['set_5fstorage_5',['set_storage',['../classdcn_1_1EVMStorage.html#a491eb4f910f059eaa0ef71d4fb2eb455',1,'dcn::EVMStorage']]],
+  ['set_5ftransient_5fstorage_6',['set_transient_storage',['../classdcn_1_1EVMStorage.html#a250b1893dc75c617589c977d2ea74ec7',1,'dcn::EVMStorage']]],
+  ['setbinpath_7',['setBinPath',['../namespacedcn.html#a802ae4049f4667dcdb1fe8b04a09769d',1,'dcn']]],
+  ['setbody_8',['setBody',['../classdcn_1_1http_1_1MessageBase.html#ae7b449b16ee59fa08312e34b5eb4e449',1,'dcn::http::MessageBase']]],
+  ['setcode_9',['setCode',['../classdcn_1_1http_1_1Response.html#abf41dfcd501a317bb429b9c51fb4749a',1,'dcn::http::Response']]],
+  ['setheader_10',['setHeader',['../classdcn_1_1http_1_1MessageBase.html#ae7c1cf492702cb7f82ad6cb5f46dcea5',1,'dcn::http::MessageBase']]],
+  ['setidleinterval_11',['setIdleInterval',['../classdcn_1_1Server.html#acb4624726ce55c87ce0add2aa428e134',1,'dcn::Server']]],
+  ['setmethod_12',['setMethod',['../classdcn_1_1http_1_1Request.html#a3ae3e92cd630ea659c33ad927c2bc013',1,'dcn::http::Request']]],
+  ['setpath_13',['setPath',['../classdcn_1_1http_1_1Request.html#a28f423e67c4f40cb4f1184848b61bce0',1,'dcn::http::Request']]],
+  ['setversion_14',['setVersion',['../classdcn_1_1http_1_1MessageBase.html#a118a5b6672834f8aed19e39bdb7c3e96',1,'dcn::http::MessageBase']]],
+  ['splitpathsegments_15',['splitPathSegments',['../namespacedcn_1_1http.html#a7911d5fb827bacf47f1317d95ec8dcc7',1,'dcn::http']]],
+  ['stop_16',['stop',['../classdcn_1_1Session.html#ac1c0529d85326181cd7a5c81cd47053f',1,'dcn::Session']]]
 ];

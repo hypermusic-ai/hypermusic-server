@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['url_0',['url',['../classhm_1_1http_1_1URL.html#a3fd80f71859a162c897e0dbf91a8d552',1,'hm::http::URL::URL()=default'],['../classhm_1_1http_1_1URL.html#a27c0a2bba44dc63ea7bc280fdf6cd829',1,'hm::http::URL::URL(const std::string &amp;url)'],['../classhm_1_1http_1_1URL.html#a42d59ce4f19eb55163d3c711167d5f9d',1,'hm::http::URL::URL(std::string &amp;&amp;url)'],['../classhm_1_1http_1_1URL.html#a0c6172354a8a6c2c1be06efa2b781a5c',1,'hm::http::URL::URL(const char *url)'],['../classhm_1_1http_1_1URL.html#aa9ea892b2a09ca10a6ea4ebc6f668095',1,'hm::http::URL::URL(const URL &amp;)=default'],['../classhm_1_1http_1_1URL.html#af61d289a2528fa41427c2d46bbc737c2',1,'hm::http::URL::URL(URL &amp;&amp;)=default']]]
+  ['validatesession_0',['validateSession',['../classdcn_1_1SessionManager.html#a84a4ba1c3d59bf918a378fc5cc16fc48',1,'dcn::SessionManager']]],
+  ['verifyaccesstoken_1',['verifyAccessToken',['../classdcn_1_1AuthManager.html#ab00a9b67f90aea4f5094a10538f3ea46',1,'dcn::AuthManager']]],
+  ['verifynonce_2',['verifyNonce',['../classdcn_1_1AuthManager.html#aa9c77084fb5533cc9e912727df64db93',1,'dcn::AuthManager']]],
+  ['verifyrefreshtoken_3',['verifyRefreshToken',['../classdcn_1_1AuthManager.html#a70e386c170274415a2638959590545d7',1,'dcn::AuthManager']]],
+  ['verifysignature_4',['verifySignature',['../classdcn_1_1AuthManager.html#aedae474789eaa983cb94d02a502f1e28',1,'dcn::AuthManager']]]
 ];

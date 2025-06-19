@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['major_5fversion_0',['MAJOR_VERSION',['../namespacehm.html#a3c1d68fb9225d36f577d2b0c51dfbde3',1,'hm']]],
-  ['minor_5fversion_1',['MINOR_VERSION',['../namespacehm.html#ad32de4be5aad0553480caac2334b7770',1,'hm']]]
+  ['major_5fversion_0',['MAJOR_VERSION',['../namespacedcn.html#a184b90896887dec190467e00f2cd1bdb',1,'dcn']]],
+  ['minor_5fversion_1',['MINOR_VERSION',['../namespacedcn.html#a2189fb32e969cdf09866dc9fe0ad3fee',1,'dcn']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['authenticationerror_0',['AuthenticationError',['../namespacehm.html#a57399fb40eed382c3fc50e563b4f58e1',1,'hm']]]
+  ['authenticationerror_0',['AuthenticationError',['../namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10',1,'dcn']]]
 ];
