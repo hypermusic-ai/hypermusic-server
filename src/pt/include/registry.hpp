@@ -2,11 +2,20 @@
 
 #include <optional>
 #include <string>
+#include <filesystem>
 
 #include "native.h"
 #include <asio.hpp>
 #include <absl/container/flat_hash_map.h>
 #include <spdlog/spdlog.h>
+
+#ifdef interface
+    #undef interface
+#endif
+#include <evmc/evmc.hpp>
+#ifndef interface
+    #define interface __STRUCT__
+#endif
 
 #include "utils.hpp"
 #include "feature.hpp"
@@ -44,7 +53,7 @@ namespace dcn
              * function returns `std::nullopt`. If the feature does not exist, it is
              * added and the hash of the feature is returned.
              */
-            asio::awaitable<bool> addFeature(Feature feature, const std::string & address);
+            asio::awaitable<bool> addFeature(evmc::address address, Feature feature, std::filesystem::path source);
             
             /**
              * @brief Retrieves the newest feature by name.
@@ -72,7 +81,7 @@ namespace dcn
              * address. If the feature name or address is not found, it returns
              * `std::nullopt`.
              */
-            asio::awaitable<std::optional<Feature>> getFeature(const std::string& name, const std::string & address) const;
+            asio::awaitable<std::optional<Feature>> getFeature(const std::string& name, const evmc::address & address) const;
 
             /**
              * @brief Adds a transformation to the registry.
@@ -86,7 +95,7 @@ namespace dcn
              * transformation does not exist, it is added and the hash of the
              * transformation is returned.
              */
-            asio::awaitable<bool> addTransformation(Transformation transformation, const std::string & address);
+            asio::awaitable<bool> addTransformation(evmc::address address, Transformation transformation, std::filesystem::path source);
 
             /**
              * @brief Retrieves the newest transformation by name.
@@ -115,7 +124,7 @@ namespace dcn
              * and address. If the transformation name or address is not found, it
              * returns `std::nullopt`.
              */
-            asio::awaitable<std::optional<Transformation>> getTransformation(const std::string& name, const std::string & address) const;
+            asio::awaitable<std::optional<Transformation>> getTransformation(const std::string& name, const evmc::address & address) const;
 
             /**
              * @brief Adds a condition to the registry.
@@ -127,7 +136,7 @@ namespace dcn
              * the function returns `std::nullopt`. If the condition does not exist, it
              * is added and the hash of the condition is returned.
              */
-            asio::awaitable<bool> addCondition(Condition condition, const std::string & address);
+            asio::awaitable<bool> addCondition(evmc::address address, Condition condition, std::filesystem::path source);
 
             /**
              * @brief Retrieves the newest condition by name.
@@ -155,7 +164,7 @@ namespace dcn
              * address. If the condition name or address is not found, it returns
              * `std::nullopt`.
              */
-            asio::awaitable<std::optional<Condition>> getCondition(const std::string& name, const std::string & address) const;
+            asio::awaitable<std::optional<Condition>> getCondition(const std::string& name, const evmc::address & address) const;
 
         protected:
 
@@ -243,16 +252,24 @@ namespace dcn
              * If at any point any subfeature does not exist, the function returns false.
              */
             asio::awaitable<bool> checkIfSubFeaturesExist(const Feature & feature) const;
+        
+        protected:
+            template<class T>
+            struct Node
+            {
+                T value;
+                std::filesystem::path path;
+            };
 
         private:
             asio::strand<asio::io_context::executor_type> _strand;
 
-            absl::flat_hash_map<std::string, std::string> _newest_feature;
-            absl::flat_hash_map<std::string, std::string> _newest_transformation;
-            absl::flat_hash_map<std::string, std::string> _newest_condition;
+            absl::flat_hash_map<std::string, evmc::address> _newest_feature;
+            absl::flat_hash_map<std::string, evmc::address> _newest_transformation;
+            absl::flat_hash_map<std::string, evmc::address> _newest_condition;
 
-            absl::flat_hash_map<std::string, absl::flat_hash_map<std::string, Feature>> _features;
-            absl::flat_hash_map<std::string, absl::flat_hash_map<std::string, Transformation>> _transformations;
-            absl::flat_hash_map<std::string, absl::flat_hash_map<std::string, Condition>> _conditions;
+            absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, Node<Feature>>> _features;
+            absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, Node<Transformation>>> _transformations;
+            absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, Node<Condition>>> _conditions;
     };
 }

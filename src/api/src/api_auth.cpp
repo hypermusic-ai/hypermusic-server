@@ -15,16 +15,24 @@ namespace dcn
             response.setBody("Invalid number of arguments. Expected 1 argument.");
             co_return response;
         }
+        auto address_arg = parse::parseRouteArgAs<std::string>(args.at(0));
 
-        std::optional<std::string> nonce_res = parse::parseRouteArgAs<std::string>(args.at(0));
-        if(!nonce_res)
+        if(!address_arg)
+        {
+            response.setCode(http::Code::BadRequest);
+            response.setBody("Invalid argument");
+            co_return response;
+        }
+
+        std::optional<evmc::address> address_res = evmc::from_hex<evmc::address>(address_arg.value());
+        if(!address_res)
         {
             response.setCode(http::Code::BadRequest);
             response.setBody("Invalid argument");
             co_return response;
         }
         
-        auto generated_nounce = co_await auth_manager.generateNonce(*nonce_res);
+        auto generated_nounce = co_await auth_manager.generateNonce(*address_res);
         json nonce_json({{"nonce", generated_nounce}});
 
         response.setHeader(http::Header::ContentType, "application/json");
@@ -71,7 +79,7 @@ namespace dcn
             co_return response;
         }
 
-        const std::string & address = auth_request["address"].get<std::string>();
+        const std::string & address_str = auth_request["address"].get<std::string>();
         const std::string & signature = auth_request["signature"].get<std::string>();
         const std::string & message = auth_request["message"].get<std::string>();
         const std::string request_nonce = parse::parseNonceFromMessage(message);
@@ -82,6 +90,15 @@ namespace dcn
             response.setBody("Invalid message");
             co_return response;
         }
+
+        auto address_res = evmc::from_hex<evmc::address>(address_str);
+        if(address_res.has_value() == false)
+        {
+            response.setCode(http::Code::BadRequest);
+            response.setBody("Invalid address");
+            co_return response;
+        }
+        const evmc::address & address = address_res.value();
 
         if(co_await auth_manager.verifyNonce(address, request_nonce) == false)
         {
@@ -150,8 +167,7 @@ namespace dcn
             response.setBody(std::format("Error: {}", refresh_verification_res.error()));
             co_return std::move(response);
         }
-        spdlog::debug("refresh token verified: {}", refresh_verification_res.value());
-        const std::string & address = refresh_verification_res.value();
+        spdlog::debug(std::format("refresh token verified: {}", refresh_verification_res.value()));
 
         // Verify if access token matches old one for that address
         // since it probably expired we does not strictly verify it
@@ -164,6 +180,8 @@ namespace dcn
             response.setBody("missing access token");
             co_return std::move(response);
         }
+
+        const evmc::address & address = refresh_verification_res.value();
 
         if(co_await auth_manager.compareAccessToken(address, access_token_res.value()) == false)
         {

@@ -17,8 +17,8 @@ namespace dcn
             const std::string & subfeature_name = dimension.feature_name();
             if(co_await isFeatureBucketEmpty(subfeature_name))co_return false;
 
-            const Feature & sub_feature = _features.at(subfeature_name).at(_newest_feature.at(subfeature_name));
-            co_return (co_await checkIfSubFeaturesExist(sub_feature));
+            const auto & sub_feature_node = _features.at(subfeature_name).at(_newest_feature.at(subfeature_name));
+            co_return (co_await checkIfSubFeaturesExist(sub_feature_node.value));
         }
         co_return true;
     }
@@ -70,7 +70,7 @@ namespace dcn
     }
 
 
-    asio::awaitable<bool> Registry::addFeature(Feature feature, const std::string & address)
+    asio::awaitable<bool> Registry::addFeature(evmc::address address, Feature feature, std::filesystem::path source)
     {
         if(feature.name().empty())
         {
@@ -89,7 +89,7 @@ namespace dcn
         if(! co_await containsFeatureBucket(feature.name()))
         {
             spdlog::debug("Feature bucket `{}` does not exists, creating new one ... ", feature.name());
-            _features.try_emplace(feature.name(), absl::flat_hash_map<std::string, Feature>());
+            _features.try_emplace(feature.name(), absl::flat_hash_map<evmc::address, Node<Feature>>());
         }       
 
         if(_features.at(feature.name()).contains(address))
@@ -118,7 +118,10 @@ namespace dcn
 
         _newest_feature[feature.name()] = address;
 
-        _features.at(feature.name()).try_emplace(address, std::move(feature));
+        _features.at(feature.name())
+            .try_emplace(
+                    std::move(address), 
+                Node<Feature>{std::move(feature), std::move(source)});
 
         co_return true;
     }
@@ -131,7 +134,7 @@ namespace dcn
         co_return (co_await getFeature(name, _newest_feature.at(name)));
     }
 
-    asio::awaitable<std::optional<Feature>> Registry::getFeature(const std::string& name, const std::string & address) const
+    asio::awaitable<std::optional<Feature>> Registry::getFeature(const std::string& name, const evmc::address & address) const
     {
         co_await utils::ensureOnStrand(_strand);
 
@@ -145,11 +148,11 @@ namespace dcn
         {
             co_return std::nullopt;
         }
-        co_return it->second;
+        co_return it->second.value;
     }
 
 
-    asio::awaitable<bool> Registry::addTransformation(Transformation transformation, const std::string & address)
+    asio::awaitable<bool> Registry::addTransformation(evmc::address address, Transformation transformation, std::filesystem::path source)
     {
         if(transformation.name().empty())
         {
@@ -162,7 +165,7 @@ namespace dcn
         if(! co_await containsTransformationBucket(transformation.name())) 
         {
             spdlog::debug("Transformation bucket `{}` does not exists, creating new one ... ", transformation.name());
-            _transformations.try_emplace(transformation.name(), absl::flat_hash_map<std::string, Transformation>());
+            _transformations.try_emplace(transformation.name(), absl::flat_hash_map<evmc::address, Node<Transformation>>());
         }
 
         if(_transformations.at(transformation.name()).contains(address))
@@ -172,7 +175,10 @@ namespace dcn
         }
 
         _newest_transformation[transformation.name()] = address;
-        _transformations.at(transformation.name()).try_emplace(address, std::move(transformation));
+        _transformations.at(transformation.name())  
+            .try_emplace(   
+                std::move(address), 
+            Node<Transformation>{std::move(transformation), std::move(source)});
         co_return true;
     }
 
@@ -184,7 +190,7 @@ namespace dcn
         co_return (co_await getTransformation(name, _newest_transformation.at(name)));
     }
 
-    asio::awaitable<std::optional<Transformation>> Registry::getTransformation(const std::string& name, const std::string & address) const
+    asio::awaitable<std::optional<Transformation>> Registry::getTransformation(const std::string& name, const evmc::address & address) const
     {
         co_await utils::ensureOnStrand(_strand);
 
@@ -198,18 +204,18 @@ namespace dcn
         {
             co_return std::nullopt;
         }
-        co_return it->second;
+        co_return it->second.value;
     }
 
 
-    asio::awaitable<bool> Registry::addCondition(Condition condition, const std::string & address)
+    asio::awaitable<bool> Registry::addCondition(evmc::address address, Condition condition, std::filesystem::path source)
     {
         co_await utils::ensureOnStrand(_strand);
 
         if(! co_await containsConditionBucket(condition.name())) 
         {
             spdlog::debug("Condition bucket `{}` does not exists, creating new one ... ", condition.name());
-            _conditions.try_emplace(condition.name(), absl::flat_hash_map<std::string, Condition>());
+            _conditions.try_emplace(condition.name(), absl::flat_hash_map<evmc::address, Node<Condition>>());
         }
 
 
@@ -220,7 +226,10 @@ namespace dcn
         }
 
         _newest_condition[condition.name()] = address;
-        _conditions.at(condition.name()).try_emplace(address, std::move(condition));
+        _conditions.at(condition.name())    
+            .try_emplace(
+                std::move(address),
+                Node<Condition>{std::move(condition), std::move(source)});
         co_return true;
     }
 
@@ -232,7 +241,7 @@ namespace dcn
         co_return (co_await getCondition(name, _newest_condition.at(name)));
     }
 
-    asio::awaitable<std::optional<Condition>> Registry::getCondition(const std::string& name, const std::string & address) const
+    asio::awaitable<std::optional<Condition>> Registry::getCondition(const std::string& name, const evmc::address & address) const
     {
         co_await utils::ensureOnStrand(_strand);
 
@@ -246,6 +255,6 @@ namespace dcn
         {
             co_return std::nullopt;
         }
-        co_return it->second;
+        co_return it->second.value;
     }
 }

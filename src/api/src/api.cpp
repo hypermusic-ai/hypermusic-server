@@ -2,7 +2,7 @@
 
 namespace dcn
 {
-    static asio::awaitable<std::expected<std::string, AuthenticationError>> _authenticate(const http::Request & request, const AuthManager & auth_manager)
+    static asio::awaitable<std::expected<evmc::address, AuthenticationError>> _authenticate(const http::Request & request, const AuthManager & auth_manager)
     {
         auto cookie_res = request.getHeader(http::Header::Cookie);
         if(cookie_res.empty())
@@ -26,12 +26,6 @@ namespace dcn
         {
             spdlog::error("Failed to verify token");
             co_return std::unexpected(verification_res.error());
-        }
-
-        if(evmc::validate_hex(verification_res.value()) == false)
-        {
-            spdlog::error("Invalid address");
-            co_return std::unexpected(AuthenticationError::InvalidToken);
         }
 
         co_return verification_res.value();
@@ -88,7 +82,17 @@ namespace dcn
 
         if(args.size() == 2)
         {
-            const auto feature_address_result = parse::parseRouteArgAs<std::string>(args.at(1));
+            const auto feature_address_arg = parse::parseRouteArgAs<std::string>(args.at(1));
+
+            if(!feature_address_arg)
+            {
+                response.setHeader(http::Header::ContentType, "text/plain");
+                response.setCode(http::Code::BadRequest);
+                response.setBody("invalid url");
+                co_return response;
+            }
+
+            const auto feature_address_result = evmc::from_hex<evmc::address>(feature_address_arg.value());
 
             if(!feature_address_result)
             {
@@ -197,9 +201,9 @@ namespace dcn
             response.setBody(std::format("Error: {}", auth_result.error()));
             co_return std::move(response);
         }
-        const std::string & address = auth_result.value();
+        const auto & address = auth_result.value();
 
-        spdlog::debug("token verified address : {}", address);
+        spdlog::debug(std::format("token verified address : {}", address));
 
         // parse feature from json_string
         auto feature_res = parse::parseFromJson<Feature>(request.getBody(), parse::use_protobuf);
@@ -251,26 +255,12 @@ namespace dcn
             response.setBody("Failed to compile code");
             co_return std::move(response);
         }
-
-        // deploy code
-        if(evmc::validate_hex(address) == false)
-        {
-            spdlog::error("Invalid address");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::BadRequest);
-            response.setBody("Invalid address");
-            co_return std::move(response);
-        }
-
-        evmc::address address_bytes{evmc::from_hex<evmc_address>(address).value_or(evmc::address{})};
         
-        
-        co_await evm.addAccount(address_bytes, 1000000); //TODO
+        co_await evm.addAccount(address, 1000000); //TODO
         
         auto deploy_res = co_await evm.deploy(
             out_dir / (feature.name() + ".bin"), 
-            address_bytes, 
+            address, 
     encodeAsArg(evm.getRegistryAddress()),
             1000000, 
             0);
@@ -285,8 +275,6 @@ namespace dcn
             co_return std::move(response);
         }
 
-        const std::string deploy_address_str = evmc::hex(deploy_res.value());
-
         const auto owner_result = co_await _fetchOwner(evm, deploy_res.value());
 
         // check execution status
@@ -300,7 +288,7 @@ namespace dcn
             co_return std::move(response);
         }
 
-        if(!co_await registry.addFeature(feature, deploy_address_str)) 
+        if(!co_await registry.addFeature(deploy_res.value(), feature, code_path)) 
         {
             spdlog::error("Failed to add feature");
             response.setHeader(http::Header::Connection, "close");
@@ -315,7 +303,7 @@ namespace dcn
         json json_output;
         json_output["name"] = feature.name();
         json_output["owner"] = evmc::hex(decodeReturnedValue<evmc::address>(owner_result.value()));
-        json_output["local_address"] = deploy_address_str;
+        json_output["local_address"] = evmc::hex(deploy_res.value());
         json_output["address"] = "0x0";
 
         response.setHeader(http::Header::Connection, "close");
@@ -369,7 +357,17 @@ namespace dcn
 
         if(args.size() == 2)
         {
-            const auto transformation_address_result = parse::parseRouteArgAs<std::string>(args.at(1));
+            const auto transformation_address_arg = parse::parseRouteArgAs<std::string>(args.at(1));
+
+            if(!transformation_address_arg)
+            {
+                response.setHeader(http::Header::ContentType, "text/plain");
+                response.setCode(http::Code::BadRequest);
+                response.setBody("invalid url");
+                co_return response;
+            }
+
+            const auto transformation_address_result = evmc::from_hex<evmc::address>(*transformation_address_arg);
 
             if(!transformation_address_result)
             {
@@ -478,9 +476,9 @@ namespace dcn
             response.setBody(std::format("Error: {}", auth_result.error()));
             co_return std::move(response);
         }
-        const std::string & address = auth_result.value();
+        const auto & address = auth_result.value();
 
-        spdlog::debug("token verified address: {}", address);
+        spdlog::debug(std::format("token verified address: {}", address));
         
         // every double-quote character (") is escaped with a backslash (\)
         auto transformation_res = parse::parseJsonToTransformation(utils::escapeSolSrcQuotes(request.getBody()), parse::use_protobuf);
@@ -538,22 +536,9 @@ namespace dcn
             co_return std::move(response);
         }
 
-        // deploy code
-        if(evmc::validate_hex(address) == false)
-        {
-            spdlog::error("Invalid address");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::BadRequest);
-            response.setBody("Invalid address");
-            co_return std::move(response);
-        }
-
-        evmc::address address_bytes{evmc::from_hex<evmc_address>(address).value_or(evmc::address{})};
-
         auto deploy_res = co_await evm.deploy(  
             out_dir / (transformation.name() + ".bin"), 
-            address_bytes, 
+            address, 
             encodeAsArg(evm.getRegistryAddress()), 
             1000000, 
             0);
@@ -567,7 +552,6 @@ namespace dcn
             response.setBody("Failed to deploy code");
             co_return std::move(response);
         }
-        const auto transformation_address_str = evmc::hex(deploy_res.value());        
         const auto owner_result = co_await _fetchOwner(evm, deploy_res.value());
 
         // check execution status
@@ -581,7 +565,7 @@ namespace dcn
             co_return std::move(response);
         }
 
-        if(!co_await registry.addTransformation(transformation, transformation_address_str)) 
+        if(!co_await registry.addTransformation(deploy_res.value(), transformation, code_path)) 
         {
             spdlog::error("Failed to add transformation to registry");
             response.setHeader(http::Header::Connection, "close");
@@ -596,7 +580,7 @@ namespace dcn
         json json_output;
         json_output["name"] = transformation.name();
         json_output["owner"] = evmc::hex(decodeReturnedValue<evmc::address>(owner_result.value()));
-        json_output["local_address"] = transformation_address_str;
+        json_output["local_address"] = evmc::hex(deploy_res.value());
         json_output["address"] = "0x0";
 
         response.setHeader(http::Header::Connection, "close");
@@ -657,10 +641,7 @@ namespace dcn
             response.setBody(std::format("Error: {}", auth_result.error()));
             co_return std::move(response);
         }
-        const std::string & address = auth_result.value();
-
-        // execute code
-        evmc::address address_bytes{evmc::from_hex<evmc_address>(address).value_or(evmc::address{})};
+        const auto & address = auth_result.value();
 
         // input arguments - from url
 
@@ -738,7 +719,7 @@ namespace dcn
         input_data.insert(input_data.end(), tuple_vec_bytes.begin(), tuple_vec_bytes.end());
 
         // execute call to runner
-        const auto exec_result = co_await evm.execute(address_bytes, evm.getRunnerAddress(), input_data, 1'000'000, 0);
+        const auto exec_result = co_await evm.execute(address, evm.getRunnerAddress(), input_data, 1'000'000, 0);
         
         // check execution status
         if(!exec_result)

@@ -11,6 +11,7 @@ add_module(NAME "PT"
         absl::hash
         spdlog::spdlog
         asio
+        evmc::evmc
 )
 
 add_dependencies("PT" check_protoc_version pt_configure)

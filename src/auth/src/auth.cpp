@@ -1,232 +1,17 @@
 #include "auth.hpp"
 
-namespace dcn
-{
-    AuthManager::AuthManager(asio::io_context & io_context)
-    :   _strand(asio::make_strand(io_context)),
-        _rng(std::random_device{}()),
-        _dist(100000, 999999),
-        _SECRET{"SUPERSECRETKEY123"}
-    {
-
-    }
-
-    asio::awaitable<std::string> AuthManager::generateNonce(const std::string & address)
-    {
-        std::string nonce =  std::to_string(_dist(_rng));
-        
-        co_await utils::ensureOnStrand(_strand);
-
-        _nonces[address] = nonce;
-        co_return nonce;
-    }
-
-    asio::awaitable<bool> AuthManager::verifyNonce(const std::string& address, const std::string & nonce)
-    {
-        co_await utils::ensureOnStrand(_strand);
-
-        auto it = _nonces.find(address);
-        if (it == _nonces.end()) co_return false;
-
-        if (it->second != nonce)
-        {
-            // remove after failed verification (?)
-            _nonces.erase(it);
-            co_return false;
-        }
-
-        // remove nonce after successful verification
-        _nonces.erase(it);
-        co_return true;
-    }
-
-    asio::awaitable<bool> AuthManager::verifySignature(const std::string& address, const std::string& sig_hex, const std::string& message)
-    {
-        co_await utils::ensureOnStrand(_strand);
-        
-        // verify signature
-        const std::optional<evmc::bytes> signature_bytes_result = evmc::from_hex(sig_hex);
-        if(!signature_bytes_result) co_return false;
-        const auto & signature_bytes = *signature_bytes_result;
-
-        if (signature_bytes.size() != 65) co_return false;
-
-        uint8_t hash[Keccak256::HASH_LEN];
-        std::string prefix(1, '\x19');
-        prefix += "Ethereum Signed Message:\n" + std::to_string(message.size()) + message;
-        dcn::Keccak256::getHash((const uint8_t*)prefix.data(), prefix.size(), hash);
-
-        // Adjust v
-        int recid = signature_bytes[64];
-        if (recid >= 27) recid -= 27;
-
-        secp256k1_context* ctx = secp256k1_context_create(SECP256K1_CONTEXT_VERIFY);
-        secp256k1_ecdsa_recoverable_signature signature;
-
-        if (!secp256k1_ecdsa_recoverable_signature_parse_compact(ctx, &signature, signature_bytes.data(), recid)) {
-            secp256k1_context_destroy(ctx);
-            co_return false;
-        }
-
-        secp256k1_pubkey pubkey;
-        if (!secp256k1_ecdsa_recover(ctx, &pubkey, &signature, hash)) {
-            secp256k1_context_destroy(ctx);
-            co_return false;
-        }
-
-        uint8_t pubkey_serialized[65];
-        size_t pubkey_len = 65;
-        secp256k1_ec_pubkey_serialize(ctx, pubkey_serialized, &pubkey_len, &pubkey, SECP256K1_EC_UNCOMPRESSED);
-        secp256k1_context_destroy(ctx);
-
-        std::string recovered = parse::parseEthAddressFromPublicKey(pubkey_serialized, pubkey_len);
-
-        // Case-insensitive compare
-        std::string lower1 = address, lower2 = recovered;
-        std::transform(lower1.begin(), lower1.end(), lower1.begin(), ::tolower);
-        std::transform(lower2.begin(), lower2.end(), lower2.begin(), ::tolower);
-
-        co_return lower1 == lower2;
-    }
-
-    asio::awaitable<std::string> AuthManager::generateAccessToken(const std::string& address)
-    {
-        co_await utils::ensureOnStrand(_strand);
-
-        auto token = jwt::create()
-            .set_issuer("eth-auth-demo")
-            .set_type("JWS")
-            .set_subject(address)
-            .set_issued_at(std::chrono::system_clock::now())
-            .set_expires_at(std::chrono::system_clock::now() + std::chrono::minutes{10})
-            .sign(jwt::algorithm::hs256{_SECRET});
-
-        _access_tokens[address] = token;
-
-        co_return token;
-    }
-
-    asio::awaitable<std::expected<std::string, AuthenticationError>> AuthManager::verifyAccessToken(std::string token) const
-    {
-        co_await utils::ensureOnStrand(_strand);
-
-        if(token.empty()) co_return std::unexpected(AuthenticationError::InvalidToken);
-        if(token.back() == '\r')token.pop_back(); // remove \r if present
-
-        try 
-        {
-            auto decoded = jwt::decode(token);
-
-            auto verifier = jwt::verify()
-                .allow_algorithm(jwt::algorithm::hs256{_SECRET})
-                .with_issuer("eth-auth-demo");
-
-            verifier.verify(decoded);
-
-            auto address = decoded.get_subject();
-
-            if(_access_tokens.contains(address) == false)
-            {
-                co_return std::unexpected(AuthenticationError::MissingToken);
-            }
-
-            if(token != _access_tokens.at(address))
-            {
-                co_return std::unexpected(AuthenticationError::InvalidToken);
-            }
-
-            co_return address;
-
-        } catch (const std::exception& e) 
-        {
-            spdlog::error("Access token verification failed: {}", e.what());
-            co_return std::unexpected(AuthenticationError::Unknown);
-        }
-    }
-
-    asio::awaitable<bool> AuthManager::compareAccessToken(std::string address, std::string token) const
-    {
-        co_await utils::ensureOnStrand(_strand);
-
-        if(token.empty()) co_return false;
-        if(token.back() == '\r')token.pop_back(); // remove \r if present
-        if(_access_tokens.contains(address) == false)
-        {
-            co_return false;
-        }
-        if(token != _access_tokens.at(address))
-        {
-            co_return false;
-        }
-        co_return true;
-    }
-
-    asio::awaitable<std::string> AuthManager::generateRefreshToken(const std::string& address)
-    {
-        co_await utils::ensureOnStrand(_strand);
-
-        auto token = jwt::create()
-            .set_issuer("eth-auth-demo")
-            .set_type("JWS")
-            .set_subject(address)
-            .set_issued_at(std::chrono::system_clock::now())
-            .set_expires_at(std::chrono::system_clock::now() + std::chrono::days{7})
-            .sign(jwt::algorithm::hs256{_SECRET});
-
-        _refresh_tokens[address] = token;
-
-        co_return token;
-    }
-
-    asio::awaitable<std::expected<std::string, AuthenticationError>> AuthManager::verifyRefreshToken(std::string token) const
-    {
-        co_await utils::ensureOnStrand(_strand);
-
-        if(token.empty()) co_return std::unexpected(AuthenticationError::InvalidToken);
-        if(token.back() == '\r')token.pop_back(); // remove \r if present
-
-        try 
-        {
-            auto decoded = jwt::decode(token);
-
-            auto verifier = jwt::verify()
-                .allow_algorithm(jwt::algorithm::hs256{_SECRET})
-                .with_issuer("eth-auth-demo");
-
-            verifier.verify(decoded);
-
-            auto address = decoded.get_subject();
-
-            if(_refresh_tokens.contains(address) == false)
-            {
-                co_return std::unexpected(AuthenticationError::MissingToken);
-            }
-
-            if(token != _refresh_tokens.at(address))
-            {
-                co_return std::unexpected(AuthenticationError::InvalidToken);
-            }
-
-            co_return address;
-
-        } catch (const std::exception& e) 
-        {
-            spdlog::error("Refresh token verification failed: {}", e.what());
-            co_return std::unexpected(AuthenticationError::Unknown);
-        }
-    }
-}
-
-
 namespace dcn::parse
 {
     // Get Ethereum address from public key (last 20 bytes of Keccak256(pubkey))
-    std::string parseEthAddressFromPublicKey(const std::uint8_t* pubkey, std::size_t len) 
+    static evmc::address _parseEthAddressFromPublicKey(const std::uint8_t* pubkey, std::size_t len) 
     {
         uint8_t hash[Keccak256::HASH_LEN];
         // skip 0x04 prefix
         dcn::Keccak256::getHash(pubkey + 1, len - 1, hash);
-        return "0x" + evmc::hex(evmc::bytes_view{hash + 12, 20}); // last 20 bytes
+        evmc::address address;
+        // last 20 bytes
+        std::copy(hash + 12, hash + 32, address.bytes);
+        return address; 
     }
 
     std::string parseNonceFromMessage(const std::string& nonce_str) 
@@ -287,5 +72,224 @@ namespace dcn::parse
     {
         return REFRESH_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=Strict; Path=/refresh;";
     }
+}
 
+namespace dcn
+{
+    AuthManager::AuthManager(asio::io_context & io_context)
+    :   _strand(asio::make_strand(io_context)),
+        _rng(std::random_device{}()),
+        _dist(100000, 999999),
+        _SECRET{"SUPERSECRETKEY123"}
+    {
+
+    }
+
+    asio::awaitable<std::string> AuthManager::generateNonce(const evmc::address & address)
+    {
+        std::string nonce =  std::to_string(_dist(_rng));
+        
+        co_await utils::ensureOnStrand(_strand);
+
+        _nonces[address] = nonce;
+        co_return nonce;
+    }
+
+    asio::awaitable<bool> AuthManager::verifyNonce(const evmc::address & address, const std::string & nonce)
+    {
+        co_await utils::ensureOnStrand(_strand);
+
+        auto it = _nonces.find(address);
+        if (it == _nonces.end()) co_return false;
+
+        if (it->second != nonce)
+        {
+            // remove after failed verification (?)
+            _nonces.erase(it);
+            co_return false;
+        }
+
+        // remove nonce after successful verification
+        _nonces.erase(it);
+        co_return true;
+    }
+
+    asio::awaitable<bool> AuthManager::verifySignature(const evmc::address & address, const std::string& sig_hex, const std::string& message)
+    {
+        co_await utils::ensureOnStrand(_strand);
+        
+        // verify signature
+        const std::optional<evmc::bytes> signature_bytes_result = evmc::from_hex(sig_hex);
+        if(!signature_bytes_result) co_return false;
+        const auto & signature_bytes = *signature_bytes_result;
+
+        if (signature_bytes.size() != 65) co_return false;
+
+        uint8_t hash[Keccak256::HASH_LEN];
+        std::string prefix(1, '\x19');
+        prefix += "Ethereum Signed Message:\n" + std::to_string(message.size()) + message;
+        dcn::Keccak256::getHash((const uint8_t*)prefix.data(), prefix.size(), hash);
+
+        // Adjust v
+        int recid = signature_bytes[64];
+        if (recid >= 27) recid -= 27;
+
+        secp256k1_context* ctx = secp256k1_context_create(SECP256K1_CONTEXT_VERIFY);
+        secp256k1_ecdsa_recoverable_signature signature;
+
+        if (!secp256k1_ecdsa_recoverable_signature_parse_compact(ctx, &signature, signature_bytes.data(), recid)) {
+            secp256k1_context_destroy(ctx);
+            co_return false;
+        }
+
+        secp256k1_pubkey pubkey;
+        if (!secp256k1_ecdsa_recover(ctx, &pubkey, &signature, hash)) {
+            secp256k1_context_destroy(ctx);
+            co_return false;
+        }
+
+        uint8_t pubkey_serialized[65];
+        size_t pubkey_len = 65;
+        secp256k1_ec_pubkey_serialize(ctx, pubkey_serialized, &pubkey_len, &pubkey, SECP256K1_EC_UNCOMPRESSED);
+        secp256k1_context_destroy(ctx);
+
+        co_return address == parse::_parseEthAddressFromPublicKey(pubkey_serialized, pubkey_len);
+    }
+
+    asio::awaitable<std::string> AuthManager::generateAccessToken(const evmc::address & address)
+    {
+        co_await utils::ensureOnStrand(_strand);
+
+        auto token = jwt::create()
+            .set_issuer("eth-auth-demo")
+            .set_type("JWS")
+            .set_subject(evmc::hex(address))
+            .set_issued_at(std::chrono::system_clock::now())
+            .set_expires_at(std::chrono::system_clock::now() + std::chrono::minutes{10})
+            .sign(jwt::algorithm::hs256{_SECRET});
+
+        _access_tokens[address] = token;
+
+        co_return token;
+    }
+
+    asio::awaitable<std::expected<evmc::address, AuthenticationError>> AuthManager::verifyAccessToken(std::string token) const
+    {
+        co_await utils::ensureOnStrand(_strand);
+
+        if(token.empty()) co_return std::unexpected(AuthenticationError::InvalidToken);
+        if(token.back() == '\r')token.pop_back(); // remove \r if present
+
+        try 
+        {
+            auto decoded = jwt::decode(token);
+
+            auto verifier = jwt::verify()
+                .allow_algorithm(jwt::algorithm::hs256{_SECRET})
+                .with_issuer("eth-auth-demo");
+
+            verifier.verify(decoded);
+
+            auto address_result = evmc::from_hex<evmc::address>(decoded.get_subject());
+            if(!address_result)
+            {
+                co_return std::unexpected(AuthenticationError::InvalidToken);
+            }
+            const auto &  address = *address_result;
+
+            if(_access_tokens.contains(address) == false)
+            {
+                co_return std::unexpected(AuthenticationError::MissingToken);
+            }
+
+            if(token != _access_tokens.at(address))
+            {
+                co_return std::unexpected(AuthenticationError::InvalidToken);
+            }
+
+            co_return address;
+
+        } catch (const std::exception& e) 
+        {
+            spdlog::error("Access token verification failed: {}", e.what());
+            co_return std::unexpected(AuthenticationError::Unknown);
+        }
+    }
+
+    asio::awaitable<bool> AuthManager::compareAccessToken(const evmc::address & address, std::string token) const
+    {
+        co_await utils::ensureOnStrand(_strand);
+
+        if(token.empty()) co_return false;
+        if(token.back() == '\r')token.pop_back(); // remove \r if present
+        if(_access_tokens.contains(address) == false)
+        {
+            co_return false;
+        }
+        if(token != _access_tokens.at(address))
+        {
+            co_return false;
+        }
+        co_return true;
+    }
+
+    asio::awaitable<std::string> AuthManager::generateRefreshToken(const evmc::address & address)
+    {
+        co_await utils::ensureOnStrand(_strand);
+
+        auto token = jwt::create()
+            .set_issuer("eth-auth-demo")
+            .set_type("JWS")
+            .set_subject(evmc::hex(address))
+            .set_issued_at(std::chrono::system_clock::now())
+            .set_expires_at(std::chrono::system_clock::now() + std::chrono::days{7})
+            .sign(jwt::algorithm::hs256{_SECRET});
+
+        _refresh_tokens[address] = token;
+
+        co_return token;
+    }
+
+    asio::awaitable<std::expected<evmc::address, AuthenticationError>> AuthManager::verifyRefreshToken(std::string token) const
+    {
+        co_await utils::ensureOnStrand(_strand);
+
+        if(token.empty()) co_return std::unexpected(AuthenticationError::InvalidToken);
+        if(token.back() == '\r')token.pop_back(); // remove \r if present
+
+        try 
+        {
+            auto decoded = jwt::decode(token);
+
+            auto verifier = jwt::verify()
+                .allow_algorithm(jwt::algorithm::hs256{_SECRET})
+                .with_issuer("eth-auth-demo");
+
+            verifier.verify(decoded);
+
+            auto address_result = evmc::from_hex<evmc::address>(decoded.get_subject());
+            if(!address_result)
+            {
+                co_return std::unexpected(AuthenticationError::InvalidToken);
+            }
+            const auto &  address = *address_result;
+
+            if(_refresh_tokens.contains(address) == false)
+            {
+                co_return std::unexpected(AuthenticationError::MissingToken);
+            }
+
+            if(token != _refresh_tokens.at(address))
+            {
+                co_return std::unexpected(AuthenticationError::InvalidToken);
+            }
+
+            co_return address;
+
+        } catch (const std::exception& e) 
+        {
+            spdlog::error("Refresh token verification failed: {}", e.what());
+            co_return std::unexpected(AuthenticationError::Unknown);
+        }
+    }
 }

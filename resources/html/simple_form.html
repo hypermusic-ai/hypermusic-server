@@ -180,7 +180,7 @@
         <div class="column">
             <h2>Send Feature</h2>
             <label>Feature Name</label>
-            <input type="text" id="featureName" placeholder="melody" oninput="updateRequestPreview()">
+            <input type="text" id="POST_featureName" placeholder="melody" oninput="updateFeatureRequestPreview()">
             
             <div id="dimensionsContainer"></div>
 
@@ -191,25 +191,25 @@
 
             <label>Request body</label>
             <div class="request-row">
-                <div id="requestContainer" class="request-body"></div>
+                <div id="POST_featureRequestBody" class="request-body"></div>
             </div>
             <button onclick="sendStructuredFeature()">Send</button>
 
             <div class="response-row">
-                <div id="responseCode" class="response-code">-</div>
-                <div id="responseBody" class="response-body">Waiting...</div>
+                <div id="POST_featureResponseCode" class="response-code">-</div>
+                <div id="POST_featureResponseBody" class="response-body">Waiting...</div>
             </div>
         </div>
         <div class="column">
             <h2>Fetch Feature</h2>
             <label>Name</label>
-            <input id="getFeatureName" type="text" placeholder="pitch">
-            <label>Version (optional)</label>
-            <input id="getFeatureVersion" type="text" placeholder="0x0...">
+            <input id="GET_featureName" type="text" placeholder="pitch">
+            <label>Address (optional)</label>
+            <input id="GET_featureAddress" type="text" placeholder="0x0...">
             <button onclick="getFeature()">Fetch</button>
             <div class="response-row">
-                <div id="getFeatureCode" class="response-code">-</div>
-                <div id="getFeatureBody" class="response-body">Waiting...</div>
+                <div id="GET_featureResponseCode" class="response-code">-</div>
+                <div id="GET_featureResponseBody" class="response-body">Waiting...</div>
             </div>
         </div>
     </div>
@@ -220,50 +220,89 @@
         <div class="column">
             <h2>Send Transformation</h2>
             <label>Transformation Name</label>
-            <input type="text" id="transformationName" placeholder="add" oninput="updateTransformationPreview()">
+            <input type="text" id="POST_transformationName" placeholder="add" oninput="updateTransformationPreview()">
 
             <div class="column">
                 <label>Solidity Code</label>
                 <div class="request-body">function run(uint32 x, uint32 [] calldata args) view external returns (uint32){</div>
-                <textarea id="transformationCode" placeholder="return x + args[0];" oninput="updateTransformationPreview()"></textarea>
+                <textarea id="POST_transformationCode" placeholder="return x + args[0];" oninput="updateTransformationPreview()"></textarea>
                 <div class="request-body">}</div>
             </div>
 
             <label style="margin:1rem;" >Request body</label>
             <div class="request-row">
-                <div id="transformationRequestContainer" class="request-body"></div>
+                <div id="POST_transformationRequestBody" class="request-body"></div>
             </div>
             
             <button onclick="sendStructuredTransformation()">Send</button>
             
             <div class="response-row">
-                <div id="transformationCode" class="response-code">-</div>
-                <div id="transformationBody" class="response-body">Waiting...</div>
+                <div id="POST_transformationResponseCode" class="response-code">-</div>
+                <div id="POST_transformationResponseBody" class="response-body">Waiting...</div>
             </div>
         </div>
         <div class="column">
             <h2>Fetch Transformation</h2>
             <label>Name</label>
-            <input id="getTransformationName" type="text" placeholder="add">
-            <label>Version (optional)</label>
-            <input id="getTransformationVersion" type="text" placeholder="0x0...">
+            <input id="GET_transformationName" type="text" placeholder="add">
+            <label>Address (optional)</label>
+            <input id="GET_transformationAddress" type="text" placeholder="0x0...">
             <button onclick="getTransformation()">Fetch</button>
             <div class="response-row">
-                <div id="getTransformationCode" class="response-code">-</div>
-                <div id="getTransformationBody" class="response-body">Waiting...</div>
+                <div id="GET_transformationResponseCode" class="response-code">-</div>
+                <div id="GET_transformationResponseBody" class="response-body">Waiting...</div>
             </div>
         </div>
     </div>
 
     <script>
-        async function updateRequestPreview() {
+        async function updateFeatureRequestPreview() {
             const json = await constructStructuredFeature();
-            document.getElementById('requestContainer').textContent = json;
+            document.getElementById('POST_featureRequestBody').textContent = json;
+        }
+
+        function clearDimensions() {
+            const container = document.getElementById('dimensionsContainer');
+            container.innerHTML = '';
+            updateFeatureRequestPreview();
+        }
+
+        function addDimension() {
+            const container = document.getElementById('dimensionsContainer');
+            const index = container.children.length;
+            const dim = document.createElement('div');
+            dim.className = 'dimension';
+            dim.innerHTML = `
+                <fieldset style="border:1px solid #555;padding:1rem;margin-bottom:1rem;">
+                    <legend>Dimension ${index + 1}</legend>
+                    <label>Feature Name</label>
+                    <input type="text" class="dimension-feature-name" placeholder="pitch" oninput="updateFeatureRequestPreview()">
+                
+                    <div class="transformations"></div>
+                    <button type="button" onclick="addTransformation(this)">➕ Add transformation</button>
+                </fieldset>
+            `;
+            container.appendChild(dim);
+            updateFeatureRequestPreview();
+        }
+
+        function addTransformation(button) {
+            const container = button.previousElementSibling;
+            const t = document.createElement('div');
+            t.innerHTML = `
+                <hr>
+                <label>Transformation name</label>
+                <input type="text" class="transformation-name" placeholder="add" oninput="updateFeatureRequestPreview()">
+                <label>args (comma-separated)</label>
+                <input type="text" class="transformation-args" placeholder="..." oninput="updateFeatureRequestPreview()">
+            `;
+            container.appendChild(t);
+            updateFeatureRequestPreview();
         }
 
         async function constructStructuredFeature()
         {
-            const name = document.getElementById('featureName').value.trim();
+            const name = document.getElementById('POST_featureName').value.trim();
             const dimensions = [];
         
             document.querySelectorAll('.dimension').forEach(dimEl => {
@@ -285,85 +324,112 @@
         }
 
         async function sendStructuredFeature() {
-            const body = await constructStructuredFeature();
-            const codeDiv = document.getElementById('responseCode');
-            const bodyDiv = document.getElementById('responseBody');
+            const requestBody = await constructStructuredFeature();
         
+            const responseCodeDiv = document.getElementById('POST_featureResponseCode');
+            const responseBodyDiv = document.getElementById('POST_featureResponseBody');
+
             try {
                 const apiBase = window.location.origin;
                 const res = await fetchWithRefresh(`${apiBase}/feature`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body,
+                    body: requestBody,
                     credentials: 'include',
                 });
                 const text = await res.text();
-                codeDiv.textContent = res.status;
-                bodyDiv.textContent = formatJSON(text);
+                responseCodeDiv.textContent = res.status;
+                responseBodyDiv.textContent = formatJSON(text);
             } catch (error) {
-                codeDiv.textContent = 'Error';
-                bodyDiv.textContent = error.message;
+                responseCodeDiv.textContent = 'Error';
+                responseBodyDiv.textContent = error.message;
             }
         }
 
-        function clearDimensions() {
-            const container = document.getElementById('dimensionsContainer');
-            container.innerHTML = '';
-            updateRequestPreview();
+
+        async function getFeature() {
+            const name = document.getElementById('GET_featureName').value.trim();
+            const address = document.getElementById('GET_featureAddress').value.trim();
+
+            const responseCodeDiv = document.getElementById('GET_featureResponseCode');
+            const responseBodyDiv = document.getElementById('GET_featureResponseBody');
+            if (!name) {
+                alert("Feature name is required.");
+                return;
+            }
+            const apiBase = window.location.origin;
+            const url = `${apiBase}/feature/${name}${address ? `/${address}` : ''}`;
+            try {
+                const res = await fetch(url);
+                const text = await res.text();
+                responseCodeDiv.textContent = res.status;
+                responseBodyDiv.textContent = formatJSON(text);
+            } catch (error) {
+                responseCodeDiv.textContent = 'Error';
+                responseBodyDiv.textContent = error.message;
+            }
         }
 
-        function addDimension() {
-            const container = document.getElementById('dimensionsContainer');
-            const index = container.children.length;
-            const dim = document.createElement('div');
-            dim.className = 'dimension';
-            dim.innerHTML = `
-                <fieldset style="border:1px solid #555;padding:1rem;margin-bottom:1rem;">
-                    <legend>Dimension ${index + 1}</legend>
-                    <label>Feature Name</label>
-                    <input type="text" class="dimension-feature-name" placeholder="pitch" oninput="updateRequestPreview()">
-                
-                    <div class="transformations"></div>
-                    <button type="button" onclick="addTransformation(this)">➕ Add transformation</button>
-                </fieldset>
-            `;
-            container.appendChild(dim);
-            updateRequestPreview();
+        function updateTransformationPreview() {
+            const name = document.getElementById('POST_transformationName').value.trim();
+            const sol_src = document.getElementById('POST_transformationCode').value.trim();
+            const obj = { name, sol_src };
+            document.getElementById('POST_transformationRequestBody').textContent = JSON.stringify(obj, null, 2);
         }
 
-        function addTransformation(button) {
-            const container = button.previousElementSibling;
-            const t = document.createElement('div');
-            t.innerHTML = `
-                <hr>
-                <label>Transformation name</label>
-                <input type="text" class="transformation-name" placeholder="add" oninput="updateRequestPreview()">
-                <label>args (comma-separated)</label>
-                <input type="text" class="transformation-args" placeholder="..." oninput="updateRequestPreview()">
-            `;
-            container.appendChild(t);
-            updateRequestPreview();
-        }
+        async function sendStructuredTransformation() {
+            const name = document.getElementById('POST_transformationName').value.trim();
+            const sol_src = document.getElementById('POST_transformationCode').value.trim();
 
-        async function sendFeature() {
-            const json = document.getElementById('featureData').value;
-            const codeDiv = document.getElementById('responseCode');
-            const bodyDiv = document.getElementById('responseBody');
+            const responseCodeDiv = document.getElementById('POST_transformationResponseCode');
+            const responseBodyDiv = document.getElementById('POST_transformationResponseBody');
+            
+            if (!name) {
+                alert("Transformation name is required.");
+                return;
+            }
+
             try {
                 const apiBase = window.location.origin;
-                const res = await fetchWithRefresh(`${apiBase}/feature`, {
+                const res = await fetchWithRefresh(`${apiBase}/transformation`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: json,
+                    body: JSON.stringify({ name, sol_src }),
+                    credentials: 'include'
                 });
                 const text = await res.text();
-                codeDiv.textContent = res.status;
-                bodyDiv.textContent = formatJSON(text);
+                responseCodeDiv.textContent = res.status;
+                responseBodyDiv.textContent = formatJSON(text);
             } catch (error) {
-                codeDiv.textContent = 'Error';
-                bodyDiv.textContent = error.message;
+                responseCodeDiv.textContent = 'Error';
+                responseBodyDiv.textContent = error.message;
+            }
+        }
+
+        async function getTransformation() {
+            const name = document.getElementById('GET_transformationName').value.trim();
+            const address = document.getElementById('GET_transformationAddress').value.trim();
+
+            const responseCodeDiv = document.getElementById('GET_transformationResponseCode');
+            const responseBodyDiv = document.getElementById('GET_transformationResponseBody');
+
+            if (!name) {
+                alert("Transformation name is required.");
+                return;
+            }
+
+            const apiBase = window.location.origin;
+            const url = `${apiBase}/transformation/${name}${address ? `/${address}` : ''}`;
+            try {
+                const res = await fetch(url);
+                const text = await res.text();
+                responseCodeDiv.textContent = res.status;
+                responseBodyDiv.textContent = formatJSON(text);
+            } catch (error) {
+                responseCodeDiv.textContent = 'Error';
+                responseBodyDiv.textContent = error.message;
             }
         }
 
@@ -380,104 +446,6 @@
             }
             const apiBase = window.location.origin;
             const url = `${apiBase}/execute/${name}/${N}/${runningInstances}`;
-            try {
-                const res = await fetch(url);
-                const text = await res.text();
-                codeDiv.textContent = res.status;
-                bodyDiv.textContent = formatJSON(text);
-            } catch (error) {
-                codeDiv.textContent = 'Error';
-                bodyDiv.textContent = error.message;
-            }
-        }
-
-        async function getFeature() {
-            const name = document.getElementById('getFeatureName').value.trim();
-            const version = document.getElementById('getFeatureVersion').value.trim();
-            const codeDiv = document.getElementById('getFeatureCode');
-            const bodyDiv = document.getElementById('getFeatureBody');
-            if (!name) {
-                alert("Feature name is required.");
-                return;
-            }
-            const apiBase = window.location.origin;
-            const url = `${apiBase}/feature/${name}${version ? `/${version}` : ''}`;
-            try {
-                const res = await fetch(url);
-                const text = await res.text();
-                codeDiv.textContent = res.status;
-                bodyDiv.textContent = formatJSON(text);
-            } catch (error) {
-                codeDiv.textContent = 'Error';
-                bodyDiv.textContent = error.message;
-            }
-        }
-
-        function updateTransformationPreview() {
-            const name = document.getElementById('transformationName').value.trim();
-            const sol_src = document.getElementById('transformationCode').value.trim();
-            const obj = { name, sol_src };
-            document.getElementById('transformationRequestContainer').textContent = JSON.stringify(obj, null, 2);
-        }
-
-        async function sendStructuredTransformation() {
-            const name = document.getElementById('transformationName').value.trim();
-            const sol_src = document.getElementById('transformationCode').value.trim();
-            const codeDiv = document.getElementById('transformationCode');
-            const bodyDiv = document.getElementById('transformationBody');
-        
-            try {
-                const apiBase = window.location.origin;
-                const res = await fetchWithRefresh(`${apiBase}/transformation`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ name, sol_src }),
-                    credentials: 'include'
-                });
-                const text = await res.text();
-                document.getElementById('transformationCode').textContent = res.status;
-                document.getElementById('transformationBody').textContent = formatJSON(text);
-            } catch (error) {
-                codeDiv.textContent = 'Error';
-                bodyDiv.textContent = error.message;
-            }
-        }
-
-        async function sendTransformation() {
-            const json = document.getElementById('transformationData').value;
-            const codeDiv = document.getElementById('transformationCode');
-            const bodyDiv = document.getElementById('transformationBody');
-            try {
-                const apiBase = window.location.origin;
-                const res = await fetchWithRefresh(`${apiBase}/transformation`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: json,
-                });
-                const text = await res.text();
-                codeDiv.textContent = res.status;
-                bodyDiv.textContent = formatJSON(text);
-            } catch (error) {
-                codeDiv.textContent = 'Error';
-                bodyDiv.textContent = error.message;
-            }
-        }
-
-        async function getTransformation() {
-            const name = document.getElementById('getTransformationName').value.trim();
-            const version = document.getElementById('getTransformationVersion').value.trim();
-            const codeDiv = document.getElementById('getTransformationCode');
-            const bodyDiv = document.getElementById('getTransformationBody');
-            if (!name) {
-                alert("Transformation name is required.");
-                return;
-            }
-            const apiBase = window.location.origin;
-            const url = `${apiBase}/transformation/${name}${version ? `/${version}` : ''}`;
             try {
                 const res = await fetch(url);
                 const text = await res.text();
@@ -563,7 +531,6 @@
             }
             return res;
         }
-
 
         loginButton.onclick = loginWithMetaMask;
 
