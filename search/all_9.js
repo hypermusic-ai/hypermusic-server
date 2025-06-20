@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['interface_0',['interface',['../evm_8hpp.html#a8f8bdbe5685d2ab60ca313c61017b92a',1,'interface:&#160;evm.hpp'],['../evm__formatter_8hpp.html#a8f8bdbe5685d2ab60ca313c61017b92a',1,'interface:&#160;evm_formatter.hpp'],['../evm__storage_8hpp.html#a8f8bdbe5685d2ab60ca313c61017b92a',1,'interface:&#160;evm_storage.hpp']]],
+  ['interface_0',['interface',['../auth_8hpp.html#a8f8bdbe5685d2ab60ca313c61017b92a',1,'interface:&#160;auth.hpp'],['../evm_8hpp.html#a8f8bdbe5685d2ab60ca313c61017b92a',1,'interface:&#160;evm.hpp'],['../evm__formatter_8hpp.html#a8f8bdbe5685d2ab60ca313c61017b92a',1,'interface:&#160;evm_formatter.hpp'],['../evm__storage_8hpp.html#a8f8bdbe5685d2ab60ca313c61017b92a',1,'interface:&#160;evm_storage.hpp'],['../registry_8hpp.html#a8f8bdbe5685d2ab60ca313c61017b92a',1,'interface:&#160;registry.hpp']]],
   ['internalservererror_1',['InternalServerError',['../namespacedcn_1_1http.html#a85103dcaf4539b1939d3a039e2f7e4ffaecbf01325f1c744e9d7bb586ac2eb5ed',1,'dcn::http']]],
   ['invalidaddress_2',['InvalidAddress',['../namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10a66196dd9678aef4aaad947e7181049c0',1,'dcn']]],
   ['invalidcookie_3',['InvalidCookie',['../namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10af5a5a49c005613277acde64dadbaf194',1,'dcn']]],

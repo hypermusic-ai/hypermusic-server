@@ -30,6 +30,7 @@ var hierarchy =
       [ "dcn::http::Request", "classdcn_1_1http_1_1Request.html", null ],
       [ "dcn::http::Response", "classdcn_1_1http_1_1Response.html", null ]
     ] ],
+    [ "dcn::Registry::Node< T >", "structdcn_1_1Registry_1_1Node.html", null ],
     [ "dcn::Registry", "classdcn_1_1Registry.html", null ],
     [ "dcn::RouteArg", "classdcn_1_1RouteArg.html", null ],
     [ "dcn::RouteArgDef", "structdcn_1_1RouteArgDef.html", null ],
