@@ -162,11 +162,19 @@
             <h2>Execute Contract</h2>
             <label>Contract name</label>
             <input id="executeName" type="text" placeholder="pitch">
+    
             <label>Sample count</label>
             <input id="executeN" type="text" placeholder="5">
-            <label>Running instances</label>
-            <input id="executeRunningInstances" type="text" placeholder="[(0;1),(0;0),(1;2)]">
+    
+            <label>Running Instances</label>
+            <div id="instanceEditor"></div>
+            <button onclick="fillInstancesFromFeature()">Fetch running instances</button>
+
+            <div class="request-row">
+                <div id="executeRunningInstances" class="request-body"></div>
+            </div>
             <button onclick="execute()">Execute</button>
+    
             <div class="response-row">
                 <div id="executeCode" class="response-code">-</div>
                 <div id="executeBody" class="response-body">Waiting...</div>
@@ -331,7 +339,7 @@
 
             try {
                 const apiBase = window.location.origin;
-                const res = await fetchWithRefresh(`${apiBase}/feature`, {
+                const res = await requestWithRefresh(`${apiBase}/feature`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: requestBody,
@@ -391,7 +399,7 @@
 
             try {
                 const apiBase = window.location.origin;
-                const res = await fetchWithRefresh(`${apiBase}/transformation`, {
+                const res = await requestWithRefresh(`${apiBase}/transformation`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -433,10 +441,107 @@
             }
         }
 
+        function addInstance(name, scalar) {
+            const editor = document.getElementById('instanceEditor');
+            const div = document.createElement('div');
+            div.classList.add('instance-row');
+            div.style.display = 'flex';
+            div.style.gap = '0.5rem';
+            div.style.marginBottom = '0.5rem';
+                
+            div.innerHTML = `
+                <div style="display: flex; align-items: center; width: 50%;">
+                    <label style="word-break: break-word; white-space: normal;">
+                        ${scalar ? `<strong>${name}</strong>` : name}
+                    </label>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <label>start point</label>
+                    <input type="number" class="instance-start-point" placeholder="0" oninput="updateInstanceInput()" style="width: 80px;">
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <label>transform shift</label>
+                    <input type="number" class="instance-transform-shift" placeholder="0" oninput="updateInstanceInput()" style="width: 80px;">
+                </div>
+            `;
+                
+            editor.appendChild(div);
+            updateInstanceInput();
+        }
+
+        function clearInstances() {
+            document.getElementById('instanceEditor').innerHTML = '';
+            updateInstanceInput();
+        }
+
+        function updateInstanceInput() {
+            const instances = [];
+            document.querySelectorAll('.instance-row').forEach(row => {
+                const a = row.querySelector('input.instance-start-point').value;
+                const b = row.querySelector('input.instance-transform-shift').value;
+                if (a !== '' && b !== '') {
+                    instances.push(`(${a};${b})`);
+                }
+            });
+            if(instances.length > 0){
+                document.getElementById('executeRunningInstances').textContent = `[${instances.join(',')}]`;
+            }else 
+            {
+                document.getElementById('executeRunningInstances').textContent = '';
+            }
+        }
+
+        async function fetchFeatureDepthFirst(rootFeatureName) 
+        {
+            const stack = [{ path: ``, name: rootFeatureName }];
+            const compositeList = [];
+            const apiBase = window.location.origin;
+
+            while (stack.length > 0) {
+                const { path, name } = stack.pop();
+            
+                try {
+                    const res = await fetch(`${apiBase}/feature/${name}`);
+                    if (!res.ok) throw new Error(`Failed to fetch ${name}`);
+                    const feature = await res.json();
+                
+                    compositeList.push({ name: `${path}/${feature.name}`, scalar: feature.dimensions.length === 0 });
+                
+                    // Push children in reverse order to preserve left-to-right traversal
+                    for (let i = feature.dimensions.length - 1; i >= 0; i--) {
+                        const dim = feature.dimensions[i];
+                        stack.push({ path: `${path}/${feature.name}`, name: dim.feature_name });
+                    }
+                } catch (e) {
+                    console.error(`Error fetching ${name}:`, e);
+                }
+            }
+        
+            return compositeList;
+        }
+
+        async function fillInstancesFromFeature() {
+            const rootName = document.getElementById('executeName').value.trim();
+            if (!rootName) {
+                alert("Please provide a feature name.");
+                return;
+            }
+        
+            // Clear previous instances
+            clearInstances();
+
+            const features = await fetchFeatureDepthFirst(rootName);
+            features.forEach(({name, scalar}, index) => {
+                addInstance(name, scalar);
+            });
+        
+            updateInstanceInput();
+        }
+
         async function execute() {
             const name = document.getElementById('executeName').value.trim();
             const N = document.getElementById('executeN').value.trim();
-            const runningInstances = document.getElementById('executeRunningInstances').value.trim();
+            const runningInstances = document.getElementById('executeRunningInstances').textContent.trim();
 
             const codeDiv = document.getElementById('executeCode');
             const bodyDiv = document.getElementById('executeBody');
@@ -445,9 +550,17 @@
                 return;
             }
             const apiBase = window.location.origin;
-            const url = `${apiBase}/execute/${name}/${N}/${runningInstances}`;
+            const url = runningInstances === '' ? `${apiBase}/execute/${name}/${N}` : `${apiBase}/execute/${name}/${N}/${runningInstances}`;
             try {
-                const res = await fetch(url);
+                const res = await requestWithRefresh(url,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                }
+                );
                 const text = await res.text();
                 codeDiv.textContent = res.status;
                 bodyDiv.textContent = formatJSON(text);
@@ -509,7 +622,7 @@
             }
         }
 
-        async function fetchWithRefresh(url, options = {}) {
+        async function requestWithRefresh(url, options = {}) {
             // always include cookies
             options.credentials = 'include';
 
