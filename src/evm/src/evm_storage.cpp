@@ -108,8 +108,6 @@ namespace dcn
 
         if (msg.kind == EVMC_CALL || msg.kind == EVMC_DELEGATECALL || msg.kind == EVMC_CALLCODE) 
         {
-            spdlog::info(std::format("EVMC call from {}, to {}", actual_sender, msg.recipient));
-
             auto it = _accounts.find(to_key(msg.recipient));
 
             if (it == _accounts.end())
@@ -130,7 +128,6 @@ namespace dcn
             evmc::Result result = _vm.execute(*this, _revision, patched_msg, code.data(), code.size());
             _sender_stack.pop();
 
-            spdlog::info(std::format("call from {}, to {} ended", patched_msg.sender, patched_msg.recipient));
             return result;
         }
         else if (msg.kind == EVMC_CREATE || msg.kind == EVMC_CREATE2)

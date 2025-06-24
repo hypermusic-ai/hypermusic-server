@@ -58,8 +58,9 @@ namespace dcn
     asio::awaitable<void> Server::readData(asio::ip::tcp::socket & sock, std::chrono::steady_clock::time_point & deadline)
     {
         std::size_t bytes_transferred = 0;
-        char read_buffer[4196];
-        std::string_view read_message;
+        std::array<char, 8192> read_buffer;
+
+        std::string full_request_data;
 
         http::Request request;
         http::Response response;
@@ -79,13 +80,54 @@ namespace dcn
 
             if(bytes_transferred == 0)co_return;
             
-            read_message = std::string_view(read_buffer, bytes_transferred);
+            full_request_data.append(read_buffer.data(), bytes_transferred);
 
-            spdlog::debug("Received bytes [{}]", bytes_transferred);
+            // Try to find end of headers
+            std::size_t header_end_pos = full_request_data.find("\r\n\r\n");
+            if (header_end_pos == std::string::npos)
+                continue; // keep reading until full headers are received
 
-            request = parse::parseRequestFromString(std::string(read_message));
+            // Parse headers first
+            request = parse::parseRequestFromString(full_request_data);
             const http::Request & const_request = request;
-            spdlog::debug("Received request:\n{}", std::format("{}", request));
+
+            // Determine expected body size
+            std::size_t content_length = 0;
+            const auto content_len_header =  request.getHeader(http::Header::ContentLength);
+            if(content_len_header.size() == 1)
+            {
+                try
+                {
+                    content_length = std::stoul(content_len_header.at(0));
+                }
+                catch(...)
+                {
+                    spdlog::error("Invalid content length header");
+                    co_return;
+                }
+
+                std::size_t actual_body_start = header_end_pos + 4;
+                std::size_t current_body_size = full_request_data.size() - actual_body_start;
+
+                // Read the rest of the body if needed
+                while (current_body_size < content_length)
+                {
+                    bytes_transferred = co_await sock.async_read_some(asio::buffer(read_buffer), asio::use_awaitable);
+                    if (bytes_transferred == 0)
+                    {
+                        spdlog::warn("client disconected while reading body");
+                        co_return;
+                    };
+
+                    full_request_data.append(read_buffer.data(), bytes_transferred);
+                    current_body_size += bytes_transferred;
+                }
+
+                // Update the request body after full body is read
+                request.setBody(full_request_data.substr(actual_body_start, content_length));
+            }
+
+            spdlog::debug("Received request:\n{}", full_request_data);
 
             auto [handler, route_args] = _router.findRoute(request);
 
@@ -118,6 +160,8 @@ namespace dcn
             // conection should close
             const auto connection_header = response.getHeader(http::Header::Connection);
             if(std::ranges::find(connection_header, "close") != connection_header.end())co_return;
+
+            full_request_data.clear(); // prepare for next request on keep-alive
         }
     }
 

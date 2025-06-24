@@ -166,6 +166,19 @@ namespace dcn
              */
             asio::awaitable<std::optional<Condition>> getCondition(const std::string& name, const evmc::address & address) const;
 
+            /**
+             * @brief Recursively checks if all subfeatures exist in the registry
+             *
+             * @param feature The feature to check
+             *
+             * @return true if all subfeatures exist, false otherwise
+             *
+             * This function works by iterating over all dimensions of the feature
+             * and recursively checking if each subfeature exists in the registry.
+             * If at any point any subfeature does not exist, the function returns false.
+             */
+            asio::awaitable<bool> checkIfSubFeaturesExist(const Feature & feature) const;
+
         protected:
 
             /**
@@ -239,19 +252,6 @@ namespace dcn
              * is empty and false otherwise.
              */
             asio::awaitable<bool> isConditionBucketEmpty(const std::string& name) const;
-
-            /**
-             * @brief Recursively checks if all subfeatures exist in the registry
-             *
-             * @param feature The feature to check
-             *
-             * @return true if all subfeatures exist, false otherwise
-             *
-             * This function works by iterating over all dimensions of the feature
-             * and recursively checking if each subfeature exists in the registry.
-             * If at any point any subfeature does not exist, the function returns false.
-             */
-            asio::awaitable<bool> checkIfSubFeaturesExist(const Feature & feature) const;
         
         protected:
             template<class T>

@@ -4,7 +4,6 @@ namespace dcn::http
 {
     MessageBase::MessageBase()
     {
-        setHeader(Header::ContentLength, "0");
     }
 
     void MessageBase::setVersion(const std::string & version) 
@@ -15,8 +14,6 @@ namespace dcn::http
     void MessageBase::setBody(const std::string & body)
     {
         _body = body;
-
-        setHeader(Header::ContentLength, std::to_string(_body.size()));
     }
 
     void MessageBase::addHeader(Header header, const std::string & value)
@@ -121,20 +118,15 @@ namespace dcn::parse
         while (std::getline(request_stream, header_buffer) && header_buffer != "\r") 
         {   
             const auto it = header_buffer.find(":");
+            const auto it_end = header_buffer.find("\r");
 
             if (it != std::string::npos) 
             {
                 header_key = header_buffer.substr(0, it);
-                header_value = header_buffer.substr(it + 1);
-            }
-            else
-            {
-                header_key = header_buffer;
-                header_value = "";
-            }
-            
-            http_request.addHeader(parse::parseHeaderFromString(header_key), header_value);
+                header_value = header_buffer.substr(it + 2, it_end - it - 2);
+                http_request.addHeader(parse::parseHeaderFromString(header_key), header_value);
 
+            }
         }
         std::string body_line;
         std::string body_buffer;

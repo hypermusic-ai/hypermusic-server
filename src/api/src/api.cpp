@@ -164,8 +164,9 @@ namespace dcn
         // Step 5: Padding to 32-byte boundary
         size_t padding = (32 - (feature_name.size() % 32)) % 32;
         input_data.insert(input_data.end(), padding, 0);
-        const auto exec_result = co_await evm.execute(evm.getRegistryAddress(), evm.getRegistryAddress(), input_data, 1'000'000, 0);
+        
         co_await evm.setGas(evm.getRegistryAddress(), 1000000000);
+        const auto exec_result = co_await evm.execute(evm.getRegistryAddress(), evm.getRegistryAddress(), input_data, 1000000000, 0);
 
         // check execution status
         if(!exec_result)
@@ -236,6 +237,15 @@ namespace dcn
 
         const Feature & feature = *feature_res;
 
+        if(co_await registry.checkIfSubFeaturesExist(feature) == false)
+        {
+            response.setHeader(http::Header::Connection, "close");
+            response.setHeader(http::Header::ContentType, "text/plain");
+            response.setCode(http::Code::BadRequest);
+            response.setBody("Cannot find subfeatures for feature");
+            co_return std::move(response);
+        }
+
         // create file with sol code
         // compile
         // deploy
@@ -273,13 +283,14 @@ namespace dcn
             co_return std::move(response);
         }
         
-        co_await evm.addAccount(address, 1000000); //TODO
+        co_await evm.addAccount(address, 1000000000);
+        co_await evm.setGas(address, 1000000000);
         
         auto deploy_res = co_await evm.deploy(
             out_dir / (feature.name() + ".bin"), 
             address, 
     encodeAsArg(evm.getRegistryAddress()),
-            1000000, 
+            1000000000, 
             0);
 
         if(!deploy_res)
@@ -440,8 +451,9 @@ namespace dcn
         // Step 5: Padding to 32-byte boundary
         size_t padding = (32 - (transformation_name.size() % 32)) % 32;
         input_data.insert(input_data.end(), padding, 0);
-        const auto exec_result = co_await evm.execute(evm.getRegistryAddress(), evm.getRegistryAddress(), input_data, 1'000'000, 0);
+
         co_await evm.setGas(evm.getRegistryAddress(), 1000000000);
+        const auto exec_result = co_await evm.execute(evm.getRegistryAddress(), evm.getRegistryAddress(), input_data, 1000000000, 0);
 
         // check execution status
         if(!exec_result)
@@ -554,6 +566,9 @@ namespace dcn
             co_return std::move(response);
         }
 
+        co_await evm.addAccount(address, 1000000000);
+        co_await evm.setGas(address, 1000000000);
+        
         auto deploy_res = co_await evm.deploy(  
             out_dir / (transformation.name() + ".bin"), 
             address, 
@@ -737,8 +752,9 @@ namespace dcn
         input_data.insert(input_data.end(), tuple_vec_bytes.begin(), tuple_vec_bytes.end());
 
         // execute call to runner
-        const auto exec_result = co_await evm.execute(address, evm.getRunnerAddress(), input_data, 1'000'000, 0);
         co_await evm.setGas(address, 1000000000);
+        co_await evm.setGas(evm.getRunnerAddress(), 1000000000);
+        const auto exec_result = co_await evm.execute(address, evm.getRunnerAddress(), input_data, 1000000000, 0);
 
         // check execution status
         if(!exec_result)
