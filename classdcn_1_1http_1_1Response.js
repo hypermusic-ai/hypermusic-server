@@ -7,5 +7,5 @@ var classdcn_1_1http_1_1Response =
     [ "getCode", "classdcn_1_1http_1_1Response.html#ac07849cba6a6e9fb69eb8bd884cddfc1", null ],
     [ "operator=", "classdcn_1_1http_1_1Response.html#a9c0e14afb104fa413ff6b10a72adb635", null ],
     [ "operator=", "classdcn_1_1http_1_1Response.html#accff148841a960ee9719e9568c062587", null ],
-    [ "setCode", "classdcn_1_1http_1_1Response.html#abf41dfcd501a317bb429b9c51fb4749a", null ]
+    [ "setCode", "classdcn_1_1http_1_1Response.html#a0fe87dea2752c355afc49c0bd01d2bfd", null ]
 ];

@@ -8,6 +8,6 @@ var classdcn_1_1http_1_1Request =
     [ "getPath", "classdcn_1_1http_1_1Request.html#a6b4f9fa67060b202cff5b41f152b8adb", null ],
     [ "operator=", "classdcn_1_1http_1_1Request.html#ac5cabe47c40d06cb286dd4e7182c31ac", null ],
     [ "operator=", "classdcn_1_1http_1_1Request.html#a4876153e6441a4abaae3c2ec6b68567f", null ],
-    [ "setMethod", "classdcn_1_1http_1_1Request.html#a3ae3e92cd630ea659c33ad927c2bc013", null ],
-    [ "setPath", "classdcn_1_1http_1_1Request.html#a28f423e67c4f40cb4f1184848b61bce0", null ]
+    [ "setMethod", "classdcn_1_1http_1_1Request.html#ada31d24842b2843fcac537b4ad72d84c", null ],
+    [ "setPath", "classdcn_1_1http_1_1Request.html#aff1c06b8877b822c6a5e9d121dfea751", null ]
 ];

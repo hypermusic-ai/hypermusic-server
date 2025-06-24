@@ -8,7 +8,7 @@ var searchData=
   ['addaccount_5',['addAccount',['../classdcn_1_1EVM.html#a8fe107db388819eecb1da76d50877051',1,'dcn::EVM']]],
   ['addcondition_6',['addCondition',['../classdcn_1_1Registry.html#aaa7f010277bc87111c8f834a35fde5e2',1,'dcn::Registry']]],
   ['addfeature_7',['addFeature',['../classdcn_1_1Registry.html#a478ddf8bf67c139c54624b53d5c292d8',1,'dcn::Registry']]],
-  ['addheader_8',['addHeader',['../classdcn_1_1http_1_1MessageBase.html#aebe91d045f039a44eeeb961822d5cde3',1,'dcn::http::MessageBase']]],
+  ['addheader_8',['addHeader',['../classdcn_1_1http_1_1MessageBase.html#a025d7be859bf9aa933c43a13ef3c92e8',1,'dcn::http::MessageBase']]],
   ['addroute_9',['addroute',['../classdcn_1_1Server.html#a8aafb367d97cbc77bdb45b702cc2bc49',1,'dcn::Server::addRoute(RouteKey route, F &amp;&amp;handler, Args &amp;&amp;... binded_args)'],['../classdcn_1_1Server.html#a6dcab3063baccd1b974060147bafafba',1,'dcn::Server::addRoute(RouteKey route, F &amp;&amp;handler)'],['../classdcn_1_1Router.html#a33466b15764d179f513e6f58b54a4bc3',1,'dcn::Router::addRoute()']]],
   ['addtransformation_10',['addTransformation',['../classdcn_1_1Registry.html#a7c9d78625477a64009effd9bdc73dc91',1,'dcn::Registry']]],
   ['authmanager_11',['authmanager',['../classdcn_1_1AuthManager.html#a47f0c0c52834c7e3c591a3f68ba43307',1,'dcn::AuthManager::AuthManager()=delete'],['../classdcn_1_1AuthManager.html#a9d2d859fc6285ae965928b127b83e5d5',1,'dcn::AuthManager::AuthManager(asio::io_context &amp;io_context)'],['../classdcn_1_1AuthManager.html#af967674006d58f31cdb5e601c4a135ed',1,'dcn::AuthManager::AuthManager(const AuthManager &amp;)=delete']]]
