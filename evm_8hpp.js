@@ -6,6 +6,7 @@ var evm_8hpp =
     [ "decodeReturnedValue", "evm_8hpp.html#a77b68c37735a1532b12d40612333809a", null ],
     [ "decodeReturnedValue", "evm_8hpp.html#a1f5d99610a41e147530e11c05241223b", null ],
     [ "decodeReturnedValue", "evm_8hpp.html#aec52f9914c4a39edb42b7a6cc6c64fa6", null ],
+    [ "decodeReturnedValue", "evm_8hpp.html#af1570db15dff0dcfddd264d6e5edcb10", null ],
     [ "encodeAsArg", "evm_8hpp.html#a248f7b2c2df597f618bef65e0b852582", null ],
     [ "encodeAsArg< evmc::address >", "evm_8hpp.html#ad23d471ec12493720b22eb15cc27e452", null ],
     [ "encodeAsArg< std::string >", "evm_8hpp.html#a79ca18ef136c91bb9fb1f13df4c08a56", null ],

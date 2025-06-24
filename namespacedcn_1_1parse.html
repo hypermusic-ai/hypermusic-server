@@ -133,6 +133,11 @@ Functions</h2></td></tr>
 <tr class="separator:aaaab59f195cf5a80312a63c35376345a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49818e5982a5512c6341a5d666ef6430" id="r_a49818e5982a5512c6341a5d666ef6430"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1parse.html#a49818e5982a5512c6341a5d666ef6430">parseRefreshTokenToCookieHeader</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">token_str</a>)</td></tr>
 <tr class="separator:a49818e5982a5512c6341a5d666ef6430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9e3d066ecde2666aed3f2325a4bc889" id="r_ac9e3d066ecde2666aed3f2325a4bc889"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1parse.html#ac9e3d066ecde2666aed3f2325a4bc889">parseToJson</a> (std::vector&lt; <a class="el" href="structdcn_1_1Samples.html">Samples</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">samples</a>, <a class="el" href="structdcn_1_1parse_1_1use__json__t.html">use_json_t</a>)</td></tr>
+<tr class="separator:ac9e3d066ecde2666aed3f2325a4bc889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af69d4571c79b427d66a0a9022a3741de" id="r_af69d4571c79b427d66a0a9022a3741de"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::vector&lt; <a class="el" href="structdcn_1_1Samples.html">Samples</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1parse.html#af69d4571c79b427d66a0a9022a3741de">parseFromJson</a> (<a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> <a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a>, <a class="el" href="structdcn_1_1parse_1_1use__json__t.html">use_json_t</a>)</td></tr>
+<tr class="memdesc:af69d4571c79b427d66a0a9022a3741de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a JSON object to a TransformationDef object.  <br /></td></tr>
+<tr class="separator:af69d4571c79b427d66a0a9022a3741de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23b7828fd641751e92aefd8569c06b88" id="r_a23b7828fd641751e92aefd8569c06b88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9">http::Header</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1parse.html#a23b7828fd641751e92aefd8569c06b88">parseHeaderFromString</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">header_str</a>)</td></tr>
 <tr class="memdesc:a23b7828fd641751e92aefd8569c06b88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a header string to a Header enum.  <br /></td></tr>
 <tr class="separator:a23b7828fd641751e92aefd8569c06b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -262,8 +267,47 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="af69d4571c79b427d66a0a9022a3741de" name="af69d4571c79b427d66a0a9022a3741de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af69d4571c79b427d66a0a9022a3741de">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[1/13]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::vector&lt; <a class="el" href="structdcn_1_1Samples.html">Samples</a> &gt; &gt; dcn::parse::parseFromJson </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a>&#160;</td>
+          <td class="paramname"><em>json</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structdcn_1_1parse_1_1use__json__t.html">use_json_t</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parses a JSON object to a TransformationDef object. </p>
+<p>Parses a JSON object to a Feature object.</p>
+<p>Parses a JSON object to a Dimension object.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>The JSON object to parse. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An optional TransformationDef object. If parsing fails, returns std::nullopt. </dd></dl>
+
+</div>
+</div>
 <a id="a92366afb09ff331dbc735c291cc77d2a" name="a92366afb09ff331dbc735c291cc77d2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92366afb09ff331dbc735c291cc77d2a">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[1/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a92366afb09ff331dbc735c291cc77d2a">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[2/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,7 +337,7 @@ template&lt;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b8
 </div>
 </div>
 <a id="add6b42aa079f3540239ec25c22500efc" name="add6b42aa079f3540239ec25c22500efc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add6b42aa079f3540239ec25c22500efc">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[2/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#add6b42aa079f3540239ec25c22500efc">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[3/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -332,7 +376,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a4c6dedd06ee0a0eda7a20e4346e0a786" name="a4c6dedd06ee0a0eda7a20e4346e0a786"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c6dedd06ee0a0eda7a20e4346e0a786">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[3/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c6dedd06ee0a0eda7a20e4346e0a786">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[4/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -379,7 +423,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="add6b42aa079f3540239ec25c22500efc" name="add6b42aa079f3540239ec25c22500efc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add6b42aa079f3540239ec25c22500efc">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[4/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#add6b42aa079f3540239ec25c22500efc">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[5/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,7 +464,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a45e8a971d644bbe91438c718ab5c3729" name="a45e8a971d644bbe91438c718ab5c3729"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45e8a971d644bbe91438c718ab5c3729">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[5/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a45e8a971d644bbe91438c718ab5c3729">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[6/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -468,7 +512,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a202fd9b22178d7626940e70dfc74dc5d" name="a202fd9b22178d7626940e70dfc74dc5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a202fd9b22178d7626940e70dfc74dc5d">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[6/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a202fd9b22178d7626940e70dfc74dc5d">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[7/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -509,7 +553,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a45e8a971d644bbe91438c718ab5c3729" name="a45e8a971d644bbe91438c718ab5c3729"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45e8a971d644bbe91438c718ab5c3729">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[7/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a45e8a971d644bbe91438c718ab5c3729">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[8/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -550,7 +594,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a61d35da49d13b490854de7f66b40b9f0" name="a61d35da49d13b490854de7f66b40b9f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61d35da49d13b490854de7f66b40b9f0">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[8/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a61d35da49d13b490854de7f66b40b9f0">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[9/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -580,7 +624,7 @@ template&lt;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b8
 </div>
 </div>
 <a id="a3146befc7c94984626acc422859f1847" name="a3146befc7c94984626acc422859f1847"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3146befc7c94984626acc422859f1847">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[9/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3146befc7c94984626acc422859f1847">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[10/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -619,7 +663,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a8c6c1305bb1830a4c3a2482ac3472a5b" name="a8c6c1305bb1830a4c3a2482ac3472a5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c6c1305bb1830a4c3a2482ac3472a5b">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[10/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c6c1305bb1830a4c3a2482ac3472a5b">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[11/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -666,7 +710,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a3146befc7c94984626acc422859f1847" name="a3146befc7c94984626acc422859f1847"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3146befc7c94984626acc422859f1847">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[11/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3146befc7c94984626acc422859f1847">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[12/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -706,7 +750,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a8c6c1305bb1830a4c3a2482ac3472a5b" name="a8c6c1305bb1830a4c3a2482ac3472a5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c6c1305bb1830a4c3a2482ac3472a5b">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[12/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c6c1305bb1830a4c3a2482ac3472a5b">&#9670;&#160;</a></span>parseFromJson() <span class="overload">[13/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1018,7 +1062,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="afcb055b4d5f82248feff952eebce9c5d" name="afcb055b4d5f82248feff952eebce9c5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcb055b4d5f82248feff952eebce9c5d">&#9670;&#160;</a></span>parseToJson() <span class="overload">[1/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afcb055b4d5f82248feff952eebce9c5d">&#9670;&#160;</a></span>parseToJson() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1055,7 +1099,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a06618a0033b62157d7a5c4aeb8c43621" name="a06618a0033b62157d7a5c4aeb8c43621"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06618a0033b62157d7a5c4aeb8c43621">&#9670;&#160;</a></span>parseToJson() <span class="overload">[2/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a06618a0033b62157d7a5c4aeb8c43621">&#9670;&#160;</a></span>parseToJson() <span class="overload">[2/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1092,7 +1136,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a44c53e24cb2987137167a7efabffddaa" name="a44c53e24cb2987137167a7efabffddaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44c53e24cb2987137167a7efabffddaa">&#9670;&#160;</a></span>parseToJson() <span class="overload">[3/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a44c53e24cb2987137167a7efabffddaa">&#9670;&#160;</a></span>parseToJson() <span class="overload">[3/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1129,7 +1173,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a71327531da33b58cf7b890fe881a0189" name="a71327531da33b58cf7b890fe881a0189"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71327531da33b58cf7b890fe881a0189">&#9670;&#160;</a></span>parseToJson() <span class="overload">[4/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a71327531da33b58cf7b890fe881a0189">&#9670;&#160;</a></span>parseToJson() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1165,8 +1209,36 @@ template&lt;&gt; </div>
 
 </div>
 </div>
+<a id="ac9e3d066ecde2666aed3f2325a4bc889" name="ac9e3d066ecde2666aed3f2325a4bc889"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9e3d066ecde2666aed3f2325a4bc889">&#9670;&#160;</a></span>parseToJson() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> &gt; dcn::parse::parseToJson </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structdcn_1_1Samples.html">Samples</a> &gt;&#160;</td>
+          <td class="paramname"><em>samples</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structdcn_1_1parse_1_1use__json__t.html">use_json_t</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad6c34e48b6f1daf59218c69dcb47e199" name="ad6c34e48b6f1daf59218c69dcb47e199"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6c34e48b6f1daf59218c69dcb47e199">&#9670;&#160;</a></span>parseToJson() <span class="overload">[5/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6c34e48b6f1daf59218c69dcb47e199">&#9670;&#160;</a></span>parseToJson() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
