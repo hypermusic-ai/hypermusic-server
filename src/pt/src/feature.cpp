@@ -28,7 +28,7 @@ namespace dcn
                 getCallDef().push(1, "Add", [uint32(3)]);
                 getCallDef().push(1, "Add", [uint32(2)]);
 
-                initTransformations();
+                init();
             }
         }
         */
@@ -72,7 +72,7 @@ namespace dcn
                 "string[] private _composites" + composites_code + ";\n"
                 "constructor(address registryAddr) FeatureBase(registryAddr, new AlwaysTrue(), \"" + feature.name() + "\", _composites){\n" // open ctor // 
                 + transform_def_code + // transform_def_code
-                "super.initTransformations();\n}" // close ctor;
+                "super.init();\n}" // close ctor;
                 "\n}"; // close contract
     }
 }
