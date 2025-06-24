@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['major_5fversion_0',['MAJOR_VERSION',['../namespacedcn.html#a184b90896887dec190467e00f2cd1bdb',1,'dcn']]],
-  ['minor_5fversion_1',['MINOR_VERSION',['../namespacedcn.html#a2189fb32e969cdf09866dc9fe0ad3fee',1,'dcn']]]
+  ['nonce_0',['nonce',['../structdcn_1_1EVMStorage_1_1Account.html#a580e317b04d6f8a7d48cbf5a57a35f7b',1,'dcn::EVMStorage::Account']]]
 ];

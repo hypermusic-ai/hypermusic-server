@@ -21,7 +21,6 @@ var annotated_dup =
       [ "RouteHandlerFunc", "classdcn_1_1RouteHandlerFunc.html", "classdcn_1_1RouteHandlerFunc" ],
       [ "RouteKey", "classdcn_1_1RouteKey.html", "classdcn_1_1RouteKey" ],
       [ "Router", "classdcn_1_1Router.html", "classdcn_1_1Router" ],
-      [ "Samples", "structdcn_1_1Samples.html", "structdcn_1_1Samples" ],
       [ "Server", "classdcn_1_1Server.html", "classdcn_1_1Server" ],
       [ "Session", "classdcn_1_1Session.html", "classdcn_1_1Session" ],
       [ "SessionManager", "classdcn_1_1SessionManager.html", "classdcn_1_1SessionManager" ]

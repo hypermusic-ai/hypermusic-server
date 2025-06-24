@@ -37,7 +37,6 @@ var hierarchy =
     [ "dcn::RouteHandlerFunc", "classdcn_1_1RouteHandlerFunc.html", null ],
     [ "dcn::RouteKey", "classdcn_1_1RouteKey.html", null ],
     [ "dcn::Router", "classdcn_1_1Router.html", null ],
-    [ "dcn::Samples", "structdcn_1_1Samples.html", null ],
     [ "dcn::Server", "classdcn_1_1Server.html", null ],
     [ "dcn::Session", "classdcn_1_1Session.html", null ],
     [ "dcn::SessionManager", "classdcn_1_1SessionManager.html", null ],

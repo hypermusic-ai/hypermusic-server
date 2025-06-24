@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['feature_5fpath_0',['feature_path',['../structdcn_1_1Samples.html#a0a5d156d852610a8082d3c4ecc2f7035',1,'dcn::Samples']]]
+  ['hash_5flen_0',['HASH_LEN',['../classdcn_1_1Keccak256.html#a2d20b1ffbfede0243dfbb11ebf5ba9a4',1,'dcn::Keccak256']]]
 ];
