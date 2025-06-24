@@ -165,7 +165,8 @@ namespace dcn
         size_t padding = (32 - (feature_name.size() % 32)) % 32;
         input_data.insert(input_data.end(), padding, 0);
         const auto exec_result = co_await evm.execute(evm.getRegistryAddress(), evm.getRegistryAddress(), input_data, 1'000'000, 0);
-        
+        co_await evm.setGas(evm.getRegistryAddress(), 1000000000);
+
         // check execution status
         if(!exec_result)
         {
@@ -440,7 +441,8 @@ namespace dcn
         size_t padding = (32 - (transformation_name.size() % 32)) % 32;
         input_data.insert(input_data.end(), padding, 0);
         const auto exec_result = co_await evm.execute(evm.getRegistryAddress(), evm.getRegistryAddress(), input_data, 1'000'000, 0);
-        
+        co_await evm.setGas(evm.getRegistryAddress(), 1000000000);
+
         // check execution status
         if(!exec_result)
         {
@@ -736,7 +738,8 @@ namespace dcn
 
         // execute call to runner
         const auto exec_result = co_await evm.execute(address, evm.getRunnerAddress(), input_data, 1'000'000, 0);
-        
+        co_await evm.setGas(address, 1000000000);
+
         // check execution status
         if(!exec_result)
         {

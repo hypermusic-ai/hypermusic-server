@@ -54,11 +54,21 @@ namespace dcn
                     if(iii + 1 != transform.args_size())args_code += ", ";
                 }
 
-                transform_def_code +=   
-                    "getCallDef().push(" 
-                    + std::to_string(i) 
-                    + ", \"" + transform.name() 
-                    + "\", [" + args_code + "]);\n";
+                if(transform.args_size() > 0)
+                {
+                    transform_def_code +=   
+                        "getCallDef().push(" 
+                        + std::to_string(i) 
+                        + ", \"" + transform.name() 
+                        + "\", [" + args_code + "]);\n";
+                }else
+                {
+                    transform_def_code +=   
+                        "getCallDef().push(" 
+                        + std::to_string(i) 
+                        + ", \"" + transform.name() 
+                        + "\");\n";
+                }
             }
         }
 

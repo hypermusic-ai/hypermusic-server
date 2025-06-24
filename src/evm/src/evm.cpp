@@ -315,6 +315,20 @@ std::vector<Samples> decodeReturnedValue(const std::vector<std::uint8_t>& bytes)
         co_return true;
     }
 
+    asio::awaitable<bool> EVM::setGas(evmc::address address, std::uint64_t gas) noexcept
+    {
+        co_await utils::ensureOnStrand(_strand);
+
+        if(!_storage.account_exists(address))
+        {
+            spdlog::warn(std::format("addAccount: Account {} does not exist", evmc::hex(address)));
+            co_return false;
+        }
+
+        _storage.set_balance(address, gas);
+        co_return true;
+    }
+
     asio::awaitable<bool> EVM::compile(std::filesystem::path code_path, std::filesystem::path out_dir, std::filesystem::path base_path, std::filesystem::path includes) const noexcept
     {
         co_await utils::ensureOnStrand(_strand);

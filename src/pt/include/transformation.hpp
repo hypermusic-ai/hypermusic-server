@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
 #include <regex>
+#include <algorithm>
 
 #include <absl/hash/hash.h>
+#include <spdlog/spdlog.h>
 
 #include "transformation.pb.h"
 

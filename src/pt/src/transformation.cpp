@@ -27,7 +27,32 @@ namespace dcn
         }
         */
 
-        std::uint32_t argc = 1;
+        std::regex used_args_pattern(R"(args\[(\d+)\])");
+        std::uint32_t argc = 0;
+
+        std::smatch match;
+        auto it = transformation.sol_src().cbegin();
+        while (std::regex_search(it, transformation.sol_src().cend(), match, used_args_pattern)) 
+        {
+            try
+            {
+                unsigned long value = std::stoul(match[1].str());
+
+                if (value > std::numeric_limits<std::uint32_t>::max()) {
+                    spdlog::error("Value exceeds uint32_t range");
+                    return "";
+                }
+                argc = std::max(argc, static_cast<std::uint32_t>(value) + 1U);
+            }
+            catch(const std::exception& e)
+            {
+                spdlog::error("Invalid argument index: {}", match[1].str());
+                return "";
+            }
+
+            it = match.suffix().first;
+        }
+
         return  "//SPDX-License-Identifier: MIT\n"
                 "pragma solidity ^0.8.0;\n"
                 "import \"transformation/TransformationBase.sol\";\n"

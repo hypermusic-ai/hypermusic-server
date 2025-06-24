@@ -54,6 +54,7 @@ namespace dcn
         EVM& operator=(EVM&&) = delete;
 
         asio::awaitable<bool> addAccount(evmc::address address, std::uint64_t initial_gas) noexcept;
+        asio::awaitable<bool> setGas(evmc::address address, std::uint64_t gas) noexcept;
 
         asio::awaitable<bool> compile(std::filesystem::path code_path,
                 std::filesystem::path out_dir,
