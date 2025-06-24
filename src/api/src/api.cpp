@@ -732,8 +732,9 @@ namespace dcn
             co_return std::move(response);
         }
 
-        json json_output;
-        json_output["output"] = decodeReturnedValue<std::vector<std::vector<std::uint32_t>>>(exec_result.value());
+        auto samples = decodeReturnedValue<std::vector<Samples>>(exec_result.value());
+
+        json json_output = parse::parseToJson(samples, parse::use_json);
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(http::Code::Created);

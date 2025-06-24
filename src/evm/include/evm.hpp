@@ -37,6 +37,7 @@
 
 #include "evm_storage.hpp"
 #include "evm_formatter.hpp"
+#include "evm_types.hpp"
 
 namespace dcn
 {
@@ -133,4 +134,7 @@ namespace dcn
 
     template<>
     evmc::address decodeReturnedValue(const std::vector<std::uint8_t> & bytes);
+
+    template<>
+    std::vector<Samples> decodeReturnedValue(const std::vector<uint8_t> & bytes);
 }

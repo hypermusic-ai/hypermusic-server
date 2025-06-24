@@ -4,6 +4,7 @@ add_module(NAME "EVM"
         "${PROJECT_PREFIX}::Native"
         "${PROJECT_PREFIX}::Crypto"
         "${PROJECT_PREFIX}::File"
+        "${PROJECT_PREFIX}::Parser"
 
         absl::hash
         absl::flat_hash_map
