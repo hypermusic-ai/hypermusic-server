@@ -1,4 +1,4 @@
-#include "evm_types.hpp"
+#include "samples.hpp"
 
 namespace dcn::parse
 {
@@ -8,8 +8,8 @@ namespace dcn::parse
 
         for (const auto& s : samples) {
             json obj;
-            obj["feature_path"] = s.feature_path;
-            obj["data"] = s.data;
+            obj["feature_path"] = s.feature_path();
+            obj["data"] = s.data();
             arr.push_back(obj);
         }
 
@@ -28,10 +28,10 @@ namespace dcn::parse
                 return std::nullopt;
 
             Samples s;
-            s.feature_path = item["feature_path"].get<std::string>();
+            s.set_feature_path(item["feature_path"].get<std::string>());
 
             for (const auto& val : item["data"]) {
-                s.data.emplace_back(val.get<std::uint32_t>());
+                s.add_data(val.get<std::uint32_t>());
             }
 
             result.push_back(std::move(s));

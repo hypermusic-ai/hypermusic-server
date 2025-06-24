@@ -9,6 +9,7 @@
 #include "feature.hpp"
 #include "transformation.hpp"
 #include "condition.hpp"
+#include "samples.hpp"
 #include "keccak256.hpp"
 
 namespace dcn

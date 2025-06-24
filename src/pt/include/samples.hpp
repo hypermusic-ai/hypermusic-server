@@ -2,16 +2,9 @@
 #include <string>
 #include <vector>
 
-#include "parser.hpp"
+#include "samples.pb.h"
 
-namespace dcn
-{
-    struct Samples 
-    {
-        std::string feature_path;
-        std::vector<std::uint32_t> data;
-    };
-}
+#include "parser.hpp"
 
 namespace dcn::parse
 {
