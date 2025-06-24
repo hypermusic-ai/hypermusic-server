@@ -10,6 +10,7 @@ var namespacedcn =
       [ "ensureOnStrand", "namespacedcn_1_1utils.html#aae9b2c4db93b9f4d05974a60179eb86a", null ],
       [ "escapeSolSrcQuotes", "namespacedcn_1_1utils.html#ad50838f255d0cc53abf48456e8a1ec8c", null ],
       [ "getAsciiLogo", "namespacedcn_1_1utils.html#ae27ec98b2a1acbfae234ac07af90679f", null ],
+      [ "loadBuildTimestamp", "namespacedcn_1_1utils.html#afe5529604b645836efa07f3d4d662540", null ],
       [ "watchdog", "namespacedcn_1_1utils.html#a3d90cd25bc6985e0d5d00227bf125b3e", null ]
     ] ],
     [ "AuthManager", "classdcn_1_1AuthManager.html", "classdcn_1_1AuthManager" ],
@@ -87,6 +88,7 @@ var namespacedcn =
     [ "GET_nonce", "namespacedcn.html#ac3751c4b02df4c86c564697360400c7e", null ],
     [ "GET_SimpleForm", "namespacedcn.html#ae37f7af49ddceb9b4e8de2bfcdf93223", null ],
     [ "GET_transformation", "namespacedcn.html#aeca50bef36a4b8d8e19ae013decb34f7", null ],
+    [ "GET_version", "namespacedcn.html#afed3b262cea12515ca285269fc7ea0b1", null ],
     [ "getBinPath", "namespacedcn.html#ac0d03601d9927645ef2d4d6c0baa5137", null ],
     [ "getLogsPath", "namespacedcn.html#a31b4652ab96dcd7a11da6072375846ac", null ],
     [ "getPTPath", "namespacedcn.html#aa1a07a14a33d9256af41675dff3c332d", null ],

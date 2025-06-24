@@ -5,5 +5,6 @@ var utils_8hpp =
     [ "currentTimestamp", "utils_8hpp.html#a07545fa1ab2d1ccc349667eae8ba746f", null ],
     [ "ensureOnStrand", "utils_8hpp.html#aae9b2c4db93b9f4d05974a60179eb86a", null ],
     [ "escapeSolSrcQuotes", "utils_8hpp.html#ad50838f255d0cc53abf48456e8a1ec8c", null ],
+    [ "loadBuildTimestamp", "utils_8hpp.html#afe5529604b645836efa07f3d4d662540", null ],
     [ "watchdog", "utils_8hpp.html#a3d90cd25bc6985e0d5d00227bf125b3e", null ]
 ];
