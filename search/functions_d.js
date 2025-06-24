@@ -10,11 +10,12 @@ var searchData=
   ['setbinpath_7',['setBinPath',['../namespacedcn.html#a802ae4049f4667dcdb1fe8b04a09769d',1,'dcn']]],
   ['setbody_8',['setBody',['../classdcn_1_1http_1_1MessageBase.html#ae7b449b16ee59fa08312e34b5eb4e449',1,'dcn::http::MessageBase']]],
   ['setcode_9',['setCode',['../classdcn_1_1http_1_1Response.html#abf41dfcd501a317bb429b9c51fb4749a',1,'dcn::http::Response']]],
-  ['setheader_10',['setHeader',['../classdcn_1_1http_1_1MessageBase.html#ae7c1cf492702cb7f82ad6cb5f46dcea5',1,'dcn::http::MessageBase']]],
-  ['setidleinterval_11',['setIdleInterval',['../classdcn_1_1Server.html#acb4624726ce55c87ce0add2aa428e134',1,'dcn::Server']]],
-  ['setmethod_12',['setMethod',['../classdcn_1_1http_1_1Request.html#a3ae3e92cd630ea659c33ad927c2bc013',1,'dcn::http::Request']]],
-  ['setpath_13',['setPath',['../classdcn_1_1http_1_1Request.html#a28f423e67c4f40cb4f1184848b61bce0',1,'dcn::http::Request']]],
-  ['setversion_14',['setVersion',['../classdcn_1_1http_1_1MessageBase.html#a118a5b6672834f8aed19e39bdb7c3e96',1,'dcn::http::MessageBase']]],
-  ['splitpathsegments_15',['splitPathSegments',['../namespacedcn_1_1http.html#a7911d5fb827bacf47f1317d95ec8dcc7',1,'dcn::http']]],
-  ['stop_16',['stop',['../classdcn_1_1Session.html#ac1c0529d85326181cd7a5c81cd47053f',1,'dcn::Session']]]
+  ['setgas_10',['setGas',['../classdcn_1_1EVM.html#a0bc15f6d8f6ad905600def45b079e4f9',1,'dcn::EVM']]],
+  ['setheader_11',['setHeader',['../classdcn_1_1http_1_1MessageBase.html#ae7c1cf492702cb7f82ad6cb5f46dcea5',1,'dcn::http::MessageBase']]],
+  ['setidleinterval_12',['setIdleInterval',['../classdcn_1_1Server.html#acb4624726ce55c87ce0add2aa428e134',1,'dcn::Server']]],
+  ['setmethod_13',['setMethod',['../classdcn_1_1http_1_1Request.html#a3ae3e92cd630ea659c33ad927c2bc013',1,'dcn::http::Request']]],
+  ['setpath_14',['setPath',['../classdcn_1_1http_1_1Request.html#a28f423e67c4f40cb4f1184848b61bce0',1,'dcn::http::Request']]],
+  ['setversion_15',['setVersion',['../classdcn_1_1http_1_1MessageBase.html#a118a5b6672834f8aed19e39bdb7c3e96',1,'dcn::http::MessageBase']]],
+  ['splitpathsegments_16',['splitPathSegments',['../namespacedcn_1_1http.html#a7911d5fb827bacf47f1317d95ec8dcc7',1,'dcn::http']]],
+  ['stop_17',['stop',['../classdcn_1_1Session.html#ac1c0529d85326181cd7a5c81cd47053f',1,'dcn::Session']]]
 ];

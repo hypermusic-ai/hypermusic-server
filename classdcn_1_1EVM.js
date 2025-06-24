@@ -13,5 +13,6 @@ var classdcn_1_1EVM =
     [ "getRunnerAddress", "classdcn_1_1EVM.html#aa751e66fc09d11c0a490550a65df6dc2", null ],
     [ "loadPT", "classdcn_1_1EVM.html#acb3de233a682d9685f6f6ba3ab320826", null ],
     [ "operator=", "classdcn_1_1EVM.html#adb10b9802b6ffa3393156279393dd6a2", null ],
-    [ "operator=", "classdcn_1_1EVM.html#aad7087f341f0da28723a4947cc5ff402", null ]
+    [ "operator=", "classdcn_1_1EVM.html#aad7087f341f0da28723a4947cc5ff402", null ],
+    [ "setGas", "classdcn_1_1EVM.html#a0bc15f6d8f6ad905600def45b079e4f9", null ]
 ];
