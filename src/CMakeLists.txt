@@ -1,4 +1,5 @@
 add_subdirectory(native)
+add_subdirectory(version)
 add_subdirectory(utils)
 add_subdirectory(crypto)
 add_subdirectory(server)

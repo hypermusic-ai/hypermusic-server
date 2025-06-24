@@ -7,6 +7,8 @@
 #include <chrono>
 #include <format>
 #include <string>
+#include <fstream>
+#include <filesystem>
 
 #include "native.h"
 #include <asio.hpp>
@@ -20,6 +22,8 @@
 
 namespace dcn::utils
 {
+    std::string loadBuildTimestamp(const std::filesystem::path & path);
+    
     std::string currentTimestamp();
 
     /**

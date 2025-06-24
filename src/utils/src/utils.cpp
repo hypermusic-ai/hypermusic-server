@@ -2,6 +2,15 @@
 
 namespace dcn::utils
 {
+    std::string loadBuildTimestamp(const std::filesystem::path & path) 
+    {
+        std::ifstream file(path);
+        if (!file.is_open()) return "Unknown";
+        std::string timestamp;
+        std::getline(file, timestamp);
+        return timestamp;
+    }
+
     std::string currentTimestamp()
     {
         const auto zt{ std::chrono::zoned_time{

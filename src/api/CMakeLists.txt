@@ -2,6 +2,7 @@ add_module(NAME "API"
     DEPENDENCIES
         "${PROJECT_PREFIX}::Utils"
         "${PROJECT_PREFIX}::Native"
+        "${PROJECT_PREFIX}::Version"
         "${PROJECT_PREFIX}::File"
         "${PROJECT_PREFIX}::PT"
         "${PROJECT_PREFIX}::Session"

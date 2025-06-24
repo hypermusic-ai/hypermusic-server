@@ -29,6 +29,9 @@ int main(int argc, char* argv[])
 
     spdlog::info("{}", dcn::utils::getAsciiLogo());
 
+    const std::string build_timestamp = dcn::utils::loadBuildTimestamp(dcn::getBinPath() / "build_timestamp");
+    spdlog::info("Build timestamp: {}", build_timestamp);
+
     spdlog::info("Version: {}.{}.{}\n", dcn::MAJOR_VERSION, dcn::MINOR_VERSION, dcn::PATCH_VERSION);
 
     spdlog::info("Decentralised Art server started with {} arguments", argc);
@@ -67,6 +70,8 @@ int main(int argc, char* argv[])
         server.addRoute({dcn::http::Method::OPTIONS, "/"},       dcn::OPTIONS_SimpleForm);
         server.addRoute({dcn::http::Method::GET, "/"},           dcn::GET_SimpleForm, std::cref(simple_form.value()));
     }
+    
+    server.addRoute({dcn::http::Method::GET, "/version"},       dcn::GET_version, std::cref(build_timestamp));
 
     server.addRoute({dcn::http::Method::GET, "/nonce/<string>"},       dcn::GET_nonce, std::ref(auth_manager));
     server.addRoute({dcn::http::Method::POST, "/auth"},                dcn::POST_auth, std::ref(auth_manager));

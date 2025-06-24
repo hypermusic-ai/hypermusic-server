@@ -39,6 +39,22 @@ namespace dcn
         co_return  co_await evm.execute(evm.getRegistryAddress(), address, input_data, 1'000'000, 0);
     }
 
+    asio::awaitable<http::Response> GET_version(const http::Request &, std::vector<RouteArg>, const std::string & build_timestamp)
+    {
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+        response.setHeader(http::Header::ContentType, "application/json");
+        response.setCode(http::Code::OK);
+        
+        json json_output;
+        json_output["version"] = std::format("{}.{}.{}", dcn::MAJOR_VERSION, dcn::MINOR_VERSION, dcn::PATCH_VERSION);
+        json_output["build_timestamp"] = build_timestamp;
+        response.setBody(json_output.dump());
+        co_return response;
+    }
+
     asio::awaitable<http::Response> OPTIONS_feature(const http::Request &, std::vector<RouteArg>)
     {
         http::Response response;

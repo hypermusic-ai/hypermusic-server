@@ -15,9 +15,12 @@ using namespace asio::experimental::awaitable_operators;
 #include "auth.hpp"
 #include "evm.hpp"
 #include "file.hpp"
+#include "version.hpp"
 
 namespace dcn
 {
+    asio::awaitable<http::Response> GET_version(const http::Request &, std::vector<RouteArg>, const std::string & build_timestamp);
+
     /**
      * Handles HEAD requests for a simple form by returning a response with CORS headers.
      *

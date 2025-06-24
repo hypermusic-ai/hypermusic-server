@@ -51,6 +51,7 @@ target_link_libraries("${PROJECT_NAME}Lib"
         proto_gen
         
         "${PROJECT_PREFIX}::Native"
+        "${PROJECT_PREFIX}::Version"
         "${PROJECT_PREFIX}::Utils"
         "${PROJECT_PREFIX}::Crypto"
         "${PROJECT_PREFIX}::Server"
@@ -149,3 +150,9 @@ install(
 if(DECENTRALISED_ART_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
+
+# Generate current timestamp
+string(TIMESTAMP BUILD_TIMESTAMP "%Y-%m-%d %H:%M:%S UTC" UTC)
+file(WRITE "${CMAKE_BINARY_DIR}/build_timestamp" "${BUILD_TIMESTAMP}")
+install(FILES "${CMAKE_BINARY_DIR}/build_timestamp"
+        DESTINATION "${CMAKE_INSTALL_BINDIR}")

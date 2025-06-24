@@ -143,6 +143,9 @@
 </head>
 
 <body>
+    <div style="margin-top: 4rem; color: #888; font-size: 0.9rem; text-align: center;">
+        <div id="versionInfo">Loading version info...</div>
+    </div>
     <h1>Decentralised Art Server</h1>
     <p style="text-align:center; max-width:600px">Interact with the API endpoints directly from your browser.</p>
 
@@ -262,7 +265,6 @@
             </div>
         </div>
     </div>
-
     <script>
         async function updateFeatureRequestPreview() {
             const json = await constructStructuredFeature();
@@ -569,6 +571,21 @@
                 bodyDiv.textContent = error.message;
             }
         }
+
+        async function fetchVersionInfo() {
+            const versionDiv = document.getElementById('versionInfo');
+            try {
+                const res = await fetch(`${window.location.origin}/version`);
+                const data = await res.json();
+                versionDiv.textContent = `Version ${data.version} (Built: ${data.build_timestamp})`;
+            } catch (err) {
+                versionDiv.textContent = "⚠️ Failed to fetch version info";
+                console.error("Version fetch failed:", err);
+            }
+        }
+
+        // Fetch version info on page load
+        fetchVersionInfo();
 
         // Function to format the JSON response nicely
         function formatJSON(text) {
