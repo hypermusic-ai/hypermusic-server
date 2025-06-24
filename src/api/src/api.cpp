@@ -51,7 +51,7 @@ namespace dcn
         json json_output;
         json_output["version"] = std::format("{}.{}.{}", dcn::MAJOR_VERSION, dcn::MINOR_VERSION, dcn::PATCH_VERSION);
         json_output["build_timestamp"] = build_timestamp;
-        response.setBody(json_output.dump());
+        response.setBodyWithContentLength(json_output.dump());
         co_return response;
     }
 
@@ -65,6 +65,7 @@ namespace dcn
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
         response.setCode(http::Code::OK);
+        response.setBodyWithContentLength("OK");
         co_return response;
     }
 
@@ -79,7 +80,7 @@ namespace dcn
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("invalid url");
+            response.setBodyWithContentLength("invalid url");
             co_return response;
         }
 
@@ -89,7 +90,7 @@ namespace dcn
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("invalid url");
+            response.setBodyWithContentLength("invalid url");
             co_return response;
         }
         const auto & feature_name = feature_name_result.value();
@@ -104,7 +105,7 @@ namespace dcn
             {
                 response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBody("invalid url");
+                response.setBodyWithContentLength("invalid url");
                 co_return response;
             }
 
@@ -114,7 +115,7 @@ namespace dcn
             {
                 response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBody("invalid url");
+                response.setBodyWithContentLength("invalid url");
                 co_return response;
             }
 
@@ -129,7 +130,7 @@ namespace dcn
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::NotFound);
-            response.setBody("feature not found");
+            response.setBodyWithContentLength("feature not found");
             co_return response;
         }
         
@@ -139,7 +140,7 @@ namespace dcn
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody("internal server error");
+            response.setBodyWithContentLength("internal server error");
             co_return response;
         }
 
@@ -175,7 +176,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody(std::format("Failed to fetch feature : {}", exec_result.error()));
+            response.setBodyWithContentLength(std::format("Failed to fetch feature : {}", exec_result.error()));
             co_return std::move(response);
         }
 
@@ -187,7 +188,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody(std::format("Failed to fetch owner : {}", owner_result.error()));
+            response.setBodyWithContentLength(std::format("Failed to fetch owner : {}", owner_result.error()));
             co_return std::move(response);
         }
 
@@ -199,7 +200,7 @@ namespace dcn
 
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(http::Code::OK);
-        response.setBody(json_res->dump());
+        response.setBodyWithContentLength(json_res->dump());
         co_return std::move(response);
     }
 
@@ -216,7 +217,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::Unauthorized);
-            response.setBody(std::format("Error: {}", auth_result.error()));
+            response.setBodyWithContentLength(std::format("Error: {}", auth_result.error()));
             co_return std::move(response);
         }
         const auto & address = auth_result.value();
@@ -231,7 +232,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("Failed to parse feature");
+            response.setBodyWithContentLength("Failed to parse feature");
             co_return std::move(response);
         }
 
@@ -242,7 +243,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("Cannot find subfeatures for feature");
+            response.setBodyWithContentLength("Cannot find subfeatures for feature");
             co_return std::move(response);
         }
 
@@ -265,7 +266,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody("Failed to create file");
+            response.setBodyWithContentLength("Failed to create file");
             co_return std::move(response);
         }
 
@@ -279,7 +280,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody("Failed to compile code");
+            response.setBodyWithContentLength("Failed to compile code");
             co_return std::move(response);
         }
         
@@ -299,7 +300,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody(std::format("Failed to deploy code : {}",  deploy_res.error()));
+            response.setBodyWithContentLength(std::format("Failed to deploy code : {}",  deploy_res.error()));
             co_return std::move(response);
         }
 
@@ -312,7 +313,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody(std::format("Failed to fetch owner : {}", owner_result.error()));
+            response.setBodyWithContentLength(std::format("Failed to fetch owner : {}", owner_result.error()));
             co_return std::move(response);
         }
 
@@ -322,7 +323,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("Failed to add feature");
+            response.setBodyWithContentLength("Failed to add feature");
             co_return std::move(response);
         }
 
@@ -337,7 +338,7 @@ namespace dcn
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(http::Code::Created);
-        response.setBody(json_output.dump());
+        response.setBodyWithContentLength(json_output.dump());
         co_return std::move(response);
     }
 
@@ -352,6 +353,7 @@ namespace dcn
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
         response.setCode(http::Code::OK);
+        response.setBodyWithContentLength("OK");
         co_return response;
     }
 
@@ -366,7 +368,7 @@ namespace dcn
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("invalid url");
+            response.setBodyWithContentLength("invalid url");
             co_return response;
         }
 
@@ -376,7 +378,7 @@ namespace dcn
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("invalid url");
+            response.setBodyWithContentLength("invalid url");
             co_return response;
         }
         const auto & transformation_name = transformation_name_result.value();
@@ -391,7 +393,7 @@ namespace dcn
             {
                 response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBody("invalid url");
+                response.setBodyWithContentLength("invalid url");
                 co_return response;
             }
 
@@ -401,7 +403,7 @@ namespace dcn
             {
                 response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBody("invalid url");
+                response.setBodyWithContentLength("invalid url");
                 co_return response;
             }
 
@@ -416,7 +418,7 @@ namespace dcn
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::NotFound);
-            response.setBody("transformation not found");
+            response.setBodyWithContentLength("transformation not found");
             co_return response;
         }
         
@@ -426,7 +428,7 @@ namespace dcn
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody("internal server error");
+            response.setBodyWithContentLength("internal server error");
             co_return response;
         }
 
@@ -462,7 +464,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody(std::format("Failed to fetch transformation : {}", exec_result.error()));
+            response.setBodyWithContentLength(std::format("Failed to fetch transformation : {}", exec_result.error()));
             co_return std::move(response);
         }
 
@@ -474,7 +476,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody(std::format("Failed to fetch owner : {}", owner_result.error()));
+            response.setBodyWithContentLength(std::format("Failed to fetch owner : {}", owner_result.error()));
             co_return std::move(response);
         }
 
@@ -486,7 +488,7 @@ namespace dcn
 
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(http::Code::OK);
-        response.setBody(json_res->dump());
+        response.setBodyWithContentLength(json_res->dump());
         co_return std::move(response);
     }
 
@@ -503,7 +505,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::Unauthorized);
-            response.setBody(std::format("Error: {}", auth_result.error()));
+            response.setBodyWithContentLength(std::format("Error: {}", auth_result.error()));
             co_return std::move(response);
         }
         const auto & address = auth_result.value();
@@ -519,7 +521,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("Failed to parse transformation");
+            response.setBodyWithContentLength("Failed to parse transformation");
             co_return std::move(response);
         }
 
@@ -530,7 +532,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("Transformation name or source is empty");
+            response.setBodyWithContentLength("Transformation name or source is empty");
             co_return std::move(response);
         }
 
@@ -548,7 +550,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody("Failed to create file");
+            response.setBodyWithContentLength("Failed to create file");
             co_return std::move(response);
         }
 
@@ -562,13 +564,13 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody("Failed to compile code");
+            response.setBodyWithContentLength("Failed to compile code");
             co_return std::move(response);
         }
 
         co_await evm.addAccount(address, 1000000000);
         co_await evm.setGas(address, 1000000000);
-        
+
         auto deploy_res = co_await evm.deploy(  
             out_dir / (transformation.name() + ".bin"), 
             address, 
@@ -582,7 +584,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody("Failed to deploy code");
+            response.setBodyWithContentLength("Failed to deploy code");
             co_return std::move(response);
         }
         const auto owner_result = co_await _fetchOwner(evm, deploy_res.value());
@@ -594,7 +596,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody(std::format("Failed to fetch owner : {}", owner_result.error()));
+            response.setBodyWithContentLength(std::format("Failed to fetch owner : {}", owner_result.error()));
             co_return std::move(response);
         }
 
@@ -604,7 +606,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("Failed to add transformation");
+            response.setBodyWithContentLength("Failed to add transformation");
             co_return std::move(response);
         }
 
@@ -619,7 +621,8 @@ namespace dcn
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(http::Code::Created);
-        response.setBody(json_output.dump());
+        response.setBodyWithContentLength(json_output.dump());
+
         co_return std::move(response);
     }
 
@@ -632,7 +635,7 @@ namespace dcn
         response.setCode(http::Code::OK);
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
-        response.setBody("OK");
+        response.setBodyWithContentLength("OK");
 
         co_return std::move(response);
     }
@@ -644,7 +647,7 @@ namespace dcn
         response.setCode(http::Code::OK);
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
-        response.setBody("OK");
+        response.setBodyWithContentLength("OK");
 
         co_return std::move(response);
     }
@@ -660,7 +663,7 @@ namespace dcn
         {
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("invalid url");
+            response.setBodyWithContentLength("invalid url");
             co_return response;
         }
 
@@ -671,7 +674,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::Unauthorized);
-            response.setBody(std::format("Error: {}", auth_result.error()));
+            response.setBodyWithContentLength(std::format("Error: {}", auth_result.error()));
             co_return std::move(response);
         }
         const auto & address = auth_result.value();
@@ -685,7 +688,7 @@ namespace dcn
             spdlog::error("invalid feature name");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("invalid feature name");
+            response.setBodyWithContentLength("invalid feature name");
             co_return response;
         }
         const auto & feature_name = feature_name_result.value();
@@ -697,7 +700,7 @@ namespace dcn
             spdlog::error("invalid number of samples");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBody("invalid number of samples");
+            response.setBodyWithContentLength("invalid number of samples");
             co_return response;
         }
         const std::uint32_t & N = N_result.value();
@@ -712,7 +715,7 @@ namespace dcn
                 spdlog::error("invalid running instaces");
                 response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBody("invalid running instaces");
+                response.setBodyWithContentLength("invalid running instaces");
                 co_return response;
             }
             running_instances = running_instances_result.value();
@@ -763,7 +766,7 @@ namespace dcn
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBody(std::format("Failed to execute code : {}", exec_result.error()));
+            response.setBodyWithContentLength(std::format("Failed to execute code : {}", exec_result.error()));
             co_return std::move(response);
         }
 
@@ -773,7 +776,7 @@ namespace dcn
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(http::Code::Created);
-        response.setBody(json_output.dump());
+        response.setBodyWithContentLength(json_output.dump());
         co_return std::move(response);
     }
 }

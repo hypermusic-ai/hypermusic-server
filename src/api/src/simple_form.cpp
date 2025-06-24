@@ -9,6 +9,7 @@ namespace dcn
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::AccessControlAllowOrigin, "*");
         response.setCode(dcn::http::Code::OK);
+        response.setBodyWithContentLength("OK");
         co_return response;
     }
 
@@ -22,6 +23,8 @@ namespace dcn
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
         response.setCode(dcn::http::Code::OK);
+        response.setBodyWithContentLength("OK");
+
         co_return response;
     }
 
@@ -33,7 +36,8 @@ namespace dcn
         response.setHeader(http::Header::Connection, "keep-alive");
         response.setHeader(http::Header::ContentType, "text/html; charset=utf-8");
         response.setCode(dcn::http::Code::OK);
-        response.setBody(simple_form);
+        response.setBodyWithContentLength(simple_form);
+
         co_return response;
     }
 }

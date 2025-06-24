@@ -143,14 +143,16 @@ namespace dcn
                     response.setVersion("HTTP/1.1");
                     response.setCode(http::Code::InternalServerError);
                     response.setHeader(http::Header::Connection, "close");
+                    response.setBodyWithContentLength("500 Internal Server Error");
+
                 }
             } 
             else 
             {
                 response.setVersion("HTTP/1.1");
                 response.setCode(http::Code::NotFound);
-                response.setBody("404 Not Found");
                 response.setHeader(http::Header::Connection, "close");
+                response.setBodyWithContentLength("404 Not Found");
             }
             
             spdlog::debug("Send response\n{}\n", std::format("{}", response));

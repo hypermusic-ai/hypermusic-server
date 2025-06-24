@@ -6,30 +6,41 @@ namespace dcn::http
     {
     }
 
-    void MessageBase::setVersion(const std::string & version) 
+    MessageBase& MessageBase::setVersion(const std::string & version) 
     { 
-        _version = version; 
+        _version = version;
+        return *this;
     }
 
-    void MessageBase::setBody(const std::string & body)
+    MessageBase& MessageBase::setBody(const std::string & body)
     {
         _body = body;
+        return *this;
     }
 
-    void MessageBase::addHeader(Header header, const std::string & value)
+    MessageBase& MessageBase::setBodyWithContentLength(const std::string & body)
+    {
+        setBody(body);
+        setHeader(Header::ContentLength, std::to_string(body.size()));
+        return *this;
+    }
+
+    MessageBase& MessageBase::addHeader(Header header, const std::string & value)
     {
         _headers.emplace_back(std::make_pair(header, value));
+        return *this;
     }
 
-    void MessageBase::setHeader(Header header, const std::string & value)
+    MessageBase& MessageBase::setHeader(Header header, const std::string & value)
     {
         auto result = std::ranges::find_if(_headers, [&](const auto & h) { return h.first == header; });
         if(result == _headers.end())
         {
             addHeader(header, value);
-            return;
+            return *this;
         }
-        result->second = value; 
+        result->second = value;
+        return *this;
     }
 
     std::vector<std::string> MessageBase::getHeader(Header header) const
@@ -62,14 +73,16 @@ namespace dcn::http
         return _body;
     }
 
-    void Request::setMethod(const Method & method)
+    Request& Request::setMethod(const Method & method)
     {
         _method = method;
+        return *this;
     }
 
-    void Request::setPath(URL path)
+    Request& Request::setPath(URL path)
     {
         _path = std::move(path);
+        return *this;
     }
 
     const Method & Request::getMethod() const
@@ -82,9 +95,10 @@ namespace dcn::http
         return _path;
     }
 
-    void Response::setCode(Code code)
+    Response& Response::setCode(Code code)
     {
         _code = code;
+        return *this;
     }
 
     const Code & Response::getCode() const
@@ -108,9 +122,7 @@ namespace dcn::parse
         request_stream >> method_str >> path_str >> version_str;
         request_stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        http_request.setMethod(parse::parseMethodFromString(method_str));
-        http_request.setPath(path_str);
-        http_request.setVersion(version_str);
+        http_request.setPath(path_str).setMethod(parse::parseMethodFromString(method_str)).setVersion(version_str);
 
         std::string header_buffer;
         std::string header_key;

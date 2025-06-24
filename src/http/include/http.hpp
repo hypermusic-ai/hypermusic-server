@@ -35,7 +35,7 @@ namespace dcn::http
              * @brief Sets the HTTP version of the message.
              * @param[in] version The version to set.
              */
-            void setVersion(const std::string & version);
+            MessageBase& setVersion(const std::string & version);
 
             /**
              * @brief Sets the body of the message.
@@ -45,7 +45,17 @@ namespace dcn::http
              *
              * @param[in] body The body content to set.
              */
-            void setBody(const std::string & body);
+            MessageBase& setBody(const std::string & body);
+
+            /**
+             * @brief Sets the body of the message.
+             *
+             * This function sets the body of the message to the provided string and updates the Content-Length header
+             * to reflect the size of the new body.
+             *
+             * @param[in] body The body content to set.
+             */
+            MessageBase& setBodyWithContentLength(const std::string & body);
 
             /**
              * @brief Adds a header to the message.
@@ -54,7 +64,7 @@ namespace dcn::http
              * @param[in] header The header to add.
              * @param[in] value The value of the header.
              */
-            void addHeader(Header header, const std::string & value);
+            MessageBase& addHeader(Header header, const std::string & value);
             
             /**
              * @brief Set a header in the message.
@@ -63,7 +73,7 @@ namespace dcn::http
              *
              * If the header does not exist, it is added. If the header already exists, its value is replaced.
              */
-            void setHeader(Header header, const std::string & value);
+            MessageBase& setHeader(Header header, const std::string & value);
 
             /**
              * @brief Gets the value of a header.
@@ -89,7 +99,7 @@ namespace dcn::http
              * @return The body of the message.
              */
             const std::string & getBody() const;
-
+        
         private:
             std::string _version;
             HeadersList _headers;
@@ -117,13 +127,13 @@ namespace dcn::http
              * @brief Sets the HTTP method of the request.
              * @param[in] method The method to set.
              */
-            void setMethod(const Method & method);
+            Request& setMethod(const Method & method);
 
             /**
              * @brief Sets the path of the request.
              * @param[in] path The path to set.
              */
-            void setPath(URL path);
+            Request& setPath(URL path);
 
             /**
              * @brief Gets the HTTP method of the request.
@@ -163,7 +173,7 @@ namespace dcn::http
              * @brief Sets the HTTP response code of the message.
              * @param[in] code The response code to set.
              */
-            void setCode(Code code);
+            Response& setCode(Code code);
 
             /**
              * @brief Gets the HTTP response code of the message.
