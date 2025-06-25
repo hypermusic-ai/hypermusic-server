@@ -51,9 +51,7 @@ jobs:
         script: |
           echo "Clearing /home/hypermusic/decentralised-art-install..."
           find /home/hypermusic/decentralised-art-install/ -mindepth 1 \
-            -not -path '/home/hypermusic/decentralised-art-install/storage' \
-            -not -path '/home/hypermusic/decentralised-art-install/storage/*' \
-            -exec rm -rf {} +
+            -path /home/hypermusic/decentralised-art-install/storage -prune -o -exec rm -rf -- {} +
 
     - name: Install tools
       run: sudo apt update && sudo apt install -y sshpass rsync
