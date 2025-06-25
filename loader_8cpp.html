@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Decentralised Art Server: src/pt/src/samples.cpp File Reference</title>
+<title>Decentralised Art Server: src/loader/src/loader.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('samples_8cpp.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('loader_8cpp.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -100,33 +100,33 @@ $(document).ready(function(){initNavTree('samples_8cpp.html',''); initResizable(
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">samples.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">loader.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="samples_8hpp_source.html">samples.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="loader_8hpp_source.html">loader.hpp</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacedcn" id="r_namespacedcn"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html">dcn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacedcn_1_1parse" id="r_namespacedcn_1_1parse"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1parse.html">dcn::parse</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ac9e3d066ecde2666aed3f2325a4bc889" id="r_ac9e3d066ecde2666aed3f2325a4bc889"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1parse.html#ac9e3d066ecde2666aed3f2325a4bc889">dcn::parse::parseToJson</a> (std::vector&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">Samples</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">samples</a>, <a class="el" href="structdcn_1_1parse_1_1use__json__t.html">use_json_t</a>)</td></tr>
-<tr class="separator:ac9e3d066ecde2666aed3f2325a4bc889"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c0199fa5d6dedef5063cb14ba3dc599" id="r_a4c0199fa5d6dedef5063cb14ba3dc599"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a4c0199fa5d6dedef5063cb14ba3dc599"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; std::vector&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">Samples</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1parse.html#a4c0199fa5d6dedef5063cb14ba3dc599">dcn::parse::parseFromJson</a> (<a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">json_val</a>, <a class="el" href="structdcn_1_1parse_1_1use__json__t.html">use_json_t</a>)</td></tr>
-<tr class="memdesc:a4c0199fa5d6dedef5063cb14ba3dc599"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a JSON object to a TransformationDef object.  <br /></td></tr>
-<tr class="separator:a4c0199fa5d6dedef5063cb14ba3dc599"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ea389fa7f30b246f0381c3147f24a91" id="r_a9ea389fa7f30b246f0381c3147f24a91"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a9ea389fa7f30b246f0381c3147f24a91">dcn::deployFeature</a> (<a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">FeatureRecord</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">feature</a>)</td></tr>
+<tr class="separator:a9ea389fa7f30b246f0381c3147f24a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a694eb7386d94395667075687784120a2" id="r_a694eb7386d94395667075687784120a2"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a694eb7386d94395667075687784120a2">dcn::deployTransformation</a> (<a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">TransformationRecord</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">transformation</a>)</td></tr>
+<tr class="separator:a694eb7386d94395667075687784120a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b729ae12aa43837bf8d376517c82162" id="r_a5b729ae12aa43837bf8d376517c82162"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a5b729ae12aa43837bf8d376517c82162">dcn::loadStoredFeatures</a> (<a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>)</td></tr>
+<tr class="separator:a5b729ae12aa43837bf8d376517c82162"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3f450de1d04026e026947cf8cc41c2e" id="r_ad3f450de1d04026e026947cf8cc41c2e"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#ad3f450de1d04026e026947cf8cc41c2e">dcn::loadStoredTransformations</a> (<a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>)</td></tr>
+<tr class="separator:ad3f450de1d04026e026947cf8cc41c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_bc9eead6ec2870f7e5588680a36ec65c.html">pt</a></li><li class="navelem"><a class="el" href="dir_6677ce50f340f4686b621228ec1907ea.html">src</a></li><li class="navelem"><a class="el" href="samples_8cpp.html">samples.cpp</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1f6e0c4656fa8537bb95d4658659e347.html">loader</a></li><li class="navelem"><a class="el" href="dir_b3ee6ae3bcaf03544369284065d1cb84.html">src</a></li><li class="navelem"><a class="el" href="loader_8cpp.html">loader.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

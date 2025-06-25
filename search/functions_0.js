@@ -10,7 +10,7 @@ var searchData=
   ['addfeature_7',['addFeature',['../classdcn_1_1Registry.html#ad755c62cdb94feecea09aaceec819bb9',1,'dcn::Registry']]],
   ['addheader_8',['addHeader',['../classdcn_1_1http_1_1MessageBase.html#a025d7be859bf9aa933c43a13ef3c92e8',1,'dcn::http::MessageBase']]],
   ['addroute_9',['addroute',['../classdcn_1_1Server.html#a8aafb367d97cbc77bdb45b702cc2bc49',1,'dcn::Server::addRoute(RouteKey route, F &amp;&amp;handler, Args &amp;&amp;... binded_args)'],['../classdcn_1_1Server.html#a6dcab3063baccd1b974060147bafafba',1,'dcn::Server::addRoute(RouteKey route, F &amp;&amp;handler)'],['../classdcn_1_1Router.html#a33466b15764d179f513e6f58b54a4bc3',1,'dcn::Router::addRoute()']]],
-  ['addtransformation_10',['addTransformation',['../classdcn_1_1Registry.html#a7c9d78625477a64009effd9bdc73dc91',1,'dcn::Registry']]],
+  ['addtransformation_10',['addTransformation',['../classdcn_1_1Registry.html#a2d84933266edf69b2f829ed1e5ef0a37',1,'dcn::Registry']]],
   ['authenticate_11',['authenticate',['../namespacedcn.html#a0cc939f20e80cff8764d9d1eb853edc1',1,'dcn']]],
   ['authmanager_12',['authmanager',['../classdcn_1_1AuthManager.html#af967674006d58f31cdb5e601c4a135ed',1,'dcn::AuthManager::AuthManager(const AuthManager &amp;)=delete'],['../classdcn_1_1AuthManager.html#a9d2d859fc6285ae965928b127b83e5d5',1,'dcn::AuthManager::AuthManager(asio::io_context &amp;io_context)'],['../classdcn_1_1AuthManager.html#a47f0c0c52834c7e3c591a3f68ba43307',1,'dcn::AuthManager::AuthManager()=delete']]]
 ];

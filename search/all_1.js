@@ -15,7 +15,7 @@ var searchData=
   ['addfeature_12',['addFeature',['../classdcn_1_1Registry.html#ad755c62cdb94feecea09aaceec819bb9',1,'dcn::Registry']]],
   ['addheader_13',['addHeader',['../classdcn_1_1http_1_1MessageBase.html#a025d7be859bf9aa933c43a13ef3c92e8',1,'dcn::http::MessageBase']]],
   ['addroute_14',['addroute',['../classdcn_1_1Router.html#a33466b15764d179f513e6f58b54a4bc3',1,'dcn::Router::addRoute()'],['../classdcn_1_1Server.html#a6dcab3063baccd1b974060147bafafba',1,'dcn::Server::addRoute(RouteKey route, F &amp;&amp;handler)'],['../classdcn_1_1Server.html#a8aafb367d97cbc77bdb45b702cc2bc49',1,'dcn::Server::addRoute(RouteKey route, F &amp;&amp;handler, Args &amp;&amp;... binded_args)']]],
-  ['addtransformation_15',['addTransformation',['../classdcn_1_1Registry.html#a7c9d78625477a64009effd9bdc73dc91',1,'dcn::Registry']]],
+  ['addtransformation_15',['addTransformation',['../classdcn_1_1Registry.html#a2d84933266edf69b2f829ed1e5ef0a37',1,'dcn::Registry']]],
   ['api_2ecpp_16',['api.cpp',['../api_8cpp.html',1,'']]],
   ['api_2ehpp_17',['api.hpp',['../api_8hpp.html',1,'']]],
   ['api_5fauth_2ecpp_18',['api_auth.cpp',['../api__auth_8cpp.html',1,'']]],

@@ -7,7 +7,7 @@ var classdcn_1_1Registry =
     [ "~Registry", "classdcn_1_1Registry.html#a142dc0d3561fdea59046818d1a17c1ad", null ],
     [ "addCondition", "classdcn_1_1Registry.html#aaa7f010277bc87111c8f834a35fde5e2", null ],
     [ "addFeature", "classdcn_1_1Registry.html#ad755c62cdb94feecea09aaceec819bb9", null ],
-    [ "addTransformation", "classdcn_1_1Registry.html#a7c9d78625477a64009effd9bdc73dc91", null ],
+    [ "addTransformation", "classdcn_1_1Registry.html#a2d84933266edf69b2f829ed1e5ef0a37", null ],
     [ "checkIfSubFeaturesExist", "classdcn_1_1Registry.html#aff17f098a56bfb2e1fed8361d85d0fc7", null ],
     [ "containsConditionBucket", "classdcn_1_1Registry.html#a8b23cdf320cc1cb5982b7294cb7fc1b7", null ],
     [ "containsFeatureBucket", "classdcn_1_1Registry.html#a27927d876101bd3b144ae8ef73a0a5a4", null ],

@@ -113,10 +113,13 @@ $(document).ready(function(){initNavTree('utils_8hpp.html',''); initResizable();
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
 <code>#include &quot;<a class="el" href="native_8h_source.html">native.h</a>&quot;</code><br />
 <code>#include &lt;asio.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="logo_8hpp_source.html">logo.hpp</a>&quot;</code><br />
 <code>#include &lt;spdlog/spdlog.h&gt;</code><br />
+<code>#include &lt;absl/container/flat_hash_map.h&gt;</code><br />
+<code>#include &lt;absl/container/flat_hash_set.h&gt;</code><br />
 </div>
 <p><a href="utils_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -147,6 +150,9 @@ Functions</h2></td></tr>
 <tr class="separator:aae9b2c4db93b9f4d05974a60179eb86a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad50838f255d0cc53abf48456e8a1ec8c" id="r_ad50838f255d0cc53abf48456e8a1ec8c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1utils.html#ad50838f255d0cc53abf48456e8a1ec8c">dcn::utils::escapeSolSrcQuotes</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="parser_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a>)</td></tr>
 <tr class="separator:ad50838f255d0cc53abf48456e8a1ec8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a213229fb0c30f9ca92e2d1c60f550442" id="r_a213229fb0c30f9ca92e2d1c60f550442"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">class</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">DataT</a> , <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">class</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">ChildT</a> , <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">template</a>&lt; typename... &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">class</a> ChildListT&gt; </td></tr>
+<tr class="memitem:a213229fb0c30f9ca92e2d1c60f550442"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedcn_1_1utils.html#a213229fb0c30f9ca92e2d1c60f550442">dcn::utils::topologicalSort</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> absl::flat_hash_map&lt; std::string, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">DataT</a> &gt; &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">data</a>, std::function&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">ChildListT</a>&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">ChildT</a> &gt;(<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">DataT</a> &amp;)&gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">get_childreen</a>, std::function&lt; std::string(<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">ChildT</a> &amp;)&gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">get_child_name</a>)</td></tr>
+<tr class="separator:a213229fb0c30f9ca92e2d1c60f550442"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a6df1d22fb5f09eccc23b9f399670cfd7" name="a6df1d22fb5f09eccc23b9f399670cfd7"></a>
