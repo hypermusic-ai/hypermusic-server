@@ -139,6 +139,26 @@
             border: 1px solid #333;
             margin: 2rem 0;
         }
+
+        #treeContainer {
+            overflow: visible; /* critical */
+            position: relative;
+            z-index: 0; /* baseline */
+        }
+
+        .vis-tooltip {
+            position: absolute !important;
+            z-index: 9999 !important;
+            background: #333;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            pointer-events: none;
+            white-space: nowrap;
+            max-width: 300px;
+        }
+
     </style>
 
     <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
@@ -276,21 +296,17 @@
             const edges = [];
         
             treeData.forEach((item, index) => {
-                const nodeId = `${item.name}__${index}`; // Ensure uniqueness
                 nodes.push({
-                    id: nodeId,
+                    id: item.id,
                     label: item.name.split('/').pop(),
-                    title: item.name,
+                    title: `${item.name}\n${item.scalar ? 'Scalar' : 'Composite'}`,
                     color: item.scalar ? '#1e90ff' : '#ffffff',
-                    font: { color: item.scalar ? '#fff' : '#000' }
+                    font: { color: item.scalar ? '#fff' : '#000' },
+                    shape: item.scalar ? 'ellipse' : 'box' 
                 });
             
-                const parentPath = item.name.split('/').slice(0, -1).join('/');
-                if (parentPath) {
-                    const parentIndex = treeData.findIndex(i => i.name === parentPath);
-                    if (parentIndex !== -1) {
-                        edges.push({ from: `${parentPath}__${parentIndex}`, to: nodeId });
-                    }
+                if (item.parent !== -1) {
+                    edges.push({ from: item.parent, to: item.id });    
                 }
             });
         
@@ -299,7 +315,8 @@
             const options = {
                 layout: { hierarchical: { direction: 'UD', sortMethod: 'directed' } },
                 physics: false,
-                edges: { color: '#aaa' }
+                edges: { color: '#aaa' },
+                interaction: { hover: true }
             };
         
             const network = new vis.Network(container, data, options);
@@ -553,24 +570,25 @@
 
         async function fetchFeatureDepthFirst(rootFeatureName) 
         {
-            const stack = [{ path: ``, name: rootFeatureName }];
+            let nodeId = 0;
+            const stack = [{ parent : -1, id : nodeId++, path: ``, name: rootFeatureName }];
             const compositeList = [];
             const apiBase = window.location.origin;
 
             while (stack.length > 0) {
-                const { path, name } = stack.pop();
+                const { parent, id, path, name } = stack.pop();
             
                 try {
                     const res = await fetch(`${apiBase}/feature/${name}`);
                     if (!res.ok) throw new Error(`Failed to fetch ${name}`);
                     const feature = await res.json();
                 
-                    compositeList.push({ name: `${path}/${feature.name}`, scalar: feature.dimensions.length === 0 });
+                    compositeList.push({ parent : parent, id : id, name: `${path}/${feature.name}`, scalar: feature.dimensions.length === 0 });
                 
                     // Push children in reverse order to preserve left-to-right traversal
                     for (let i = feature.dimensions.length - 1; i >= 0; i--) {
                         const dim = feature.dimensions[i];
-                        stack.push({ path: `${path}/${feature.name}`, name: dim.feature_name });
+                        stack.push({ parent: id, id: nodeId++, path: `${path}/${feature.name}`, name: dim.feature_name });
                     }
                 } catch (e) {
                     console.error(`Error fetching ${name}:`, e);
@@ -593,7 +611,7 @@
             let col = 0;
             const maxCols = 2;
             const features = await fetchFeatureDepthFirst(rootName);
-            features.forEach(({name, scalar}, index) => {
+            features.forEach(({parent, id, name, scalar}, index) => {
                 addInstance(name, scalar, col);
                 col = (col + 1) % maxCols;
             });
