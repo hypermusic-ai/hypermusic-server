@@ -104,6 +104,7 @@ namespace dcn
         evmc::address _registry_address;
         evmc::address _runner_address;
     };
+    asio::awaitable<std::expected<std::vector<std::uint8_t>, evmc_status_code>> fetchOwner(EVM & evm, const evmc::address & address);
 
     std::vector<std::uint8_t> constructFunctionSelector(std::string signature);
 

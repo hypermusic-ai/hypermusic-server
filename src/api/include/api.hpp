@@ -19,6 +19,8 @@ using namespace asio::experimental::awaitable_operators;
 
 namespace dcn
 {
+    asio::awaitable<std::expected<evmc::address, AuthenticationError>> authenticate(const http::Request & request, const AuthManager & auth_manager);
+
     asio::awaitable<http::Response> GET_version(const http::Request &, std::vector<RouteArg>, const std::string & build_timestamp);
 
     /**

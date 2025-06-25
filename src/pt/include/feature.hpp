@@ -147,4 +147,14 @@ namespace dcn::parse
      */
     template<>
     std::optional<Feature> parseFromJson(std::string json_str, use_protobuf_t);
+
+
+    std::optional<json> parseToJson(FeatureRecord feature, use_json_t);
+    std::optional<std::string> parseToJson(FeatureRecord feature_record, use_protobuf_t);
+
+    template<>
+    std::optional<FeatureRecord> parseFromJson(json json_obj, use_json_t);
+    
+    template<>
+    std::optional<FeatureRecord> parseFromJson(std::string json_str, use_protobuf_t);
 }

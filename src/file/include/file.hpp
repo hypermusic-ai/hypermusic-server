@@ -17,6 +17,7 @@ namespace dcn
 
     std::filesystem::path getBinPath();
 
+    std::filesystem::path getStoragePath();
     std::filesystem::path getResourcesPath();
     std::filesystem::path getLogsPath();
     std::filesystem::path getPTPath();

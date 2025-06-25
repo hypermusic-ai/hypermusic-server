@@ -5,6 +5,7 @@ namespace dcn
     static std::filesystem::path BIN_PATH = std::filesystem::path();
     static std::filesystem::path LOGS_PATH = std::filesystem::path("logs");
     static std::filesystem::path RESOURCES_DIR = std::filesystem::path("resources");
+    static std::filesystem::path STORAGE_DIR = std::filesystem::path("storage");
     static std::filesystem::path PT_REPO = std::filesystem::path("pt");
 
 
@@ -21,6 +22,11 @@ namespace dcn
     std::filesystem::path getResourcesPath()
     {
         return BIN_PATH.parent_path() / RESOURCES_DIR;
+    }
+
+    std::filesystem::path getStoragePath()
+    {
+        return BIN_PATH.parent_path() / STORAGE_DIR;
     }
 
     std::filesystem::path getLogsPath()

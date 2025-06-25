@@ -21,6 +21,7 @@
 #include "feature.hpp"
 #include "transformation.hpp"
 #include "condition.hpp"
+#include "file.hpp"
 
 namespace dcn
 {
@@ -53,7 +54,7 @@ namespace dcn
              * function returns `std::nullopt`. If the feature does not exist, it is
              * added and the hash of the feature is returned.
              */
-            asio::awaitable<bool> addFeature(evmc::address address, Feature feature, std::filesystem::path source);
+            asio::awaitable<bool> addFeature(evmc::address address, Feature feature, evmc::address owner, std::filesystem::path source);
             
             /**
              * @brief Retrieves the newest feature by name.
@@ -268,7 +269,7 @@ namespace dcn
             absl::flat_hash_map<std::string, evmc::address> _newest_transformation;
             absl::flat_hash_map<std::string, evmc::address> _newest_condition;
 
-            absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, Node<Feature>>> _features;
+            absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, FeatureRecord>> _features;
             absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, Node<Transformation>>> _transformations;
             absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, Node<Condition>>> _conditions;
     };

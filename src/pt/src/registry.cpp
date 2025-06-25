@@ -18,7 +18,7 @@ namespace dcn
             if(co_await isFeatureBucketEmpty(subfeature_name))co_return false;
 
             const auto & sub_feature_node = _features.at(subfeature_name).at(_newest_feature.at(subfeature_name));
-            co_return (co_await checkIfSubFeaturesExist(sub_feature_node.value));
+            co_return (co_await checkIfSubFeaturesExist(sub_feature_node.feature()));
         }
         co_return true;
     }
@@ -70,7 +70,7 @@ namespace dcn
     }
 
 
-    asio::awaitable<bool> Registry::addFeature(evmc::address address, Feature feature, std::filesystem::path source)
+    asio::awaitable<bool> Registry::addFeature(evmc::address address, Feature feature, evmc::address owner, std::filesystem::path source)
     {
         if(feature.name().empty())
         {
@@ -89,7 +89,7 @@ namespace dcn
         if(! co_await containsFeatureBucket(feature.name()))
         {
             spdlog::debug("Feature bucket `{}` does not exists, creating new one ... ", feature.name());
-            _features.try_emplace(feature.name(), absl::flat_hash_map<evmc::address, Node<Feature>>());
+            _features.try_emplace(feature.name(), absl::flat_hash_map<evmc::address, FeatureRecord>());
         }       
 
         if(_features.at(feature.name()).contains(address))
@@ -116,12 +116,26 @@ namespace dcn
             }
         }
 
-        _newest_feature[feature.name()] = address;
+        FeatureRecord feature_record;
+        *feature_record.mutable_feature() = std::move(feature);
+        feature_record.set_owner(evmc::hex(owner));
+        feature_record.set_code_path(source.string());
 
-        _features.at(feature.name())
-            .try_emplace(
-                    std::move(address), 
-                Node<Feature>{std::move(feature), std::move(source)});
+        std::filesystem::create_directories(getStoragePath() / "features");
+        std::ofstream output_file(getStoragePath()/ "features" / (feature_record.feature().name() + ".json"), std::ios::out | std::ios::trunc);
+        const auto parsing_result = parse::parseToJson(feature_record, parse::use_protobuf);
+        if(!parsing_result)
+        {
+            spdlog::error("Failed to parse feature `{}`", feature.name());
+            co_return false;
+        }
+
+        output_file << *parsing_result;
+        output_file.close();
+
+        _newest_feature[feature_record.feature().name()] = address;
+        _features.at(feature_record.feature().name())
+            .try_emplace(std::move(address), std::move(feature_record));
 
         co_return true;
     }
@@ -148,7 +162,7 @@ namespace dcn
         {
             co_return std::nullopt;
         }
-        co_return it->second.value;
+        co_return it->second.feature();
     }
 
 

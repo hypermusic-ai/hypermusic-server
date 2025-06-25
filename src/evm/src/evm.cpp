@@ -260,6 +260,15 @@ namespace dcn
 
         return result;
     }
+
+    asio::awaitable<std::expected<std::vector<std::uint8_t>, evmc_status_code>> fetchOwner(EVM & evm, const evmc::address & address)
+    {
+        std::vector<uint8_t> input_data;
+        const auto selector = constructFunctionSelector("getOwner()");
+        input_data.insert(input_data.end(), selector.begin(), selector.end());
+        co_return  co_await evm.execute(evm.getRegistryAddress(), address, input_data, 1'000'000, 0);
+    }
+
     EVM::EVM(asio::io_context & io_context, evmc_revision rev, std::filesystem::path solc_path)
     :   _vm(evmc_create_evmone()),
         _rev(rev),

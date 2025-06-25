@@ -252,4 +252,71 @@ namespace dcn::parse
 
         return feature;
     }
+
+
+    std::optional<json> parseToJson(FeatureRecord feature, use_json_t)
+    {
+        json json_obj = json::object();
+        json_obj["feature"] = parseToJson(feature.feature(), use_json);
+        json_obj["owner"] = feature.owner();
+        json_obj["code_path"] = feature.code_path();
+        return json_obj;
+    }
+
+    std::optional<std::string> parseToJson(FeatureRecord feature_record, use_protobuf_t)
+    {
+        google::protobuf::util::JsonPrintOptions options;
+        options.add_whitespace = true; // Pretty print
+        options.preserve_proto_field_names = true; // Use snakeCase from proto
+        options.always_print_fields_with_no_presence = true;
+
+        std::string json_output;
+
+        auto status = google::protobuf::util::MessageToJsonString(feature_record, &json_output, options);
+
+        if(!status.ok()) return std::nullopt;
+
+        return json_output;
+    }
+
+    template<>
+    std::optional<FeatureRecord> parseFromJson(json json_obj, use_json_t)
+    {
+        FeatureRecord feature_record;
+        if (json_obj.contains("feature") == false)
+            return std::nullopt;
+
+        std::optional<Feature> feature = parseFromJson<Feature>(json_obj["feature"], use_json);
+
+        if(!feature)
+            return std::nullopt;
+
+        *feature_record.mutable_feature() = std::move(*feature);
+
+        if (json_obj.contains("owner") == false)
+            return std::nullopt;
+        
+        feature_record.set_owner(json_obj["owner"].get<std::string>());
+
+        if (json_obj.contains("code_path") == false)
+            return std::nullopt;
+        
+        feature_record.set_code_path(json_obj["code_path"].get<std::string>());
+
+        return feature_record;
+    }
+    
+    template<>
+    std::optional<FeatureRecord> parseFromJson(std::string json_str, use_protobuf_t)
+    {
+        google::protobuf::util::JsonParseOptions options;
+
+        FeatureRecord feature_record;
+
+        auto status = google::protobuf::util::JsonStringToMessage(json_str, &feature_record, options);
+
+        if(!status.ok()) return std::nullopt;
+
+        return feature_record;
+    }
 }
