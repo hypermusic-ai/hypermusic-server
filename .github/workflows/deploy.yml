@@ -66,7 +66,7 @@ jobs:
         chmod 600 "$KEY_FILE"
 
         # Use rsync to copy contents (not the 'install/' dir itself)
-        rsync -az --delete -e "ssh -i $KEY_FILE -o StrictHostKeyChecking=no" \
+        rsync -az --delete --exclude 'storage' -e "ssh -i $KEY_FILE -o StrictHostKeyChecking=no" \
           install/ hypermusic@34.118.118.250:/home/hypermusic/decentralised-art-install
 
         # Clean up key file
