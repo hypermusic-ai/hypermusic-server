@@ -1,10 +1,17 @@
 #pragma once
 
+#include <format>
+
 #include "native.h"
 #include <asio.hpp>
+#include <asio/experimental/awaitable_operators.hpp>
+using namespace asio::experimental::awaitable_operators;
+
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <absl/container/flat_hash_map.h>
+#include <absl/container/flat_hash_set.h>
 
 #include "server.hpp"
 #include "http.hpp"
@@ -16,6 +23,7 @@
 #include "auth.hpp"
 #include "utils.hpp"
 #include "version.hpp"
+#include "loader.hpp"
 
 namespace dcn
 {

@@ -80,8 +80,7 @@ namespace dcn
             response.setBodyWithContentLength("transformation not found");
             co_return response;
         }
-        
-        auto json_res = parse::parseTransformationToJson(*transformation_res, parse::use_json);
+        auto json_res = parse::parseToJson(*transformation_res, parse::use_json);
 
         if(!json_res)
         {
@@ -172,7 +171,7 @@ namespace dcn
         spdlog::debug(std::format("token verified address: {}", address));
         
         // every double-quote character (") is escaped with a backslash (\)
-        auto transformation_res = parse::parseJsonToTransformation(utils::escapeSolSrcQuotes(request.getBody()), parse::use_protobuf);
+        auto transformation_res = parse::parseFromJson<Transformation>(utils::escapeSolSrcQuotes(request.getBody()), parse::use_protobuf);
 
         if(!transformation_res) 
         {
@@ -185,96 +184,25 @@ namespace dcn
         }
 
         const Transformation & transformation = *transformation_res;
-        if(transformation.name().empty() || transformation.sol_src().empty())
+
+        TransformationRecord transformation_record;
+        transformation_record.set_code_path((getResourcesPath() / "contracts" / "transformations" / (transformation.name() + ".sol")).string());
+        transformation_record.set_owner(evmc::hex(address));
+        *transformation_record.mutable_transformation() = std::move(transformation);
+
+        if(!co_await deployTransformation(evm, registry, transformation_record))
         {
-            spdlog::error("Transformation name or source is empty");
+            spdlog::error("Failed to deploy transformation");
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("Transformation name or source is empty");
+            response.setBodyWithContentLength("Failed to deploy transformation");
             co_return std::move(response);
         }
-
-        std::filesystem::path code_path = getResourcesPath() / "contracts" / "transformations" / (transformation.name() + ".sol");
-        std::filesystem::path out_dir = getResourcesPath() / "contracts" / "transformations" / "build";
-
-        std::filesystem::create_directories(code_path.parent_path());
-        std::filesystem::create_directories(out_dir);
-
-        // create code file
-        std::ofstream out_file(code_path); 
-        if(!out_file.is_open())
-        {
-            spdlog::error("Failed to create file");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength("Failed to create file");
-            co_return std::move(response);
-        }
-
-        out_file << constructTransformationSolidityCode(transformation);
-        out_file.close();
-
-        // compile code
-        if(!co_await evm.compile(code_path, out_dir, getPTPath()/ "contracts", getPTPath() / "node_modules"))
-        {
-            spdlog::error("Failed to compile code");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength("Failed to compile code");
-            co_return std::move(response);
-        }
-
-        co_await evm.addAccount(address, 1000000000);
-        co_await evm.setGas(address, 1000000000);
-
-        auto deploy_res = co_await evm.deploy(  
-            out_dir / (transformation.name() + ".bin"), 
-            address, 
-            encodeAsArg(evm.getRegistryAddress()), 
-            1000000, 
-            0);
-        
-        if(!deploy_res)
-        {
-            spdlog::error("Failed to deploy code");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength("Failed to deploy code");
-            co_return std::move(response);
-        }
-        const auto owner_result = co_await fetchOwner(evm, deploy_res.value());
-
-        // check execution status
-        if(!owner_result)
-        {
-            spdlog::error("Failed to fetch owner {}", owner_result.error());
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength(std::format("Failed to fetch owner : {}", owner_result.error()));
-            co_return std::move(response);
-        }
-
-        if(!co_await registry.addTransformation(deploy_res.value(), transformation, code_path)) 
-        {
-            spdlog::error("Failed to add transformation to registry");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("Failed to add transformation");
-            co_return std::move(response);
-        }
-
-        spdlog::debug("transformation '{}' added", transformation.name());
 
         json json_output;
-        json_output["name"] = transformation.name();
-        json_output["owner"] = evmc::hex(decodeReturnedValue<evmc::address>(owner_result.value()));
-        json_output["local_address"] = evmc::hex(deploy_res.value());
+        json_output["name"] = transformation_record.transformation().name();
+        json_output["owner"] = transformation_record.owner();
         json_output["address"] = "0x0";
 
         response.setHeader(http::Header::Connection, "close");

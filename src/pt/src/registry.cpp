@@ -126,7 +126,7 @@ namespace dcn
         const auto parsing_result = parse::parseToJson(feature_record, parse::use_protobuf);
         if(!parsing_result)
         {
-            spdlog::error("Failed to parse feature `{}`", feature.name());
+            spdlog::error("Failed to parse feature `{}`", feature_record.feature().name());
             co_return false;
         }
 
@@ -166,7 +166,7 @@ namespace dcn
     }
 
 
-    asio::awaitable<bool> Registry::addTransformation(evmc::address address, Transformation transformation, std::filesystem::path source)
+    asio::awaitable<bool> Registry::addTransformation(evmc::address address, Transformation transformation, evmc::address owner, std::filesystem::path source)
     {
         if(transformation.name().empty())
         {
@@ -179,7 +179,7 @@ namespace dcn
         if(! co_await containsTransformationBucket(transformation.name())) 
         {
             spdlog::debug("Transformation bucket `{}` does not exists, creating new one ... ", transformation.name());
-            _transformations.try_emplace(transformation.name(), absl::flat_hash_map<evmc::address, Node<Transformation>>());
+            _transformations.try_emplace(transformation.name(), absl::flat_hash_map<evmc::address, TransformationRecord>());
         }
 
         if(_transformations.at(transformation.name()).contains(address))
@@ -187,13 +187,33 @@ namespace dcn
             spdlog::error("Transformation `{}` of this signature already exists", transformation.name());
             co_return false;
         }
+        
+        TransformationRecord transformation_record;
 
-        _newest_transformation[transformation.name()] = address;
-        _transformations.at(transformation.name())  
-            .try_emplace(   
-                std::move(address), 
-            Node<Transformation>{std::move(transformation), std::move(source)});
+        *transformation_record.mutable_transformation() = std::move(transformation);
+        transformation_record.set_owner(evmc::hex(owner));
+        transformation_record.set_code_path(source.string());
+
+        std::filesystem::create_directories(getStoragePath() / "transformations");
+        std::ofstream output_file(getStoragePath()/ "transformations" / (transformation_record.transformation().name() + ".json"), std::ios::out | std::ios::trunc);
+        const auto parsing_result = parse::parseToJson(transformation_record, parse::use_protobuf);
+        if(!parsing_result)
+        {
+            spdlog::error("Failed to parse transformation `{}`", transformation_record.transformation().name());
+            co_return false;
+        }
+
+        output_file << *parsing_result;
+        output_file.close();
+
+        _newest_transformation[transformation_record.transformation().name()] = address;
+        _transformations.at(transformation_record.transformation().name())
+            .try_emplace(std::move(address), std::move(transformation_record));
+
         co_return true;
+
+
+
     }
 
     asio::awaitable<std::optional<Transformation>> Registry::getNewestTransformation(const std::string& name) const
@@ -218,7 +238,7 @@ namespace dcn
         {
             co_return std::nullopt;
         }
-        co_return it->second.value;
+        co_return it->second.transformation();
     }
 
 

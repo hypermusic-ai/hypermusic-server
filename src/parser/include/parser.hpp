@@ -24,4 +24,11 @@ namespace dcn::parse
      * This tag type is used to distinguish between Protobuf and JSON parsing.
      */
     static constexpr use_json_t use_json{};
+
+
+    template<class T>
+    std::optional<T> parseFromJson(json json, use_json_t);
+
+    template<class T>
+    std::optional<T> parseFromJson(std::string json_str, use_protobuf_t);
 }

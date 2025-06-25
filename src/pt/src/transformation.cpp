@@ -2,9 +2,6 @@
 
 namespace dcn
 {
-
-
-
     std::string constructTransformationSolidityCode(const Transformation & transformation)
     {
         /* ------------- EXAMPLE -------------
@@ -67,7 +64,7 @@ namespace dcn
 
 namespace dcn::parse
 {
-    std::optional<json> parseTransformationToJson(Transformation transformation, use_json_t)
+    std::optional<json> parseToJson(Transformation transformation, use_json_t)
     {
         json json_obj;
 
@@ -77,7 +74,8 @@ namespace dcn::parse
         return json_obj;
     }
 
-    std::optional<Transformation> parseJsonToTransformation(json json_obj, use_json_t)
+    template<>
+    std::optional<Transformation> parseFromJson(json json_obj, use_json_t)
     {
         Transformation transformation;
 
@@ -96,7 +94,7 @@ namespace dcn::parse
         return transformation;
     }
 
-    std::optional<std::string> parseTransformationToJson(Transformation transformation, use_protobuf_t)
+    std::optional<std::string> parseToJson(Transformation transformation, use_protobuf_t)
     {
         google::protobuf::util::JsonPrintOptions options;
         options.add_whitespace = true;
@@ -111,7 +109,8 @@ namespace dcn::parse
         return json_str;
     }
 
-    std::optional<Transformation> parseJsonToTransformation(std::string json_str, use_protobuf_t)
+    template<>
+    std::optional<Transformation> parseFromJson(std::string json_str, use_protobuf_t)
     {
         google::protobuf::util::JsonParseOptions options;
 
@@ -123,4 +122,70 @@ namespace dcn::parse
 
         return transformation;
     }
+
+    std::optional<json> parseToJson(TransformationRecord transformation_record, use_json_t)
+    {
+        json json_obj = json::object();
+        json_obj["transformation"] = parseToJson(transformation_record.transformation(), use_json);
+        json_obj["owner"] = transformation_record.owner();
+        json_obj["code_path"] = transformation_record.code_path();
+        return json_obj;
+    }
+
+    std::optional<std::string> parseToJson(TransformationRecord transformation_record, use_protobuf_t)
+    {
+        google::protobuf::util::JsonPrintOptions options;
+        options.add_whitespace = true;
+        options.preserve_proto_field_names = true; // Use snake_case from proto
+        options.always_print_fields_with_no_presence = true;
+
+        std::string json_str;
+        auto status = google::protobuf::util::MessageToJsonString(transformation_record, &json_str, options);
+
+        if (!status.ok()) return std::nullopt;
+
+        return json_str;
+    }
+
+    template<>
+    std::optional<TransformationRecord> parseFromJson(json json_obj, use_json_t)
+    {
+        TransformationRecord transformation_record;
+        if (json_obj.contains("transformation") == false)
+            return std::nullopt;
+
+        std::optional<Transformation> transformation = parseFromJson<Transformation>(json_obj["transformation"], use_json);
+
+        if(!transformation)
+            return std::nullopt;
+
+        *transformation_record.mutable_transformation() = std::move(*transformation);
+
+        if (json_obj.contains("owner") == false)
+            return std::nullopt;
+        
+        transformation_record.set_owner(json_obj["owner"].get<std::string>());
+
+        if (json_obj.contains("code_path") == false)
+            return std::nullopt;
+        
+        transformation_record.set_code_path(json_obj["code_path"].get<std::string>());
+
+        return transformation_record;
+    }
+
+    template<>
+    std::optional<TransformationRecord> parseFromJson(std::string json_str, use_protobuf_t)
+    {
+        google::protobuf::util::JsonParseOptions options;
+
+        TransformationRecord transformation_record;
+
+        auto status = google::protobuf::util::JsonStringToMessage(json_str, &transformation_record, options);
+
+        if(!status.ok()) return std::nullopt;
+
+        return transformation_record;
+    }
+
 }

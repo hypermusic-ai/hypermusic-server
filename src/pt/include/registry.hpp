@@ -96,7 +96,7 @@ namespace dcn
              * transformation does not exist, it is added and the hash of the
              * transformation is returned.
              */
-            asio::awaitable<bool> addTransformation(evmc::address address, Transformation transformation, std::filesystem::path source);
+            asio::awaitable<bool> addTransformation(evmc::address address, Transformation transformation, evmc::address owner, std::filesystem::path source);
 
             /**
              * @brief Retrieves the newest transformation by name.
@@ -270,7 +270,7 @@ namespace dcn
             absl::flat_hash_map<std::string, evmc::address> _newest_condition;
 
             absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, FeatureRecord>> _features;
-            absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, Node<Transformation>>> _transformations;
+            absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, TransformationRecord>> _transformations;
             absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, Node<Condition>>> _conditions;
     };
 }

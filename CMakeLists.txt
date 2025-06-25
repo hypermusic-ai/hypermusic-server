@@ -63,6 +63,7 @@ target_link_libraries("${PROJECT_NAME}Lib"
         "${PROJECT_PREFIX}::Auth"
         "${PROJECT_PREFIX}::API"
         "${PROJECT_PREFIX}::EVM"
+        "${PROJECT_PREFIX}::Loader"
 )
 
 target_sources("${PROJECT_NAME}Lib" PUBLIC

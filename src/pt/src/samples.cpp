@@ -16,6 +16,7 @@ namespace dcn::parse
         return arr;
     }
 
+    template<>
     std::optional<std::vector<Samples>> parseFromJson(json json_val, use_json_t) 
     {
         if (!json_val.is_array())

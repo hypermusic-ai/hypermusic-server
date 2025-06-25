@@ -9,5 +9,7 @@
 namespace dcn::parse
 {
     std::optional<json> parseToJson(std::vector<Samples> samples, use_json_t);
+
+    template<>
     std::optional<std::vector<Samples>> parseFromJson(json json, use_json_t);
 }

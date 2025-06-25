@@ -6,3 +6,11 @@ message Transformation {
     string name = 1;
     string sol_src = 2;
 }
+
+// Internal full record (used in storage, indexing, etc.)
+message TransformationRecord 
+{
+  Transformation transformation = 1;
+  string owner = 2;
+  string code_path = 3;
+}

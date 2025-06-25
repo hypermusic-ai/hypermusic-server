@@ -11,6 +11,7 @@ add_module(NAME "API"
         "${PROJECT_PREFIX}::Parser"
         "${PROJECT_PREFIX}::Auth"
         "${PROJECT_PREFIX}::EVM"
+        "${PROJECT_PREFIX}::Loader"
 
         spdlog::spdlog
         asio

@@ -66,13 +66,6 @@ namespace dcn
 
 namespace dcn::parse
 {
-
-    template<class T>
-    std::optional<T> parseFromJson(json json, use_json_t);
-
-    template<class T>
-    std::optional<T> parseFromJson(std::string json_str, use_protobuf_t);
-
     /**
      * @brief Parses a TransformationDef object to a JSON object.
      * @param transform_def The TransformationDef object to parse.

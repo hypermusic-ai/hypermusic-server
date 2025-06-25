@@ -5,4 +5,6 @@ add_module(NAME "Utils"
         "${PROJECT_PREFIX}::Native"
         spdlog::spdlog
         asio
+        absl::hash
+        absl::flat_hash_map 
 )

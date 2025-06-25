@@ -16,6 +16,7 @@ using namespace asio::experimental::awaitable_operators;
 #include "evm.hpp"
 #include "file.hpp"
 #include "version.hpp"
+#include "loader.hpp"
 
 namespace dcn
 {

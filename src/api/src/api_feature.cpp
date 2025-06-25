@@ -185,98 +185,23 @@ namespace dcn
 
         const Feature & feature = *feature_res;
 
-        if(co_await registry.checkIfSubFeaturesExist(feature) == false)
+        FeatureRecord feature_record;
+        feature_record.set_code_path((getResourcesPath() / "contracts" / "features" / (feature.name() + ".sol")).string());
+        feature_record.set_owner(evmc::hex(address));
+        *feature_record.mutable_feature() = std::move(feature);
+
+        if(!co_await deployFeature(evm, registry, feature_record))
         {
             response.setHeader(http::Header::Connection, "close");
             response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("Cannot find subfeatures for feature");
+            response.setBodyWithContentLength("Failed to deploy feature");
             co_return std::move(response);
         }
 
-        std::filesystem::path code_path = getResourcesPath() / "contracts" / "features" / (feature.name() + ".sol");
-        std::filesystem::path out_dir = getResourcesPath() / "contracts" / "features" / "build";
-
-        std::filesystem::create_directories(code_path.parent_path());
-        std::filesystem::create_directories(out_dir);
-
-        // create code file
-        std::ofstream out_file(code_path); 
-        if(!out_file.is_open())
-        {
-            spdlog::error("Failed to create file");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength("Failed to create file");
-            co_return std::move(response);
-        }
-
-        out_file << constructFeatureSolidityCode(feature);
-        out_file.close();
-
-        // compile code
-        if(!co_await evm.compile(code_path, out_dir, getPTPath()/ "contracts", getPTPath() / "node_modules"))
-        {
-            spdlog::error("Failed to compile code");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength("Failed to compile code");
-            co_return std::move(response);
-        }
-        
-        co_await evm.addAccount(address, 1000000000);
-        co_await evm.setGas(address, 1000000000);
-        
-        auto deploy_res = co_await evm.deploy(
-            out_dir / (feature.name() + ".bin"), 
-            address, 
-    encodeAsArg(evm.getRegistryAddress()),
-            1000000000, 
-            0);
-
-        if(!deploy_res)
-        {
-            spdlog::error("Failed to deploy code : {}", deploy_res.error());
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength(std::format("Failed to deploy code : {}",  deploy_res.error()));
-            co_return std::move(response);
-        }
-
-        const auto owner_result = co_await fetchOwner(evm, deploy_res.value());
-
-        // check execution status
-        if(!owner_result)
-        {
-            spdlog::error("Failed to fetch owner {}", owner_result.error());
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength(std::format("Failed to fetch owner : {}", owner_result.error()));
-            co_return std::move(response);
-        }
-
-        const auto owner_address = decodeReturnedValue<evmc::address>(owner_result.value());
-
-        if(!co_await registry.addFeature(deploy_res.value(), feature, owner_address, code_path)) 
-        {
-            spdlog::error("Failed to add feature");
-            response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
-            response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("Failed to add feature");
-            co_return std::move(response);
-        }
-
-        spdlog::debug("feature '{}' added", feature.name());
-        
         json json_output;
-        json_output["name"] = feature.name();
-        json_output["owner"] = evmc::hex(owner_address);
-        json_output["local_address"] = evmc::hex(deploy_res.value());
+        json_output["name"] = feature_record.feature().name();
+        json_output["owner"] = feature_record.owner();
         json_output["address"] = "0x0";
 
         response.setHeader(http::Header::Connection, "close");

@@ -90,8 +90,15 @@ int main(int argc, char* argv[])
     
     server.addRoute({dcn::http::Method::GET, "/execute/<string>/<uint>/<~[<(<uint>;<uint>)>]>"},                dcn::GET_execute, std::cref(auth_manager), std::cref(registry), std::ref(evm));
 
-
-    asio::co_spawn(io_context, server.listen(), asio::detached);
+    asio::co_spawn(io_context, dcn::loadStoredTransformations(evm, registry), 
+        [&io_context, &registry, &evm, &server](std::exception_ptr, bool){
+                asio::co_spawn(io_context, dcn::loadStoredFeatures(evm, registry), 
+                [&io_context, &server](std::exception_ptr, bool){
+                    asio::co_spawn(io_context, server.listen(), asio::detached);
+                }
+            );
+        }
+    );
 
     try
     {
