@@ -140,6 +140,9 @@
             margin: 2rem 0;
         }
     </style>
+
+    <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+    <link href="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -162,22 +165,24 @@
 
     <div class="row">
         <div class="column">
-            <h2>Execute Contract</h2>
-            <label>Contract name</label>
+            <h2>Execute</h2>
+            <label>Feature name</label>
             <input id="executeName" type="text" placeholder="pitch">
-    
-            <label>Sample count</label>
-            <input id="executeN" type="text" placeholder="5">
-    
+            <button onclick="fillInstancesFromFeature()">Fetch</button>
+            
             <label>Running Instances</label>
-            <div id="instanceEditor"></div>
-            <button onclick="fillInstancesFromFeature()">Fetch running instances</button>
-
+            <div id="instanceEditor" style="display: flex; gap: 2rem; flex-wrap: wrap;"></div>
             <div class="request-row">
                 <div id="executeRunningInstances" class="request-body"></div>
             </div>
-            <button onclick="execute()">Execute</button>
+            <div class="request-row">
+                <div id="treeContainer" style="display: none; width: 100%; height: 400px; background: #1e1e1e; border-radius: 6px; margin: 1rem;"></div>
+            </div>
+            <label>Sample count</label>
+            <input id="executeN" type="text" placeholder="5">
     
+            <button onclick="execute()">Execute</button>
+
             <div class="response-row">
                 <div id="executeCode" class="response-code">-</div>
                 <div id="executeBody" class="response-body">Waiting...</div>
@@ -266,6 +271,36 @@
         </div>
     </div>
     <script>
+        function drawFeatureTree(treeData) {
+            const nodes = [];
+            const edges = [];
+        
+            treeData.forEach((item, index) => {
+                nodes.push({
+                    id: item.name,
+                    label: item.name.split('/').pop(),
+                    color: item.scalar ? '#1e90ff' : '#ffffff',
+                    font: { color: item.scalar ? '#fff' : '#000' }
+                });
+            
+                const parentPath = item.name.split('/').slice(0, -1).join('/');
+                if (parentPath) {
+                    edges.push({ from: parentPath, to: item.name });
+                }
+            });
+        
+            const container = document.getElementById('treeContainer');
+            const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+            const options = {
+                layout: { hierarchical: { direction: 'UD', sortMethod: 'directed' } },
+                physics: false,
+                edges: { color: '#aaa' }
+            };
+            const network = new vis.Network(container, data, options);
+            document.getElementById('treeContainer').style.display = 'block';
+            network.fit(); // Center the view
+        }
+
         async function updateFeatureRequestPreview() {
             const json = await constructStructuredFeature();
             document.getElementById('POST_featureRequestBody').textContent = json;
@@ -443,31 +478,48 @@
             }
         }
 
-        function addInstance(name, scalar) {
+
+        function addInstance(name, scalar, column) {
             const editor = document.getElementById('instanceEditor');
+
+            // Ensure column container exists
+            let colId = `instance-column-${column}`;
+            let col = document.getElementById(colId);
+            if (!col) {
+                col = document.createElement('div');
+                col.id = colId;
+                col.classList.add('instance-column');
+                col.style.display = 'flex';
+                col.style.flexDirection = 'column';
+                col.style.gap = '0.5rem';
+                col.style.minWidth = '300px';
+                editor.appendChild(col);
+            }
+
+            // Create instance input row
             const div = document.createElement('div');
             div.classList.add('instance-row');
             div.style.display = 'flex';
             div.style.gap = '0.5rem';
             div.style.marginBottom = '0.5rem';
-                
+
             div.innerHTML = `
-                <div style="display: flex; align-items: center; width: 50%;">
+                <div style="display: flex; align-items: center; width: 50%; font-size: 0.8rem;">
                     <label style="word-break: break-word; white-space: normal;">
                         ${scalar ? `<strong>${name}</strong>` : name}
                     </label>
                 </div>
-                <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; flex-direction: column; font-size: 0.8rem;">
                     <label>start point</label>
-                    <input type="number" class="instance-start-point" placeholder="0" oninput="updateInstanceInput()" style="width: 80px;">
+                    <input type="number" class="instance-start-point" placeholder="0" value="0" oninput="updateInstanceInput()" style="width: 80px;">
                 </div>
-                <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; flex-direction: column; font-size: 0.8rem;">
                     <label>transform shift</label>
-                    <input type="number" class="instance-transform-shift" placeholder="0" oninput="updateInstanceInput()" style="width: 80px;">
+                    <input type="number" class="instance-transform-shift" placeholder="0" value="0" oninput="updateInstanceInput()" style="width: 80px;">
                 </div>
             `;
-                
-            editor.appendChild(div);
+            
+            col.appendChild(div);
             updateInstanceInput();
         }
 
@@ -531,13 +583,17 @@
         
             // Clear previous instances
             clearInstances();
-
+            
+            let col = 0;
+            const maxCols = 2;
             const features = await fetchFeatureDepthFirst(rootName);
             features.forEach(({name, scalar}, index) => {
-                addInstance(name, scalar);
+                addInstance(name, scalar, col);
+                col = (col + 1) % maxCols;
             });
         
             updateInstanceInput();
+            drawFeatureTree(features);
         }
 
         async function execute() {
