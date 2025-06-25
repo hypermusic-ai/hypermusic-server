@@ -276,16 +276,21 @@
             const edges = [];
         
             treeData.forEach((item, index) => {
+                const nodeId = `${item.name}__${index}`; // Ensure uniqueness
                 nodes.push({
-                    id: item.name,
+                    id: nodeId,
                     label: item.name.split('/').pop(),
+                    title: item.name,
                     color: item.scalar ? '#1e90ff' : '#ffffff',
                     font: { color: item.scalar ? '#fff' : '#000' }
                 });
             
                 const parentPath = item.name.split('/').slice(0, -1).join('/');
                 if (parentPath) {
-                    edges.push({ from: parentPath, to: item.name });
+                    const parentIndex = treeData.findIndex(i => i.name === parentPath);
+                    if (parentIndex !== -1) {
+                        edges.push({ from: `${parentPath}__${parentIndex}`, to: nodeId });
+                    }
                 }
             });
         
@@ -296,9 +301,10 @@
                 physics: false,
                 edges: { color: '#aaa' }
             };
+        
             const network = new vis.Network(container, data, options);
             document.getElementById('treeContainer').style.display = 'block';
-            network.fit(); // Center the view
+            network.fit();
         }
 
         async function updateFeatureRequestPreview() {
