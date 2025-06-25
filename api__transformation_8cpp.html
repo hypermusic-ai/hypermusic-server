@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Decentralised Art Server: src/api/src/api.cpp File Reference</title>
+<title>Decentralised Art Server: src/api/src/api_transformation.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('api_8cpp.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('api__transformation_8cpp.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('api_8cpp.html',''); initResizable(); }
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">api.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">api_transformation.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="api_8hpp_source.html">api.hpp</a>&quot;</code><br />
@@ -112,17 +112,19 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0cc939f20e80cff8764d9d1eb853edc1" id="r_a0cc939f20e80cff8764d9d1eb853edc1"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; std::expected&lt; evmc::address, <a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10">AuthenticationError</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a0cc939f20e80cff8764d9d1eb853edc1">dcn::authenticate</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">request</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">auth_manager</a>)</td></tr>
-<tr class="separator:a0cc939f20e80cff8764d9d1eb853edc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afed3b262cea12515ca285269fc7ea0b1" id="r_afed3b262cea12515ca285269fc7ea0b1"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#afed3b262cea12515ca285269fc7ea0b1">dcn::GET_version</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">build_timestamp</a>)</td></tr>
-<tr class="separator:afed3b262cea12515ca285269fc7ea0b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcf0e0fcb9332c361fdb8882a768c760" id="r_afcf0e0fcb9332c361fdb8882a768c760"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#afcf0e0fcb9332c361fdb8882a768c760">dcn::OPTIONS_transformation</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;)</td></tr>
+<tr class="separator:afcf0e0fcb9332c361fdb8882a768c760"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeca50bef36a4b8d8e19ae013decb34f7" id="r_aeca50bef36a4b8d8e19ae013decb34f7"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#aeca50bef36a4b8d8e19ae013decb34f7">dcn::GET_transformation</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">args</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
+<tr class="separator:aeca50bef36a4b8d8e19ae013decb34f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e3b30c2922ac53a9157eb4f86cc6fa5" id="r_a5e3b30c2922ac53a9157eb4f86cc6fa5"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a5e3b30c2922ac53a9157eb4f86cc6fa5">dcn::POST_transformation</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">args</a>, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">auth_manager</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
+<tr class="separator:a5e3b30c2922ac53a9157eb4f86cc6fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_da61e3e9a357748887e3ca8d7c5a0c16.html">api</a></li><li class="navelem"><a class="el" href="dir_279cbe7663829d487e97774a2345ea4e.html">src</a></li><li class="navelem"><a class="el" href="api_8cpp.html">api.cpp</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_da61e3e9a357748887e3ca8d7c5a0c16.html">api</a></li><li class="navelem"><a class="el" href="dir_279cbe7663829d487e97774a2345ea4e.html">src</a></li><li class="navelem"><a class="el" href="api__transformation_8cpp.html">api_transformation.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

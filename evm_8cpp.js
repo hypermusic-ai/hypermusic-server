@@ -8,5 +8,6 @@ var evm_8cpp =
     [ "encodeAsArg< std::string >", "evm_8cpp.html#a79ca18ef136c91bb9fb1f13df4c08a56", null ],
     [ "encodeAsArg< std::uint32_t >", "evm_8cpp.html#ad4d0d6b3558cf961fbe01aadba3ecb84", null ],
     [ "encodeAsArg< std::vector< std::tuple< std::uint32_t, std::uint32_t > > >", "evm_8cpp.html#ac503d264f680b394c9b72e378a7e3fe3", null ],
-    [ "encodeAsArg< std::vector< std::uint32_t > >", "evm_8cpp.html#adcd741468cd327cbbc3141920c80d44e", null ]
+    [ "encodeAsArg< std::vector< std::uint32_t > >", "evm_8cpp.html#adcd741468cd327cbbc3141920c80d44e", null ],
+    [ "fetchOwner", "evm_8cpp.html#a038ac19627e8b500ea8a1c3fb716d34f", null ]
 ];

@@ -47,7 +47,8 @@ var searchData=
   ['getrequirement_44',['getRequirement',['../classdcn_1_1RouteArg.html#a91648ad7536bb8bf05bd4fd9551a7cad',1,'dcn::RouteArg']]],
   ['getresourcespath_45',['getResourcesPath',['../namespacedcn.html#ac0e55457c0e648c759ef19607670b46f',1,'dcn']]],
   ['getrunneraddress_46',['getRunnerAddress',['../classdcn_1_1EVM.html#aa751e66fc09d11c0a490550a65df6dc2',1,'dcn::EVM']]],
-  ['gettransformation_47',['getTransformation',['../classdcn_1_1Registry.html#aa96d6ea7e0e9ab83e2d32a089fa723b6',1,'dcn::Registry']]],
-  ['gettype_48',['getType',['../classdcn_1_1RouteArg.html#a5a3ca9883d02a929ee098e0940a69995',1,'dcn::RouteArg']]],
-  ['getversion_49',['getVersion',['../classdcn_1_1http_1_1MessageBase.html#a4342573fcd3568513c8b76fd273f7cf2',1,'dcn::http::MessageBase']]]
+  ['getstoragepath_47',['getStoragePath',['../namespacedcn.html#a1977044d5c5a97e9814f7c9bc45f9b79',1,'dcn']]],
+  ['gettransformation_48',['getTransformation',['../classdcn_1_1Registry.html#aa96d6ea7e0e9ab83e2d32a089fa723b6',1,'dcn::Registry']]],
+  ['gettype_49',['getType',['../classdcn_1_1RouteArg.html#a5a3ca9883d02a929ee098e0940a69995',1,'dcn::RouteArg']]],
+  ['getversion_50',['getVersion',['../classdcn_1_1http_1_1MessageBase.html#a4342573fcd3568513c8b76fd273f7cf2',1,'dcn::http::MessageBase']]]
 ];

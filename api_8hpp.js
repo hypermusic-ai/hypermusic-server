@@ -1,5 +1,6 @@
 var api_8hpp =
 [
+    [ "authenticate", "api_8hpp.html#a0cc939f20e80cff8764d9d1eb853edc1", null ],
     [ "GET_execute", "api_8hpp.html#a43fa656e7a21322ec32d97de3e5c0a11", null ],
     [ "GET_feature", "api_8hpp.html#ae839348cd866c04081b43b59410ffda5", null ],
     [ "GET_nonce", "api_8hpp.html#ac3751c4b02df4c86c564697360400c7e", null ],
