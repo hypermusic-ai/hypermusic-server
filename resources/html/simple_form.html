@@ -158,7 +158,10 @@
             white-space: nowrap;
             max-width: 300px;
         }
-
+        #popupInstanceEditor, 
+        #popupInstanceEditor * {
+            box-sizing: border-box;
+        }
     </style>
 
     <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
@@ -188,10 +191,21 @@
             <h2>Execute</h2>
             <label>Feature name</label>
             <input id="executeName" type="text" placeholder="pitch">
-            <button onclick="fillInstancesFromFeature()">Fetch</button>
+            <button onclick="fetchBeforeExecute()">Fetch</button>
             
+            <div id="popupInstanceEditor" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%); background:#222; color:#fff; padding:1rem; border-radius:8px; z-index:9999;">
+                <h3>Edit Running Instance</h3>
+                <p id="popupFeatureLabel"></p>
+                <label>Start Point</label>
+                <input type="number" id="popupStartPoint" style="width:100%;">
+                <label>Transform Shift</label>
+                <input type="number" id="popupTransformShift" style="width:100%;">
+                <div style="margin-top:1rem; display:flex; justify-content: space-between;">
+                    <button onclick="saveInstanceEdit()">Save</button>
+                    <button onclick="closePopup()">Cancel</button>
+                </div>
+            </div>
             <label>Running Instances</label>
-            <div id="instanceEditor" style="display: flex; gap: 2rem; flex-wrap: wrap;"></div>
             <div class="request-row">
                 <div id="executeRunningInstances" class="request-body"></div>
             </div>
@@ -291,6 +305,54 @@
         </div>
     </div>
     <script>
+        // --------------------------------------------------------------------------
+        // Running Instances
+        // --------------------------------------------------------------------------
+        let runningInstanceData = []; // indexed by node.id
+        let currentNodeEditing = null;
+
+        function openRIPopup(nodeId, label) {
+            currentNodeEditing = nodeId;
+            document.getElementById("popupFeatureLabel").textContent = label;
+            const existing = runningInstanceData[nodeId] || [0, 0];
+            document.getElementById("popupStartPoint").value = existing[0];
+            document.getElementById("popupTransformShift").value = existing[1];
+            document.getElementById("popupInstanceEditor").style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById("popupInstanceEditor").style.display = 'none';
+            currentNodeEditing = null;
+        }
+
+        function saveInstanceEdit() {
+            const a = parseInt(document.getElementById("popupStartPoint").value);
+            const b = parseInt(document.getElementById("popupTransformShift").value);
+            if (!isNaN(a) && !isNaN(b)) {
+                runningInstanceData[currentNodeEditing] = [a, b];
+                updateRunningInstanceList();
+            }
+            closePopup();
+        }
+        
+        function updateRunningInstanceList() {
+            const result = runningInstanceData
+                .map((v, i) => v ? `(${v[0]};${v[1]})` : null)
+                .filter(v => v !== null);
+
+            document.getElementById('executeRunningInstances').textContent = result.length > 0
+                ? `[${result.join(',')}]`
+                : '';
+        }
+
+        function clearRunningInstances() {
+            runningInstanceData = [];
+            updateRunningInstanceList();
+        }
+
+        // --------------------------------------------------------------------------
+        // Execute
+        // --------------------------------------------------------------------------
         function drawFeatureTree(treeData) {
             const nodes = [];
             const edges = [];
@@ -320,10 +382,117 @@
             };
         
             const network = new vis.Network(container, data, options);
+
+            network.on("click", function (params) {
+                if (params.nodes.length > 0) {
+                    const nodeId = params.nodes[0];
+                    const nodeData = treeData.find(n => n.id === nodeId);
+                    if (nodeData) {
+                        openRIPopup(nodeId, nodeData.name);
+                    }
+                }
+            });
+
             document.getElementById('treeContainer').style.display = 'block';
             network.fit();
         }
 
+        async function fetchFeatureDepthFirst(rootFeatureName) 
+        {
+            clearRunningInstances();
+
+            let nodeIdCounter = 0;
+            const compositeList = [];
+            const apiBase = window.location.origin;
+            const stack = [{
+                parent: -1,
+                path: '',
+                name: rootFeatureName,
+                assignId: () => nodeIdCounter++
+            }];
+
+            while (stack.length > 0) {
+                const { parent, path, name, assignId } = stack.pop();
+                const id = assignId();
+            
+                try {
+                    const res = await fetch(`${apiBase}/feature/${name}`);
+                    if (!res.ok) throw new Error(`Failed to fetch ${name}`);
+                    const feature = await res.json();
+                
+                    const fullPath = `${path}/${feature.name}`;
+                    const scalar = feature.dimensions.length === 0;
+                
+                    compositeList.push({ parent, id, name: fullPath, scalar });
+                    runningInstanceData[id] = [0, 0];
+                
+                    // Push children in reverse so they’re visited left-to-right
+                    for (let i = feature.dimensions.length - 1; i >= 0; i--) {
+                        const dim = feature.dimensions[i];
+                        stack.push({
+                            parent: id,
+                            path: fullPath,
+                            name: dim.feature_name,
+                            assignId: () => nodeIdCounter++
+                        });
+                    }
+                } catch (e) {
+                    console.error(`Error fetching ${name}:`, e);
+                }
+            }
+
+            updateRunningInstanceList();
+            return compositeList;
+        }
+        
+
+        async function fetchBeforeExecute() {
+            const rootName = document.getElementById('executeName').value.trim();
+            if (!rootName) {
+                alert("Please provide a feature name.");
+                return;
+            }
+                    
+            const features = await fetchFeatureDepthFirst(rootName);
+
+            drawFeatureTree(features);
+        }
+
+        async function execute() {
+            const name = document.getElementById('executeName').value.trim();
+            const N = document.getElementById('executeN').value.trim();
+            const runningInstances = document.getElementById('executeRunningInstances').textContent.trim();
+
+            const codeDiv = document.getElementById('executeCode');
+            const bodyDiv = document.getElementById('executeBody');
+            if (!name) {
+                alert("Contract name is required.");
+                return;
+            }
+            const apiBase = window.location.origin;
+            const url = runningInstances === '' ? `${apiBase}/execute/${name}/${N}` : `${apiBase}/execute/${name}/${N}/${runningInstances}`;
+            try {
+                const res = await requestWithRefresh(url,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                }
+                );
+                const text = await res.text();
+                codeDiv.textContent = res.status;
+                bodyDiv.textContent = formatJSON(text);
+            } catch (error) {
+                codeDiv.textContent = 'Error';
+                bodyDiv.textContent = error.message;
+            }
+        }
+
+        // --------------------------------------------------------------------------
+        // Feature
+        // --------------------------------------------------------------------------
         async function updateFeatureRequestPreview() {
             const json = await constructStructuredFeature();
             document.getElementById('POST_featureRequestBody').textContent = json;
@@ -437,6 +606,33 @@
                 responseBodyDiv.textContent = error.message;
             }
         }
+        // --------------------------------------------------------------------------
+        // Transformation
+        // --------------------------------------------------------------------------
+        async function getTransformation() {
+            const name = document.getElementById('GET_transformationName').value.trim();
+            const address = document.getElementById('GET_transformationAddress').value.trim();
+
+            const responseCodeDiv = document.getElementById('GET_transformationResponseCode');
+            const responseBodyDiv = document.getElementById('GET_transformationResponseBody');
+
+            if (!name) {
+                alert("Transformation name is required.");
+                return;
+            }
+
+            const apiBase = window.location.origin;
+            const url = `${apiBase}/transformation/${name}${address ? `/${address}` : ''}`;
+            try {
+                const res = await fetch(url);
+                const text = await res.text();
+                responseCodeDiv.textContent = res.status;
+                responseBodyDiv.textContent = formatJSON(text);
+            } catch (error) {
+                responseCodeDiv.textContent = 'Error';
+                responseBodyDiv.textContent = error.message;
+            }
+        }
 
         function updateTransformationPreview() {
             const name = document.getElementById('POST_transformationName').value.trim();
@@ -476,182 +672,9 @@
             }
         }
 
-        async function getTransformation() {
-            const name = document.getElementById('GET_transformationName').value.trim();
-            const address = document.getElementById('GET_transformationAddress').value.trim();
-
-            const responseCodeDiv = document.getElementById('GET_transformationResponseCode');
-            const responseBodyDiv = document.getElementById('GET_transformationResponseBody');
-
-            if (!name) {
-                alert("Transformation name is required.");
-                return;
-            }
-
-            const apiBase = window.location.origin;
-            const url = `${apiBase}/transformation/${name}${address ? `/${address}` : ''}`;
-            try {
-                const res = await fetch(url);
-                const text = await res.text();
-                responseCodeDiv.textContent = res.status;
-                responseBodyDiv.textContent = formatJSON(text);
-            } catch (error) {
-                responseCodeDiv.textContent = 'Error';
-                responseBodyDiv.textContent = error.message;
-            }
-        }
-
-
-        function addInstance(name, scalar, column) {
-            const editor = document.getElementById('instanceEditor');
-
-            // Ensure column container exists
-            let colId = `instance-column-${column}`;
-            let col = document.getElementById(colId);
-            if (!col) {
-                col = document.createElement('div');
-                col.id = colId;
-                col.classList.add('instance-column');
-                col.style.display = 'flex';
-                col.style.flexDirection = 'column';
-                col.style.gap = '0.5rem';
-                col.style.minWidth = '300px';
-                editor.appendChild(col);
-            }
-
-            // Create instance input row
-            const div = document.createElement('div');
-            div.classList.add('instance-row');
-            div.style.display = 'flex';
-            div.style.gap = '0.5rem';
-            div.style.marginBottom = '0.5rem';
-
-            div.innerHTML = `
-                <div style="display: flex; align-items: center; width: 50%; font-size: 0.8rem;">
-                    <label style="word-break: break-word; white-space: normal;">
-                        ${scalar ? `<strong>${name}</strong>` : name}
-                    </label>
-                </div>
-                <div style="display: flex; flex-direction: column; font-size: 0.8rem;">
-                    <label>start point</label>
-                    <input type="number" class="instance-start-point" placeholder="0" value="0" oninput="updateInstanceInput()" style="width: 80px;">
-                </div>
-                <div style="display: flex; flex-direction: column; font-size: 0.8rem;">
-                    <label>transform shift</label>
-                    <input type="number" class="instance-transform-shift" placeholder="0" value="0" oninput="updateInstanceInput()" style="width: 80px;">
-                </div>
-            `;
-            
-            col.appendChild(div);
-            updateInstanceInput();
-        }
-
-        function clearInstances() {
-            document.getElementById('instanceEditor').innerHTML = '';
-            updateInstanceInput();
-        }
-
-        function updateInstanceInput() {
-            const instances = [];
-            document.querySelectorAll('.instance-row').forEach(row => {
-                const a = row.querySelector('input.instance-start-point').value;
-                const b = row.querySelector('input.instance-transform-shift').value;
-                if (a !== '' && b !== '') {
-                    instances.push(`(${a};${b})`);
-                }
-            });
-            if(instances.length > 0){
-                document.getElementById('executeRunningInstances').textContent = `[${instances.join(',')}]`;
-            }else 
-            {
-                document.getElementById('executeRunningInstances').textContent = '';
-            }
-        }
-
-        async function fetchFeatureDepthFirst(rootFeatureName) 
-        {
-            let nodeId = 0;
-            const stack = [{ parent : -1, id : nodeId++, path: ``, name: rootFeatureName }];
-            const compositeList = [];
-            const apiBase = window.location.origin;
-
-            while (stack.length > 0) {
-                const { parent, id, path, name } = stack.pop();
-            
-                try {
-                    const res = await fetch(`${apiBase}/feature/${name}`);
-                    if (!res.ok) throw new Error(`Failed to fetch ${name}`);
-                    const feature = await res.json();
-                
-                    compositeList.push({ parent : parent, id : id, name: `${path}/${feature.name}`, scalar: feature.dimensions.length === 0 });
-                
-                    // Push children in reverse order to preserve left-to-right traversal
-                    for (let i = feature.dimensions.length - 1; i >= 0; i--) {
-                        const dim = feature.dimensions[i];
-                        stack.push({ parent: id, id: nodeId++, path: `${path}/${feature.name}`, name: dim.feature_name });
-                    }
-                } catch (e) {
-                    console.error(`Error fetching ${name}:`, e);
-                }
-            }
-        
-            return compositeList;
-        }
-
-        async function fillInstancesFromFeature() {
-            const rootName = document.getElementById('executeName').value.trim();
-            if (!rootName) {
-                alert("Please provide a feature name.");
-                return;
-            }
-        
-            // Clear previous instances
-            clearInstances();
-            
-            let col = 0;
-            const maxCols = 2;
-            const features = await fetchFeatureDepthFirst(rootName);
-            features.forEach(({parent, id, name, scalar}, index) => {
-                addInstance(name, scalar, col);
-                col = (col + 1) % maxCols;
-            });
-        
-            updateInstanceInput();
-            drawFeatureTree(features);
-        }
-
-        async function execute() {
-            const name = document.getElementById('executeName').value.trim();
-            const N = document.getElementById('executeN').value.trim();
-            const runningInstances = document.getElementById('executeRunningInstances').textContent.trim();
-
-            const codeDiv = document.getElementById('executeCode');
-            const bodyDiv = document.getElementById('executeBody');
-            if (!name) {
-                alert("Contract name is required.");
-                return;
-            }
-            const apiBase = window.location.origin;
-            const url = runningInstances === '' ? `${apiBase}/execute/${name}/${N}` : `${apiBase}/execute/${name}/${N}/${runningInstances}`;
-            try {
-                const res = await requestWithRefresh(url,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include'
-                }
-                );
-                const text = await res.text();
-                codeDiv.textContent = res.status;
-                bodyDiv.textContent = formatJSON(text);
-            } catch (error) {
-                codeDiv.textContent = 'Error';
-                bodyDiv.textContent = error.message;
-            }
-        }
-
+        // --------------------------------------------------------------------------
+        // Version
+        // --------------------------------------------------------------------------
         async function fetchVersionInfo() {
             const versionDiv = document.getElementById('versionInfo');
             try {
@@ -667,16 +690,9 @@
         // Fetch version info on page load
         fetchVersionInfo();
 
-        // Function to format the JSON response nicely
-        function formatJSON(text) {
-            try {
-                const json = JSON.parse(text);
-                return JSON.stringify(json, null, 2); // Pretty-print with 2 spaces
-            } catch (e) {
-                return text; // If not valid JSON, return as it is
-            }
-        }
-
+        // --------------------------------------------------------------------------
+        // Login
+        // --------------------------------------------------------------------------
         // MetaMask login functionality
         const loginButton = document.getElementById('login');
         const loginStatusDiv = document.getElementById('loginStatus');
@@ -718,6 +734,20 @@
                 loginStatusDiv.innerHTML = `<p style="color: red;">⚠️ Error: ${err.message}</p>`;
             }
         }
+        loginButton.onclick = loginWithMetaMask;
+
+        // --------------------------------------------------------------------------
+        // Utils
+        // --------------------------------------------------------------------------
+        // Function to format the JSON response nicely
+        function formatJSON(text) {
+            try {
+                const json = JSON.parse(text);
+                return JSON.stringify(json, null, 2); // Pretty-print with 2 spaces
+            } catch (e) {
+                return text; // If not valid JSON, return as it is
+            }
+        }
 
         async function requestWithRefresh(url, options = {}) {
             // always include cookies
@@ -741,8 +771,6 @@
             }
             return res;
         }
-
-        loginButton.onclick = loginWithMetaMask;
 
     </script>
 
