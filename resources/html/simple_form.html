@@ -166,6 +166,9 @@
 
     <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
     <link href="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/jzz"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jzz-midi-smf"></script>
 </head>
 
 <body>
@@ -189,10 +192,16 @@
     <div class="row">
         <div class="column">
             <h2>Execute</h2>
-            <label>Feature name</label>
-            <input id="executeName" type="text" placeholder="pitch">
-            <button onclick="fetchBeforeExecute()">Fetch</button>
-            
+            <div class="row" style="display: flex; gap: 1rem; align-items: flex-end;">
+                <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
+                    <label>Feature name</label>
+                    <input id="executeName" type="text" placeholder="pitch">
+                </div>
+                <div style="flex: 1; min-width: 120px;">
+                    <label style="visibility:hidden;">Fetch</label>
+                    <button onclick="fetchBeforeExecute()">Fetch</button>
+                </div>
+            </div>
             <div id="popupInstanceEditor" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%); background:#222; color:#fff; padding:1rem; border-radius:8px; z-index:9999;">
                 <h3>Edit Running Instance</h3>
                 <p id="popupFeatureLabel"></p>
@@ -212,18 +221,56 @@
             <div class="request-row">
                 <div id="treeContainer" style="display: none; width: 100%; height: 400px; background: #1e1e1e; border-radius: 6px; margin: 1rem;"></div>
             </div>
-            <label>Sample count</label>
-            <input id="executeN" type="text" placeholder="5">
-    
-            <button onclick="execute()">Execute</button>
-
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="row" style="display: flex; gap: 1rem; align-items: flex-end;">
+                <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
+                    <label>Sample count</label>
+                    <input id="executeN" type="text" placeholder="5">
+                </div>
+                <div style="flex: 1; min-width: 120px;">
+                    <label style="visibility:hidden;">Execute</label>
+                    <button onclick="execute()">Execute</button>
+                </div>
+            </div>
             <div class="response-row">
                 <div id="executeCode" class="response-code">-</div>
                 <div id="executeBody" class="response-body">Waiting...</div>
             </div>
         </div>
+        <div class="column">
+            <h2>MIDI Export</h2>
+            <button onclick="buildMIDIMappingUI()">Map MIDI Channels</button>
+            <div id="midiMapper"></div>
+            <button onclick="visualizeStructuredMIDI()">🎹 Visualize MIDI</button>
+            <div id="midiCanvasWrapper" style="display: none; width: 100%;">
+                <div style="display: flex; justify-content: flex-end;">
+                  <button onclick="hideMidiCanvas()" style="
+                    background: #444;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    padding: 4px 10px;
+                    margin-bottom: 0.5rem;
+                    cursor: pointer;
+                  ">✖ Hide</button>
+                </div>
+                <canvas id="midiCanvas" style="width: 100%; height: 400px; border: 1px solid #555; background: #111;"></canvas>
+              </div>
+            <div class="row" style="display: flex; gap: 1rem; align-items: flex-end;">
+                <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
+                    <label for="bpmInput">Tempo (BPM)</label>
+                    <input type="number" id="bpmInput" placeholder="e.g. 120" min="20" max="300" value="120">
+                </div>
+                <div style="flex: 1; min-width: 120px;">
+                    <label style="visibility:hidden;">Export</label>
+                    <button onclick="exportStructuredMIDI()">🎼 Export</button>
+                </div>
+            </div>
+        </div>
     </div>
-
     <hr>
 
     <div class="row">
@@ -305,6 +352,275 @@
         </div>
     </div>
     <script>
+        // --------------------------------------------------------------------------
+        // MIDI
+        // --------------------------------------------------------------------------
+        function buildMIDIMappingUI() {
+            const text = document.getElementById("executeBody").textContent;
+            let parsed;
+            try {
+                parsed = JSON.parse(text);
+            } catch (e) {
+                alert("Invalid JSON output");
+                return;
+            }
+        
+            const container = document.getElementById("midiMapper");
+            container.innerHTML = '';
+        
+            parsed.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.style.marginBottom = '1rem';
+                row.innerHTML = `
+                <fieldset style="border:1px solid #555; padding:0.5rem; margin-bottom:0.5rem; font-size: 0.9rem;">
+                     <legend style="font-size: 0.9rem;">${item.feature_path}</legend>
+
+                     <label style="display:flex; flex-wrap: wrap;  margin-bottom: 0.3rem;">Channel:
+                         <input type="number" min="0" max="15" value="0" id="channelInput${idx}" style="width: 3rem; margin-left: 0.5rem;">
+                     </label>
+
+                    <div style="
+                      display: grid;
+                      grid-template-columns: auto auto;
+                      gap: 0.4rem 1rem;
+                      align-items: center;
+                    ">
+                      <label style="display: flex; align-items: center; gap: 0.4rem; min-width: 100px;">
+                        <input type="checkbox" class="roleCheck" data-role="pitch" data-idx='${idx}' style="width:30%"> Pitch
+                      </label>
+                      <label style="display: flex; align-items: center; gap: 0.4rem; min-width: 100px;">
+                        <input type="checkbox" class="roleCheck" data-role="time" data-idx='${idx}' style="width:30%"> Time
+                      </label>
+                      <label style="display: flex; align-items: center; gap: 0.4rem; min-width: 100px;">
+                        <input type="checkbox" class="roleCheck" data-role="velocity" data-idx='${idx}' style="width:30%"> Velocity
+                      </label>
+                      <label style="display: flex; align-items: center; gap: 0.4rem; min-width: 100px;">
+                        <input type="checkbox" class="roleCheck" data-role="duration" data-idx='${idx}' style="width:30%"> Duration
+                      </label>
+                    </div>
+                
+                </fieldset>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function collectChannelRoles(parsed) {
+            const map = new Map();
+                
+            parsed.forEach((entry, i) => {
+                const channel = parseInt(document.getElementById(`channelInput${i}`).value);
+                if (isNaN(channel) || channel < 0 || channel > 15) return;
+            
+                const roleChecks = document.querySelectorAll(`.roleCheck[data-idx="${i}"]`);
+                roleChecks.forEach(c => {
+                    if (!c.checked) return;
+                    const role = c.dataset.role;
+                
+                    if (!map.has(channel)) map.set(channel, { pitch: [], time: [], velocity: [], duration: [] });
+                    const r = map.get(channel);
+                    if (role === "pitch") r.pitch.push(entry.data);
+                    else if (role === "time") r.time = entry.data;
+                    else if (role === "velocity") r.velocity = entry.data;
+                    else if (role === "duration") r.duration = entry.data;
+                });
+            });
+        
+            return map;
+        }
+        
+        function hideMidiCanvas() {
+            document.getElementById("midiCanvasWrapper").style.display = "none";
+        }
+        
+        function visualizeStructuredMIDI() 
+        {
+            document.getElementById("midiCanvasWrapper").style.display = "block";
+
+            const text = document.getElementById("executeBody").textContent;
+            let parsed;
+            try {
+                parsed = JSON.parse(text);
+            } catch (e) {
+                alert("Invalid JSON output");
+                return;
+            }
+        
+            const ticksPerBeat = 480;
+            const canvas = document.getElementById("midiCanvas");
+            const ctx = canvas.getContext("2d");
+            // Set internal resolution to match displayed size
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+            const colors = [
+                "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4",
+                "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff",
+                "#9a6324", "#fffac8", "#800000", "#aaffc3"
+            ];
+        
+            const channelMap = collectChannelRoles(parsed);
+        
+            const defaultVelocity = 0;
+            const defaultDuration = 0;
+        
+            const events = [];
+        
+            for (const [channel, { pitch, time, velocity, duration }] of channelMap.entries()) {
+                if (!pitch.length) continue;
+                const n = Math.max(...pitch.map(p => p.length));
+            
+                for (let i = 0; i < n; i++) {
+                    const startBeat = (time?.[i] ?? 0);
+                    const startTick = startBeat * ticksPerBeat;
+                    const vel = Math.max(0, Math.min(127, velocity?.[i] ?? defaultVelocity));
+                    const dur = duration?.[i] ?? defaultDuration;
+                    const endTick = startTick + dur * ticksPerBeat;
+                
+                    for (const pitchArray of pitch) {
+                        const note = (pitchArray[i] ?? 0);
+                        events.push({
+                            channel,
+                            note,
+                            start: startTick,
+                            end: endTick,
+                            velocity: vel
+                        });
+                    }
+                }
+            }
+        
+            // Normalize time and pitch for drawing
+            const maxTick = Math.max(...events.map(e => e.end));
+            const minNote = Math.min(...events.map(e => e.note));
+            const maxNote = Math.max(...events.map(e => e.note));
+        
+            const margin = 10;
+            const xScale = (canvas.width - 2 * margin) / maxTick;
+            const yScale = (canvas.height - 2 * margin) / (maxNote - minNote + 1);
+        
+            // Draw pitch grid
+            ctx.strokeStyle = "#333";
+            ctx.lineWidth = 0.5;
+            for (let p = minNote; p <= maxNote; p++) {
+                const y = canvas.height - margin - (p - minNote + 1) * yScale;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        
+            // Draw time grid every beat
+            ctx.strokeStyle = "#444";
+            for (let b = 0; b < maxTick / ticksPerBeat; b++) {
+                const x = margin + b * ticksPerBeat * xScale;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+        
+            const labelsMargin = 10; // for axis labels
+        
+            // Draw (Y-axis) labels
+            const uniquePitches = [...new Set(events.map(e => e.note))].sort((a, b) => a - b);
+            ctx.fillStyle = "#888";
+            ctx.font = "12px monospace";
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            uniquePitches.forEach(p => {
+              const y = canvas.height - labelsMargin - (p - minNote + 1) * yScale + yScale / 2;
+              ctx.fillText(p.toString(), labelsMargin + 4, y);
+            });
+
+            // Draw (X-axis) labels
+            const uniqueBeats = [...new Set(events.map(e => Math.floor(e.start / ticksPerBeat)))].sort((a, b) => a - b);
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+            uniqueBeats.forEach(b => {
+              const x = margin + b * ticksPerBeat * xScale;
+              ctx.fillText(b.toString(), x, canvas.height - labelsMargin - 2);
+            });
+        
+            events.forEach(evt => {
+                const x = margin + evt.start * xScale;
+                const y = canvas.height - margin - (evt.note - minNote + 1) * yScale;
+                const width = (evt.end - evt.start) * xScale;
+                const height = yScale - 1;
+
+                // Normalize velocity to alpha [0.2–1] for visibility
+                const alpha = Math.max(0.2, Math.min(1, evt.velocity / 127));
+                const baseColor = colors[evt.channel % colors.length];
+                ctx.fillStyle = hexToRgba(baseColor, alpha);
+                ctx.fillRect(x, y, width, height);
+
+                // Draw velocity number
+                ctx.fillStyle = "#fff";
+                ctx.font = "10px monospace";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "bottom";
+                ctx.fillText(evt.velocity.toString(), x + width / 2, y + (height / 2));
+            });
+        }
+
+
+        function exportStructuredMIDI() {
+            const text = document.getElementById("executeBody").textContent;
+            let parsed;
+            try {
+                parsed = JSON.parse(text);
+            } catch (e) {
+                alert("Invalid JSON output");
+                return;
+            }
+        
+            const bpm = parseInt(document.getElementById("bpmInput").value);
+            const tempo = isNaN(bpm) ? 120 : bpm;
+            const ticksPerBeat = 480;
+            const smf = new JZZ.MIDI.SMF(1, ticksPerBeat);
+            const track = new JZZ.MIDI.SMF.MTrk();
+            smf.push(track);
+            track.smfBPM(tempo);
+        
+            const channelMap = collectChannelRoles(parsed);
+        
+            const defaultVelocity = 100;
+            const defaultDuration = 1;
+        
+            for (const [channel, { pitch, time, velocity, duration }] of channelMap.entries()) {
+                if (!pitch.length) continue;
+            
+                const n = Math.max(...pitch.map(p => p.length));
+            
+                for (let i = 0; i < n; i++) {
+                    const beat = time?.[i] ?? i;
+                    const tick = Math.floor(beat * ticksPerBeat);
+                    const vel = Math.max(0, Math.min(127, velocity?.[i] ?? defaultVelocity));
+                    const dur = duration?.[i] ?? defaultDuration;
+                    const endTick = tick + Math.floor(dur * ticksPerBeat);
+                
+                    for (const pitchArray of pitch) {
+                        const note = 60 + (pitchArray[i] ?? 0); // transpose base note to middle C
+                    
+                        track.add(tick, JZZ.MIDI.noteOn(channel, note, vel));
+                        track.add(endTick, JZZ.MIDI.noteOff(channel, note, vel));
+                    }
+                }
+            }
+        
+            // Generate binary and trigger download
+            const blob = new Blob([smf.dump()], { type: "audio/midi" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "out.mid";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         // --------------------------------------------------------------------------
         // Running Instances
         // --------------------------------------------------------------------------
@@ -747,6 +1063,13 @@
             } catch (e) {
                 return text; // If not valid JSON, return as it is
             }
+        }
+
+        function hexToRgba(hex, alpha = 1.0) {
+            const r = parseInt(hex.substr(1, 2), 16);
+            const g = parseInt(hex.substr(3, 2), 16);
+            const b = parseInt(hex.substr(5, 2), 16);
+            return `rgba(${r},${g},${b},${alpha})`;
         }
 
         async function requestWithRefresh(url, options = {}) {
