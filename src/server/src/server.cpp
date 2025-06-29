@@ -23,7 +23,7 @@ namespace dcn
     asio::awaitable<void> Server::listen()
     {
         co_await asio::dispatch(asio::bind_executor(_strand, asio::use_awaitable));
-        spdlog::debug("Decentralised Art server listening on port {}", _acceptor.local_endpoint().port());
+        spdlog::info("Decentralised Art server listening on port {}", _acceptor.local_endpoint().port());
         std::chrono::steady_clock::time_point listen_deadline{};
 
         while (_close == false)

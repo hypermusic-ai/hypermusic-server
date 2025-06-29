@@ -28,10 +28,13 @@
         }
 
         label,
-        input,
-        button {
+        input {
             display: block;
             width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        button {
             margin-bottom: 1rem;
         }
 
@@ -116,6 +119,9 @@
             border-radius: 6px;
             font-family: monospace;
             white-space: pre-wrap;
+            word-break: break-word;
+            max-width: 100%;
+            overflow-wrap: break-word;
         }
 
         .request-row {
@@ -132,6 +138,9 @@
             border-radius: 6px;
             font-family: monospace;
             white-space: pre-wrap;
+            word-break: break-word;
+            max-width: 100%;
+            overflow-wrap: break-word;
         }
 
         hr {
@@ -139,7 +148,19 @@
             border: 1px solid #333;
             margin: 2rem 0;
         }
+        #login {
+            padding: 0.8rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #1e90ff;
+            color: #fff;
+            border: none;
+        }
 
+        #login:hover {
+            background-color: #0f66c0;
+        }
         #treeContainer {
             overflow: visible; /* critical */
             position: relative;
@@ -162,6 +183,11 @@
         #popupInstanceEditor * {
             box-sizing: border-box;
         }
+
+        #midi-visualiser-section {
+            background-color: white;
+        }
+        
     </style>
 
     <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
@@ -169,6 +195,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jzz"></script>
     <script src="https://cdn.jsdelivr.net/npm/jzz-midi-smf"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
+
 </head>
 
 <body>
@@ -180,9 +210,9 @@
 
     <div class="row">
         <div class="column">
-            <button id="login" class="response-body">Login with MetaMask</button>
             <div class="response-row">
-                <div id="loginStatus" class="response-body"></div>
+                <button id="login" style="flex: 1; min-width: 200px;">Login with MetaMask</button>
+                <div id="loginStatus" class="response-body" style="flex: 3;">Status...</div>
             </div>
         </div>
     </div>
@@ -228,7 +258,7 @@
             <div class="row" style="display: flex; gap: 1rem; align-items: flex-end;">
                 <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
                     <label>Sample count</label>
-                    <input id="executeN" type="text" placeholder="5">
+                    <input id="executeN" type="number" placeholder="5">
                 </div>
                 <div style="flex: 1; min-width: 120px;">
                     <label style="visibility:hidden;">Execute</label>
@@ -242,12 +272,21 @@
         </div>
         <div class="column">
             <h2>MIDI Export</h2>
-            <button onclick="buildMIDIMappingUI()">Map MIDI Channels</button>
-            <div id="midiMapper"></div>
-            <button onclick="visualizeStructuredMIDI()">🎹 Visualize MIDI</button>
+            <button onclick="addMIDIMappingChannel()">➕ Add Channel</button>
+            <div id="midiMapper"></div> 
+            <div class="row" style="display: flex; gap: 1rem; align-items: flex-end;">
+                <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
+                    <label>Ticks per beat</label>
+                    <input id="midiTicksPerBeat" type="number" placeholder="480" value="480">
+                </div>
+                <div style="flex: 1; min-width: 120px;">
+                    <label style="visibility:hidden;">Visualize MIDI</label>
+                    <button onclick="showMIDICanvas()">🎹 Visualize MIDI</button>
+                </div>
+            </div>
             <div id="midiCanvasWrapper" style="display: none; width: 100%;">
                 <div style="display: flex; justify-content: flex-end;">
-                  <button onclick="hideMidiCanvas()" style="
+                  <button onclick="hideMIDICanvas()" style="
                     background: #444;
                     color: #fff;
                     border: none;
@@ -257,18 +296,14 @@
                     cursor: pointer;
                   ">✖ Hide</button>
                 </div>
-                <canvas id="midiCanvas" style="width: 100%; height: 400px; border: 1px solid #555; background: #111;"></canvas>
+                
+                <section id="midi-visualiser-section" style="margin-bottom: 0.5rem;">
+                    <midi-player id="midiPlayer" sound-font visualizer="#pianoVis"></midi-player>
+                    <midi-visualizer id="pianoVis" type="piano-roll"></midi-visualizer>
+                    <midi-visualizer id="staffVis" type="staff"></midi-visualizer>
+                </section>
+                <button id="downloadMIDIButton" onclick="downloadMIDI()" style="display:none;">💾 Download MIDI</button>
               </div>
-            <div class="row" style="display: flex; gap: 1rem; align-items: flex-end;">
-                <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
-                    <label for="bpmInput">Tempo (BPM)</label>
-                    <input type="number" id="bpmInput" placeholder="e.g. 120" min="20" max="300" value="120">
-                </div>
-                <div style="flex: 1; min-width: 120px;">
-                    <label style="visibility:hidden;">Export</label>
-                    <button onclick="exportStructuredMIDI()">🎼 Export</button>
-                </div>
-            </div>
         </div>
     </div>
     <hr>
@@ -352,272 +387,485 @@
         </div>
     </div>
     <script>
+        let rootFeatureName;
+        let executeResultData = []; // populated during execute()
+
         // --------------------------------------------------------------------------
         // MIDI
         // --------------------------------------------------------------------------
-        function buildMIDIMappingUI() {
-            const text = document.getElementById("executeBody").textContent;
-            let parsed;
-            try {
-                parsed = JSON.parse(text);
-            } catch (e) {
-                alert("Invalid JSON output");
-                return;
+        class MIDIEvent
+        {
+            constructor(tick) {
+                this.tick = tick;
             }
-        
-            const container = document.getElementById("midiMapper");
-            container.innerHTML = '';
-        
-            parsed.forEach((item, idx) => {
-                const row = document.createElement('div');
-                row.style.marginBottom = '1rem';
-                row.innerHTML = `
-                <fieldset style="border:1px solid #555; padding:0.5rem; margin-bottom:0.5rem; font-size: 0.9rem;">
-                     <legend style="font-size: 0.9rem;">${item.feature_path}</legend>
-
-                     <label style="display:flex; flex-wrap: wrap;  margin-bottom: 0.3rem;">Channel:
-                         <input type="number" min="0" max="15" value="0" id="channelInput${idx}" style="width: 3rem; margin-left: 0.5rem;">
-                     </label>
-
-                    <div style="
-                      display: grid;
-                      grid-template-columns: auto auto;
-                      gap: 0.4rem 1rem;
-                      align-items: center;
-                    ">
-                      <label style="display: flex; align-items: center; gap: 0.4rem; min-width: 100px;">
-                        <input type="checkbox" class="roleCheck" data-role="pitch" data-idx='${idx}' style="width:30%"> Pitch
-                      </label>
-                      <label style="display: flex; align-items: center; gap: 0.4rem; min-width: 100px;">
-                        <input type="checkbox" class="roleCheck" data-role="time" data-idx='${idx}' style="width:30%"> Time
-                      </label>
-                      <label style="display: flex; align-items: center; gap: 0.4rem; min-width: 100px;">
-                        <input type="checkbox" class="roleCheck" data-role="velocity" data-idx='${idx}' style="width:30%"> Velocity
-                      </label>
-                      <label style="display: flex; align-items: center; gap: 0.4rem; min-width: 100px;">
-                        <input type="checkbox" class="roleCheck" data-role="duration" data-idx='${idx}' style="width:30%"> Duration
-                      </label>
-                    </div>
-                
-                </fieldset>
-                `;
-                container.appendChild(row);
-            });
         }
 
-        function collectChannelRoles(parsed) {
-            const map = new Map();
-                
-            parsed.forEach((entry, i) => {
-                const channel = parseInt(document.getElementById(`channelInput${i}`).value);
-                if (isNaN(channel) || channel < 0 || channel > 15) return;
-            
-                const roleChecks = document.querySelectorAll(`.roleCheck[data-idx="${i}"]`);
-                roleChecks.forEach(c => {
-                    if (!c.checked) return;
-                    const role = c.dataset.role;
-                
-                    if (!map.has(channel)) map.set(channel, { pitch: [], time: [], velocity: [], duration: [] });
-                    const r = map.get(channel);
-                    if (role === "pitch") r.pitch.push(entry.data);
-                    else if (role === "time") r.time = entry.data;
-                    else if (role === "velocity") r.velocity = entry.data;
-                    else if (role === "duration") r.duration = entry.data;
-                });
+        class MIDINoteEvent extends MIDIEvent
+        {
+            constructor(tick, pitch, velocity, duration) {
+                super(tick);
+                this.pitch = pitch;
+                this.velocity = velocity;
+                this.duration = duration;
+            }
+        }
+
+        class MIDITimeSignatureEvent extends MIDIEvent
+        {
+            constructor(tick, numerator, denominator) {
+                super(tick);
+                this.numerator = numerator;
+                this.denominator = denominator;
+            }
+        }
+
+        class MIDIBPMEvent extends MIDIEvent
+        {
+            constructor(tick, bpm) {
+                super(tick);
+                this.bpm = bpm;
+            }
+        }
+
+        let availableFeatureNames = []; // Global store for dropdown values
+        let featureDropdownElements = [];
+
+        function populateFeatureDropdown(select) {
+            const currentValue = select.value;
+
+            // Clear old options
+            select.innerHTML = '';
+
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.textContent = '— select feature —';
+            select.appendChild(emptyOption);
+
+            availableFeatureNames.forEach(fname => {
+                const option = document.createElement('option');
+                option.value = fname;
+                option.textContent = fname;
+                select.appendChild(option);
             });
         
-            return map;
+            // Try to restore previous selection if still valid
+            if (availableFeatureNames.includes(currentValue)) {
+                select.value = currentValue;
+            }
+        }
+
+        function createFeatureDropdown(name) {
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.gap = '0.5rem';
+            wrapper.style.marginBottom = '0.5rem';
+                
+            const label = document.createElement('label');
+            label.textContent = name;
+            label.style.minWidth = '80px';
+            label.style.color = '#ccc';
+            label.style.margin = 0;
+            label.style.width = 'auto';
+                
+            const select = document.createElement('select');
+            select.name = name;
+            select.style.flex = '1';
+            select.style.background = '#1e1e1e';
+            select.style.color = '#fff';
+            select.style.border = '1px solid #444';
+            select.style.borderRadius = '4px';
+            select.style.padding = '0.4rem';
+                
+            wrapper.appendChild(label);
+            wrapper.appendChild(select);
+                
+            // Save reference for later updates
+            featureDropdownElements.push(select);
+                
+            // Populate initially
+            populateFeatureDropdown(select);
+                
+            return wrapper;
+        }
+
+        function createEventButton(label, onClick) {
+            const btn = document.createElement('button');
+            btn.textContent = label;
+            btn.style.marginRight = '0.5rem';
+            btn.style.marginBottom = '0.5rem';
+            btn.onclick = onClick;
+            return btn;
+        }
+
+        function renderMIDINoteEvent(container) {
+            const div = document.createElement('div');
+            div.className = 'midi-event note';
+            div.style.border = '1px solid #333';
+            div.style.padding = '0.5rem';
+            div.style.marginBottom = '0.5rem';
+            div.style.borderRadius = '4px';
+            div.style.backgroundColor = '#222';
+
+            const titleRow = document.createElement('div');
+            titleRow.style.display = 'flex';
+            titleRow.style.justifyContent = 'space-between';
+            titleRow.style.alignItems = 'center';
+            titleRow.style.marginBottom = '0.5rem';
+
+            const title = document.createElement('strong');
+            title.textContent = '🎵 Note Event';
+            title.style.color = '#fff';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '✖';
+            removeBtn.style.background = '#444';
+            removeBtn.style.color = '#fff';
+            removeBtn.style.border = 'none';
+            removeBtn.style.borderRadius = '4px';
+            removeBtn.style.padding = '0.3rem 0.6rem';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.onclick = () => container.removeChild(div);
+
+            titleRow.appendChild(title);
+            titleRow.appendChild(removeBtn);
+            div.appendChild(titleRow);
+
+            const separator = document.createElement('hr');
+            separator.style.border = '0';
+            separator.style.borderTop = '1px solid #444';
+            separator.style.margin = '0.5rem 0';
+            div.appendChild(separator);
+
+            div.appendChild(createFeatureDropdown('tick'));
+            div.appendChild(createFeatureDropdown('pitch'));
+            div.appendChild(createFeatureDropdown('velocity'));
+            div.appendChild(createFeatureDropdown('duration'));
+
+            container.appendChild(div);
+        }
+
+        function renderMIDITimeSignatureEvent(container) {
+            const div = document.createElement('div');
+            div.className = 'midi-event timesig';
+            div.style.border = '1px solid #333';
+            div.style.padding = '0.5rem';
+            div.style.marginBottom = '0.5rem';
+            div.style.borderRadius = '4px';
+            div.style.backgroundColor = '#223344';
+        
+            const titleRow = document.createElement('div');
+            titleRow.style.display = 'flex';
+            titleRow.style.justifyContent = 'space-between';
+            titleRow.style.alignItems = 'center';
+            titleRow.style.marginBottom = '0.5rem';
+        
+            const title = document.createElement('strong');
+            title.textContent = '🕒 Time Signature Event';
+            title.style.fontSize = '1rem';
+            title.style.color = '#fff';
+        
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '✖';
+            removeBtn.style.background = '#444';
+            removeBtn.style.color = '#fff';
+            removeBtn.style.border = 'none';
+            removeBtn.style.borderRadius = '4px';
+            removeBtn.style.padding = '0.3rem 0.6rem';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.onclick = () => container.removeChild(div);
+        
+            titleRow.appendChild(title);
+            titleRow.appendChild(removeBtn);
+            div.appendChild(titleRow);
+        
+            const separator = document.createElement('hr');
+            separator.style.border = '0';
+            separator.style.borderTop = '1px solid #444';
+            separator.style.margin = '0.5rem 0';
+            div.appendChild(separator);
+        
+            div.appendChild(createFeatureDropdown('tick'));
+            div.appendChild(createFeatureDropdown('numerator'));
+            div.appendChild(createFeatureDropdown('denominator'));
+        
+            container.appendChild(div);
+        }
+
+        function renderMIDIBPMEvent(container) {
+            const div = document.createElement('div');
+            div.className = 'midi-event bpm';
+            div.style.border = '1px solid #333';
+            div.style.padding = '0.5rem';
+            div.style.marginBottom = '0.5rem';
+            div.style.borderRadius = '4px';
+            div.style.backgroundColor = '#443322';
+                
+            const titleRow = document.createElement('div');
+            titleRow.style.display = 'flex';
+            titleRow.style.justifyContent = 'space-between';
+            titleRow.style.alignItems = 'center';
+            titleRow.style.marginBottom = '0.5rem';
+                
+            const title = document.createElement('strong');
+            title.textContent = '⚡ BPM Event';
+            title.style.fontSize = '1rem';
+            title.style.color = '#fff';
+                
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '✖';
+            removeBtn.style.background = '#444';
+            removeBtn.style.color = '#fff';
+            removeBtn.style.border = 'none';
+            removeBtn.style.borderRadius = '4px';
+            removeBtn.style.padding = '0.3rem 0.6rem';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.onclick = () => container.removeChild(div);
+                
+            titleRow.appendChild(title);
+            titleRow.appendChild(removeBtn);
+            div.appendChild(titleRow);
+                
+            const separator = document.createElement('hr');
+            separator.style.border = '0';
+            separator.style.borderTop = '1px solid #444';
+            separator.style.margin = '0.5rem 0';
+            div.appendChild(separator);
+                
+            div.appendChild(createFeatureDropdown('tick'));
+            div.appendChild(createFeatureDropdown('bpm'));
+                
+            container.appendChild(div);
+        }
+
+        function removeMIDIMappingChannel(container, blockToRemove) {
+            container.removeChild(blockToRemove);
+
+            // Re-label remaining channels
+            const blocks = container.querySelectorAll('.midi-channel-block');
+            blocks.forEach((block, index) => {
+                const title = block.querySelector('h3');
+                if (title) {
+                    title.textContent = `Channel ${index}`;
+                }
+            });
         }
         
-        function hideMidiCanvas() {
+        function addMIDIMappingChannel() {
+            const container = document.getElementById('midiMapper');
+            const channelIndex = container.querySelectorAll('.midi-channel-block')?.length || 0;
+                
+            const block = document.createElement('div');
+            block.className = 'midi-channel-block';
+            block.style.border = '1px solid #555';
+            block.style.borderRadius = '8px';
+            block.style.padding = '1rem';
+            block.style.marginBottom = '1rem';
+            block.style.backgroundColor = '#1a1a1a';
+                
+            // Header with title and remove button
+            const header = document.createElement('div');
+            header.style.display = 'flex';
+            header.style.justifyContent = 'space-between';
+            header.style.alignItems = 'center';
+            header.style.marginBottom = '0.5rem';
+                
+            const title = document.createElement('h3');
+            title.textContent = `Channel ${channelIndex}`;
+            title.style.margin = 0;
+            title.style.fontSize = '1.2rem';
+            title.style.color = '#ccc';
+                
+            const removeButton = document.createElement('button');
+            removeButton.textContent = '✖';
+            removeButton.style.width = '4rem';
+            removeButton.style.backgroundColor = '#444';
+            removeButton.style.color = '#fff';
+            removeButton.style.border = 'none';
+            removeButton.style.borderRadius = '4px';
+            removeButton.style.padding = '0.3rem 0.6rem';
+            removeButton.onclick = () => removeMIDIMappingChannel(container, block);
+                
+            header.appendChild(title);
+            header.appendChild(removeButton);
+            block.appendChild(header);
+                
+            // Event controls
+            const eventsContainer = document.createElement('div');
+            eventsContainer.className = 'midi-events';
+            eventsContainer.style.padding = '0.5rem';
+            eventsContainer.style.background = '#111';
+            eventsContainer.style.borderRadius = '4px';
+            eventsContainer.style.marginTop = '0.5rem';
+
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.style.display = 'flex';
+            buttonsContainer.style.flexWrap = 'wrap';
+            buttonsContainer.style.gap = '0.5rem';
+            buttonsContainer.style.marginBottom = '0.5rem';
+
+            buttonsContainer.appendChild(createEventButton('➕ Note Event', () => renderMIDINoteEvent(eventsContainer)));
+            buttonsContainer.appendChild(createEventButton('➕ Time Signature', () => renderMIDITimeSignatureEvent(eventsContainer)));
+            buttonsContainer.appendChild(createEventButton('➕ BPM Event', () => renderMIDIBPMEvent(eventsContainer)));
+
+            block.appendChild(buttonsContainer);
+            block.appendChild(eventsContainer);
+                
+            container.appendChild(block);
+        }
+ 
+        function renderMIDIToVisualizer(midiUint8Array) {
+            const blob = new Blob([midiUint8Array], { type: 'audio/midi' });
+            const url = URL.createObjectURL(blob);
+
+            const player = document.getElementById('midiPlayer');
+            const pianoVis = document.getElementById('pianoVis');
+            const staffVis = document.getElementById('staffVis');
+
+            player.src = url;
+            pianoVis.src = url;
+            staffVis.src = url;
+        }
+
+        function hideMIDICanvas() {
             document.getElementById("midiCanvasWrapper").style.display = "none";
         }
         
-        function visualizeStructuredMIDI() 
+        function showMIDICanvas() 
         {
-            document.getElementById("midiCanvasWrapper").style.display = "block";
-
-            const text = document.getElementById("executeBody").textContent;
-            let parsed;
-            try {
-                parsed = JSON.parse(text);
-            } catch (e) {
-                alert("Invalid JSON output");
+            // Validate all feature dropdowns
+            const unselected = featureDropdownElements.filter(select => !select.value || select.value === '');
+            if (unselected.length > 0) {
+                alert("Please select values for all mappings before visualizing.");
                 return;
             }
-        
-            const ticksPerBeat = 480;
-            const canvas = document.getElementById("midiCanvas");
-            const ctx = canvas.getContext("2d");
-            // Set internal resolution to match displayed size
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-            const colors = [
-                "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4",
-                "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff",
-                "#9a6324", "#fffac8", "#800000", "#aaffc3"
-            ];
-        
-            const channelMap = collectChannelRoles(parsed);
-        
-            const defaultVelocity = 0;
-            const defaultDuration = 0;
-        
-            const events = [];
-        
-            for (const [channel, { pitch, time, velocity, duration }] of channelMap.entries()) {
-                if (!pitch.length) continue;
-                const n = Math.max(...pitch.map(p => p.length));
-            
-                for (let i = 0; i < n; i++) {
-                    const startBeat = (time?.[i] ?? 0);
-                    const startTick = startBeat * ticksPerBeat;
-                    const vel = Math.max(0, Math.min(127, velocity?.[i] ?? defaultVelocity));
-                    const dur = duration?.[i] ?? defaultDuration;
-                    const endTick = startTick + dur * ticksPerBeat;
-                
-                    for (const pitchArray of pitch) {
-                        const note = (pitchArray[i] ?? 0);
-                        events.push({
-                            channel,
-                            note,
-                            start: startTick,
-                            end: endTick,
-                            velocity: vel
-                        });
-                    }
-                }
-            }
-        
-            // Normalize time and pitch for drawing
-            const maxTick = Math.max(...events.map(e => e.end));
-            const minNote = Math.min(...events.map(e => e.note));
-            const maxNote = Math.max(...events.map(e => e.note));
-        
-            const margin = 10;
-            const xScale = (canvas.width - 2 * margin) / maxTick;
-            const yScale = (canvas.height - 2 * margin) / (maxNote - minNote + 1);
-        
-            // Draw pitch grid
-            ctx.strokeStyle = "#333";
-            ctx.lineWidth = 0.5;
-            for (let p = minNote; p <= maxNote; p++) {
-                const y = canvas.height - margin - (p - minNote + 1) * yScale;
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
-            }
-        
-            // Draw time grid every beat
-            ctx.strokeStyle = "#444";
-            for (let b = 0; b < maxTick / ticksPerBeat; b++) {
-                const x = margin + b * ticksPerBeat * xScale;
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
-            }
-        
-            const labelsMargin = 10; // for axis labels
-        
-            // Draw (Y-axis) labels
-            const uniquePitches = [...new Set(events.map(e => e.note))].sort((a, b) => a - b);
-            ctx.fillStyle = "#888";
-            ctx.font = "12px monospace";
-            ctx.textAlign = "right";
-            ctx.textBaseline = "middle";
-            uniquePitches.forEach(p => {
-              const y = canvas.height - labelsMargin - (p - minNote + 1) * yScale + yScale / 2;
-              ctx.fillText(p.toString(), labelsMargin + 4, y);
-            });
 
-            // Draw (X-axis) labels
-            const uniqueBeats = [...new Set(events.map(e => Math.floor(e.start / ticksPerBeat)))].sort((a, b) => a - b);
-            ctx.textAlign = "center";
-            ctx.textBaseline = "top";
-            uniqueBeats.forEach(b => {
-              const x = margin + b * ticksPerBeat * xScale;
-              ctx.fillText(b.toString(), x, canvas.height - labelsMargin - 2);
-            });
-        
-            events.forEach(evt => {
-                const x = margin + evt.start * xScale;
-                const y = canvas.height - margin - (evt.note - minNote + 1) * yScale;
-                const width = (evt.end - evt.start) * xScale;
-                const height = yScale - 1;
-
-                // Normalize velocity to alpha [0.2–1] for visibility
-                const alpha = Math.max(0.2, Math.min(1, evt.velocity / 127));
-                const baseColor = colors[evt.channel % colors.length];
-                ctx.fillStyle = hexToRgba(baseColor, alpha);
-                ctx.fillRect(x, y, width, height);
-
-                // Draw velocity number
-                ctx.fillStyle = "#fff";
-                ctx.font = "10px monospace";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "bottom";
-                ctx.fillText(evt.velocity.toString(), x + width / 2, y + (height / 2));
-            });
+            document.getElementById("midiCanvasWrapper").style.display = "block";
+            constructMIDI();
         }
 
+        let constructedMIDI = null; // stores last MIDI Uint8Array for export
+        function constructMIDI() {
+            const ticksPerBeat = document.getElementById('midiTicksPerBeat').value;
 
-        function exportStructuredMIDI() {
-            const text = document.getElementById("executeBody").textContent;
-            let parsed;
-            try {
-                parsed = JSON.parse(text);
-            } catch (e) {
-                alert("Invalid JSON output");
+            const smf = new JZZ.MIDI.SMF(1, ticksPerBeat);
+            const channelBlocks = document.querySelectorAll('.midi-channel-block');
+                
+            channelBlocks.forEach((block, channelIndex) => {
+                const track = new JZZ.MIDI.SMF.MTrk();
+                let maxTick = 0;
+            
+                // Add default tempo and time signature
+                track.add(0, JZZ.MIDI.smfTempo(500000));
+                track.add(0, JZZ.MIDI.smfTimeSignature(4, 4, 24, 8));
+            
+                const eventsContainer = block.querySelector('.midi-events');
+                const events = eventsContainer.querySelectorAll('.midi-event');
+            
+                events.forEach(event => {
+                    const inputs = event.querySelectorAll('select');
+                    const getInputPath = name => {
+                        const sel = Array.from(inputs).find(s => s.name === name);
+                        return sel?.value || null;
+                    };
+                
+                    if (event.classList.contains('note')) {
+                        const tickPath = getInputPath('tick');
+                        const pitchPath = getInputPath('pitch');
+                        const velocityPath = getInputPath('velocity');
+                        const durationPath = getInputPath('duration');
+                    
+                        const ticks = getFeatureArray(tickPath);
+                        const pitches = getFeatureArray(pitchPath);
+                        const velocities = getFeatureArray(velocityPath);
+                        const durations = getFeatureArray(durationPath);
+                    
+                        const length = Math.min(ticks.length, pitches.length, velocities.length, durations.length);
+                        console.log("length: ", length);
+                        for (let i = 0; i < length; i++) {
+                            const tick = ticks[i];
+                            const pitch = pitches[i];
+                            const velocity = velocities[i];
+                            const duration = durations[i];
+                            
+                            console.log(tick, pitch, velocity, duration);
+
+                            track.add(tick, JZZ.MIDI.noteOn(channelIndex, pitch, velocity));
+                            track.add(tick + duration, JZZ.MIDI.noteOff(channelIndex, pitch));
+                            maxTick = Math.max(maxTick, tick + duration);
+                        }
+                    }
+                
+                    if (event.classList.contains('bpm')) {
+                        const tickPath = getInputPath('tick');
+                        const bpmPath = getInputPath('bpm');
+                    
+                        const ticks = getFeatureArray(tickPath);
+                        const bpms = getFeatureArray(bpmPath);
+                        const len = Math.min(ticks.length, bpms.length);
+                    
+                        for (let i = 0; i < len; i++) {
+                            const tick = ticks[i];
+                            const bpm = bpms[i];
+                            const mpqn = bpm > 0 ? Math.round(60000000 / bpm) : 500000;
+                            track.add(tick, JZZ.MIDI.smfTempo(mpqn));
+                            maxTick = Math.max(maxTick, tick);
+                        }
+                    }
+                
+                    if (event.classList.contains('timesig')) {
+                        const tickPath = getInputPath('tick');
+                        const numPath = getInputPath('numerator');
+                        const denPath = getInputPath('denominator');
+                    
+                        const ticks = getFeatureArray(tickPath);
+                        const nums = getFeatureArray(numPath);
+                        const dens = getFeatureArray(denPath);
+                        const len = Math.min(ticks.length, nums.length, dens.length);
+                    
+                        for (let i = 0; i < len; i++) {
+                            const tick = ticks[i];
+                            const numerator = nums[i];
+                            const denominator = dens[i];
+                            track.add(tick, JZZ.MIDI.smfTimeSignature(numerator, denominator, 24, 8));
+                            maxTick = Math.max(maxTick, tick);
+                        }
+                    }
+                });
+                console.log("Max tick: " + maxTick);
+                track.add(maxTick + 1, JZZ.MIDI.smfEndOfTrack());
+                smf.push(track);
+            });
+            const midiBytes = 'data:audio/midi;base64,' + JZZ.lib.toBase64(smf.dump());
+
+            const byteCharacters = atob(midiBytes.split(',')[1]);
+	        const byteNumbers = new Array(byteCharacters.length);
+	        for (let i = 0; i < byteCharacters.length; i++) {
+	            byteNumbers[i] = byteCharacters.charCodeAt(i);
+	        }
+	        const byteArray = new Uint8Array(byteNumbers);
+
+            renderMIDIToVisualizer(byteArray);
+            constructedMIDI = byteArray;
+            document.getElementById('downloadMIDIButton').style.display = 'inline-block';
+        }
+
+        function downloadMIDI() {
+            if (!constructedMIDI) {
+                alert("No MIDI available to download. Please visualize first.");
                 return;
             }
         
-            const bpm = parseInt(document.getElementById("bpmInput").value);
-            const tempo = isNaN(bpm) ? 120 : bpm;
-            const ticksPerBeat = 480;
-            const smf = new JZZ.MIDI.SMF(1, ticksPerBeat);
-            const track = new JZZ.MIDI.SMF.MTrk();
-            smf.push(track);
-            track.smfBPM(tempo);
-        
-            const channelMap = collectChannelRoles(parsed);
-        
-            const defaultVelocity = 100;
-            const defaultDuration = 1;
-        
-            for (const [channel, { pitch, time, velocity, duration }] of channelMap.entries()) {
-                if (!pitch.length) continue;
-            
-                const n = Math.max(...pitch.map(p => p.length));
-            
-                for (let i = 0; i < n; i++) {
-                    const beat = time?.[i] ?? i;
-                    const tick = Math.floor(beat * ticksPerBeat);
-                    const vel = Math.max(0, Math.min(127, velocity?.[i] ?? defaultVelocity));
-                    const dur = duration?.[i] ?? defaultDuration;
-                    const endTick = tick + Math.floor(dur * ticksPerBeat);
-                
-                    for (const pitchArray of pitch) {
-                        const note = 60 + (pitchArray[i] ?? 0); // transpose base note to middle C
-                    
-                        track.add(tick, JZZ.MIDI.noteOn(channel, note, vel));
-                        track.add(endTick, JZZ.MIDI.noteOff(channel, note, vel));
-                    }
-                }
-            }
-        
-            // Generate binary and trigger download
-            const blob = new Blob([smf.dump()], { type: "audio/midi" });
+            const blob = new Blob([constructedMIDI], { type: 'audio/midi' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
+        
+            const a = document.createElement('a');
             a.href = url;
-            a.download = "out.mid";
+            a.download = `${rootFeatureName}.mid`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+        
             URL.revokeObjectURL(url);
         }
 
@@ -753,23 +1001,28 @@
                         });
                     }
                 } catch (e) {
-                    console.error(`Error fetching ${name}:`, e);
+                    console.error(`Error fetching ${name}:, e`);
                 }
             }
 
             updateRunningInstanceList();
+            availableFeatureNames = compositeList
+                                    .filter(entry => entry.scalar)
+                                    .map(entry => entry.name);
+            // Update all dropdowns
+            featureDropdownElements.forEach(populateFeatureDropdown);
+
             return compositeList;
         }
         
-
         async function fetchBeforeExecute() {
-            const rootName = document.getElementById('executeName').value.trim();
-            if (!rootName) {
+            rootFeatureName = document.getElementById('executeName').value.trim();
+            if (!rootFeatureName) {
                 alert("Please provide a feature name.");
                 return;
             }
                     
-            const features = await fetchFeatureDepthFirst(rootName);
+            const features = await fetchFeatureDepthFirst(rootFeatureName);
 
             drawFeatureTree(features);
         }
@@ -800,6 +1053,11 @@
                 const text = await res.text();
                 codeDiv.textContent = res.status;
                 bodyDiv.textContent = formatJSON(text);
+                // Store feature data for MIDI use
+                const parsed = JSON.parse(text);
+                if (Array.isArray(parsed)) {
+                    executeResultData = parsed;
+                }            
             } catch (error) {
                 codeDiv.textContent = 'Error';
                 bodyDiv.textContent = error.message;
@@ -1055,6 +1313,12 @@
         // --------------------------------------------------------------------------
         // Utils
         // --------------------------------------------------------------------------
+
+        function getFeatureArray(path) {
+            const entry = executeResultData.find(f => f.feature_path === path);
+            return entry?.data ?? [];
+        }
+
         // Function to format the JSON response nicely
         function formatJSON(text) {
             try {

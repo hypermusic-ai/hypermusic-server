@@ -4,11 +4,10 @@
     #error "Solidity_SOLC_EXECUTABLE is not defined"
 #endif
 
-int main(int argc, char* argv[])
+static void _configureLogger()
 {
-    dcn::setBinPath(std::filesystem::path(argv[0]).parent_path());
-    
     std::filesystem::create_directories(dcn::getLogsPath());
+
     // Create sinks
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     const std::string log_name = dcn::utils::currentTimestamp() + "-DCNServer.log";
@@ -26,20 +25,50 @@ int main(int argc, char* argv[])
     logger.flush_on(spdlog::level::info);
 
     spdlog::set_default_logger(std::make_shared<spdlog::logger>(logger));
+}
+
+int main(int argc, char* argv[])
+{
+    dcn::setBinPath(std::filesystem::path(argv[0]).parent_path());
+    
+    _configureLogger();
 
     spdlog::info("{}", dcn::utils::getAsciiLogo());
 
     const std::string build_timestamp = dcn::utils::loadBuildTimestamp(dcn::getBinPath() / "build_timestamp");
-    spdlog::info("Build timestamp: {}", build_timestamp);
+    spdlog::debug("Build timestamp: {}", build_timestamp);
 
-    spdlog::info("Version: {}.{}.{}\n", dcn::MAJOR_VERSION, dcn::MINOR_VERSION, dcn::PATCH_VERSION);
+    spdlog::debug("Version: {}.{}.{}\n", dcn::MAJOR_VERSION, dcn::MINOR_VERSION, dcn::PATCH_VERSION);
 
-    spdlog::info("Decentralised Art server started with {} arguments", argc);
+    spdlog::debug("Decentralised Art server started with {} arguments", argc);
     for(int i = 0; i < argc; ++i)
     {
-        spdlog::info("Argument at {}={}", i, argv[i]);
+        spdlog::debug("Argument at [{}] : {}", i, argv[i]);
     }
     
+    dcn::cmd::ArgParser arg_parser;
+    arg_parser.addArg("-h", dcn::cmd::CommandLineArgDef::NArgs::Zero, dcn::cmd::CommandLineArgDef::Type::Bool, "Display help message and exit");
+    arg_parser.addArg("--help", dcn::cmd::CommandLineArgDef::NArgs::Zero, dcn::cmd::CommandLineArgDef::Type::Bool, "Display help message and exit");
+    arg_parser.addArg("--version", dcn::cmd::CommandLineArgDef::NArgs::Zero, dcn::cmd::CommandLineArgDef::Type::Bool, "Display version and exit");
+    arg_parser.addArg("--port", dcn::cmd::CommandLineArgDef::NArgs::One, dcn::cmd::CommandLineArgDef::Type::Int, "Port to listen on");
+
+    arg_parser.parse(argc, argv);
+
+    if(arg_parser.getArg<bool>("--version").value_or(false))
+    {
+        spdlog::info("Decentralised Art server build timestamp: {}", build_timestamp);
+        spdlog::info("Version: {}.{}.{}", dcn::MAJOR_VERSION, dcn::MINOR_VERSION, dcn::PATCH_VERSION);
+        return 0;
+    }
+
+    if(arg_parser.getArg<bool>("--help").value_or(false) || arg_parser.getArg<bool>("-h").value_or(false))
+    {
+        spdlog::info(arg_parser.constructHelpMessage());
+        return 0;
+    }
+
+    const asio::ip::port_type port = arg_parser.getArg<std::vector<int>>("--port").value_or(std::vector<int>{dcn::DEFAULT_PORT}).at(0);
+
     spdlog::info("Current working path: {}", std::filesystem::current_path().string());
 
     // solidity check
@@ -59,7 +88,7 @@ int main(int argc, char* argv[])
 
     dcn::EVM evm(io_context, EVMC_SHANGHAI, solc_path);
 
-    dcn::Server server(io_context, {asio::ip::tcp::v4(), dcn::DEFAULT_PORT});
+    dcn::Server server(io_context, {asio::ip::tcp::v4(), port});
 
     server.setIdleInterval(5000ms);
     
