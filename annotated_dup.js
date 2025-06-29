@@ -1,6 +1,10 @@
 var annotated_dup =
 [
     [ "dcn", "namespacedcn.html", [
+      [ "cmd", "namespacedcn_1_1cmd.html", [
+        [ "ArgParser", "classdcn_1_1cmd_1_1ArgParser.html", "classdcn_1_1cmd_1_1ArgParser" ],
+        [ "CommandLineArgDef", "structdcn_1_1cmd_1_1CommandLineArgDef.html", "structdcn_1_1cmd_1_1CommandLineArgDef" ]
+      ] ],
       [ "http", "namespacedcn_1_1http.html", [
         [ "MessageBase", "classdcn_1_1http_1_1MessageBase.html", "classdcn_1_1http_1_1MessageBase" ],
         [ "Request", "classdcn_1_1http_1_1Request.html", "classdcn_1_1http_1_1Request" ],

@@ -1,5 +1,6 @@
 var namespacedcn =
 [
+    [ "cmd", "namespacedcn_1_1cmd.html", "namespacedcn_1_1cmd" ],
     [ "http", "namespacedcn_1_1http.html", "namespacedcn_1_1http" ],
     [ "native", "namespacedcn_1_1native.html", [
       [ "runProcess", "namespacedcn_1_1native.html#a969c7a0469fb2cd69b6a559bd8455d5a", null ]

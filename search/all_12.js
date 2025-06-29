@@ -31,6 +31,6 @@ var searchData=
   ['splitpathsegments_28',['splitPathSegments',['../namespacedcn_1_1http.html#a7911d5fb827bacf47f1317d95ec8dcc7',1,'dcn::http']]],
   ['stop_29',['stop',['../classdcn_1_1Session.html#ac1c0529d85326181cd7a5c81cd47053f',1,'dcn::Session']]],
   ['storage_30',['storage',['../structdcn_1_1EVMStorage_1_1Account.html#a1c39f3db0f956022f88e409049f7a800',1,'dcn::EVMStorage::Account']]],
-  ['string_31',['string',['../namespacedcn.html#a73f6cd1f34fc64548d4b6b8749ed6f68ab45cffe084dd3d20d928bee85e7b0f21',1,'dcn']]],
+  ['string_31',['string',['../structdcn_1_1cmd_1_1CommandLineArgDef.html#a4ac5850eca382389832c61e50ae5053ba27118326006d3829667a400ad23d5d98',1,'dcn::cmd::CommandLineArgDef::String'],['../namespacedcn.html#a73f6cd1f34fc64548d4b6b8749ed6f68ab45cffe084dd3d20d928bee85e7b0f21',1,'dcn::string']]],
   ['stringify_32',['STRINGIFY',['../utils_8hpp.html#a6df1d22fb5f09eccc23b9f399670cfd7',1,'utils.hpp']]]
 ];

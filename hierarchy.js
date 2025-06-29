@@ -1,7 +1,9 @@
 var hierarchy =
 [
     [ "dcn::EVMStorage::Account", "structdcn_1_1EVMStorage_1_1Account.html", null ],
+    [ "dcn::cmd::ArgParser", "classdcn_1_1cmd_1_1ArgParser.html", null ],
     [ "dcn::AuthManager", "classdcn_1_1AuthManager.html", null ],
+    [ "dcn::cmd::CommandLineArgDef", "structdcn_1_1cmd_1_1CommandLineArgDef.html", null ],
     [ "dcn::EVM", "classdcn_1_1EVM.html", null ],
     [ "std::formatter", null, [
       [ "std::formatter< dcn::AuthenticationError >", "structstd_1_1formatter_3_01dcn_1_1AuthenticationError_01_4.html", null ],
