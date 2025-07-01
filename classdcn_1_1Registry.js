@@ -17,6 +17,8 @@ var classdcn_1_1Registry =
     [ "getNewestCondition", "classdcn_1_1Registry.html#a0461dea9fc9168d1ce9887e170c92497", null ],
     [ "getNewestFeature", "classdcn_1_1Registry.html#a57ee01e5d2c9197fb58a4b74da8e0375", null ],
     [ "getNewestTransformation", "classdcn_1_1Registry.html#a0e23427e7aa3f61c63407d2aeebb7ce5", null ],
+    [ "getOwnedFeatures", "classdcn_1_1Registry.html#a267d246c9ddd931fe6ba993d1d2abe32", null ],
+    [ "getOwnedTransformations", "classdcn_1_1Registry.html#ab1650f5bd3f707f80b1c587eb3a688c9", null ],
     [ "getTransformation", "classdcn_1_1Registry.html#aa96d6ea7e0e9ab83e2d32a089fa723b6", null ],
     [ "isConditionBucketEmpty", "classdcn_1_1Registry.html#a1eef4f7eef6c38b4751388f2d04bfe6f", null ],
     [ "isFeatureBucketEmpty", "classdcn_1_1Registry.html#a6eb9a205660509f44390bf7d8a38f703", null ],

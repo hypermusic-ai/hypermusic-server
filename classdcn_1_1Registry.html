@@ -158,6 +158,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aff17f098a56bfb2e1fed8361d85d0fc7" id="r_aff17f098a56bfb2e1fed8361d85d0fc7"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdcn_1_1Registry.html#aff17f098a56bfb2e1fed8361d85d0fc7">checkIfSubFeaturesExist</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">Feature</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">feature</a>) <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a></td></tr>
 <tr class="memdesc:aff17f098a56bfb2e1fed8361d85d0fc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively checks if all subfeatures exist in the registry.  <br /></td></tr>
 <tr class="separator:aff17f098a56bfb2e1fed8361d85d0fc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a267d246c9ddd931fe6ba993d1d2abe32" id="r_a267d246c9ddd931fe6ba993d1d2abe32"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; absl::flat_hash_set&lt; std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdcn_1_1Registry.html#a267d246c9ddd931fe6ba993d1d2abe32">getOwnedFeatures</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> evmc::address &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">address</a>) <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a></td></tr>
+<tr class="separator:a267d246c9ddd931fe6ba993d1d2abe32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1650f5bd3f707f80b1c587eb3a688c9" id="r_ab1650f5bd3f707f80b1c587eb3a688c9"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; absl::flat_hash_set&lt; std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdcn_1_1Registry.html#ab1650f5bd3f707f80b1c587eb3a688c9">getOwnedTransformations</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> evmc::address &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">address</a>) <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a></td></tr>
+<tr class="separator:ab1650f5bd3f707f80b1c587eb3a688c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -712,6 +716,42 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <code>std::optional&lt;Transformation&gt;</code> containing the transformation if found, or <code>std::nullopt</code> if the transformation does not exist.</dd></dl>
 <p>This function searches for the newest transformation by name in the registry. If the transformation does not exist, it returns <code>std::nullopt</code>. </p>
+
+</div>
+</div>
+<a id="a267d246c9ddd931fe6ba993d1d2abe32" name="a267d246c9ddd931fe6ba993d1d2abe32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a267d246c9ddd931fe6ba993d1d2abe32">&#9670;&#160;</a></span>getOwnedFeatures()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">asio::awaitable&lt; absl::flat_hash_set&lt; std::string &gt; &gt; dcn::Registry::getOwnedFeatures </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> evmc::address &amp;&#160;</td>
+          <td class="paramname"><em>address</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab1650f5bd3f707f80b1c587eb3a688c9" name="ab1650f5bd3f707f80b1c587eb3a688c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1650f5bd3f707f80b1c587eb3a688c9">&#9670;&#160;</a></span>getOwnedTransformations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">asio::awaitable&lt; absl::flat_hash_set&lt; std::string &gt; &gt; dcn::Registry::getOwnedTransformations </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> evmc::address &amp;&#160;</td>
+          <td class="paramname"><em>address</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

@@ -87,6 +87,7 @@ var namespacedcn =
     [ "encodeAsArg< std::vector< std::uint32_t > >", "namespacedcn.html#adcd741468cd327cbbc3141920c80d44e", null ],
     [ "encodeAsArg< std::vector< std::uint32_t > >", "namespacedcn.html#adcd741468cd327cbbc3141920c80d44e", null ],
     [ "fetchOwner", "namespacedcn.html#a038ac19627e8b500ea8a1c3fb716d34f", null ],
+    [ "GET_accountInfo", "namespacedcn.html#a0a4b0999356fb08f760c67a4e031a63a", null ],
     [ "GET_condition", "namespacedcn.html#ab7967198d63932ef2419d1790533f253", null ],
     [ "GET_execute", "namespacedcn.html#a43fa656e7a21322ec32d97de3e5c0a11", null ],
     [ "GET_feature", "namespacedcn.html#ae839348cd866c04081b43b59410ffda5", null ],
