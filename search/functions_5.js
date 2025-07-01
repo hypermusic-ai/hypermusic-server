@@ -12,7 +12,7 @@ var searchData=
   ['get_5fexecute_9',['GET_execute',['../namespacedcn.html#a43fa656e7a21322ec32d97de3e5c0a11',1,'dcn']]],
   ['get_5ffeature_10',['GET_feature',['../namespacedcn.html#ae839348cd866c04081b43b59410ffda5',1,'dcn']]],
   ['get_5fnonce_11',['GET_nonce',['../namespacedcn.html#ac3751c4b02df4c86c564697360400c7e',1,'dcn']]],
-  ['get_5fsimpleform_12',['GET_SimpleForm',['../namespacedcn.html#ae37f7af49ddceb9b4e8de2bfcdf93223',1,'dcn']]],
+  ['get_5fservefile_12',['GET_ServeFile',['../namespacedcn.html#a895f1601c1e072da0147834f72024d39',1,'dcn']]],
   ['get_5fstorage_13',['get_storage',['../classdcn_1_1EVMStorage.html#a765611b80c3e368ebfc59b0cdc8b94dd',1,'dcn::EVMStorage']]],
   ['get_5ftransformation_14',['GET_transformation',['../namespacedcn.html#aeca50bef36a4b8d8e19ae013decb34f7',1,'dcn']]],
   ['get_5ftransient_5fstorage_15',['get_transient_storage',['../classdcn_1_1EVMStorage.html#ad86c7673b3d798bc8905fc38c9265137',1,'dcn::EVMStorage']]],

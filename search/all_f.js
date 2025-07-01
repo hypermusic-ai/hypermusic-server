@@ -9,6 +9,6 @@ var searchData=
   ['optional_6',['optional',['../namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d',1,'dcn']]],
   ['options_7',['OPTIONS',['../namespacedcn_1_1http.html#a4f682cd7b59ded888fa0d767b29cf172a164dd62adb30ca051b5289672a572f9b',1,'dcn::http']]],
   ['options_5ffeature_8',['OPTIONS_feature',['../namespacedcn.html#a112a61a4922f6c7dc256016e72561b7d',1,'dcn']]],
-  ['options_5fsimpleform_9',['OPTIONS_SimpleForm',['../namespacedcn.html#a81a3a77cc6ad4769ff50481473c4d537',1,'dcn']]],
+  ['options_5fservefile_9',['OPTIONS_ServeFile',['../namespacedcn.html#af25caf53a2512f0b2d2ea0339856ca2e',1,'dcn']]],
   ['options_5ftransformation_10',['OPTIONS_transformation',['../namespacedcn.html#afcf0e0fcb9332c361fdb8882a768c760',1,'dcn']]]
 ];

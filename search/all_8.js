@@ -4,7 +4,7 @@ var searchData=
   ['handlerdefinition_1',['HandlerDefinition',['../namespacedcn.html#a95cbb2c96065bd6b4d712e346a0436f8',1,'dcn']]],
   ['hash_5flen_2',['HASH_LEN',['../classdcn_1_1Keccak256.html#a2d20b1ffbfede0243dfbb11ebf5ba9a4',1,'dcn::Keccak256']]],
   ['head_3',['HEAD',['../namespacedcn_1_1http.html#a4f682cd7b59ded888fa0d767b29cf172ae15e216fc1c639f787b1231ecdfa1bf8',1,'dcn::http']]],
-  ['head_5fsimpleform_4',['HEAD_SimpleForm',['../namespacedcn.html#a316d489cacc113dd8fabde02237d030d',1,'dcn']]],
+  ['head_5fservefile_4',['HEAD_ServeFile',['../namespacedcn.html#a3a5f9805ac17d8069443629731cb44a2',1,'dcn']]],
   ['header_5',['Header',['../namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9',1,'dcn::http']]],
   ['headerslist_6',['HeadersList',['../namespacedcn_1_1http.html#acbde0b4461bbaf8168c379b61f063798',1,'dcn::http']]],
   ['http_2ecpp_7',['http.cpp',['../http_8cpp.html',1,'']]],
