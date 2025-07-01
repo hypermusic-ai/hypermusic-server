@@ -912,6 +912,56 @@ export async function fetchVersionInfo() {
 }
 
 // --------------------------------------------------------------------------
+// Account
+// --------------------------------------------------------------------------
+export async function fetchAccountResources() {
+    const address = document.getElementById('accountAddressInput').value.trim();
+    const featuresDiv = document.getElementById('accountFeaturesList');
+    const transformationsDiv = document.getElementById('accountTransformationsList');
+
+    featuresDiv.textContent = 'Loading...';
+    transformationsDiv.textContent = 'Loading...';
+
+    if (!address) {
+        alert("Address is required.");
+        featuresDiv.textContent = '❌ Invalid address';
+        transformationsDiv.textContent = '';
+        return;
+    }
+
+    try {
+        const apiBase = window.location.origin;
+        const res = await requestWithRefresh(`${apiBase}/account/${address}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await res.json();
+
+        // Update dropdown source
+        availableFeatureNames = data.owned_features;
+        featureDropdownElements.forEach(populateFeatureDropdown);
+
+        featuresDiv.innerHTML = data.owned_features?.length
+            ? data.owned_features.map((name, i) => {
+                const bg = i % 2 === 0 ? '#1e1e1e' : '#2a2a2a';
+                return `<div style="padding: 0.5rem; border: 1px solid #3333; border-radius: 4px; margin-bottom: 0.3rem; background: ${bg};"><code>${name}</code></div>`;
+            }).join('')
+            : '(none)';
+
+        transformationsDiv.innerHTML = data.owned_transformations?.length
+            ? data.owned_transformations.map((name, i) => {
+                const bg = i % 2 === 0 ? '#1e1e1e' : '#2a2a2a';
+                return `<div style="padding: 0.5rem; border: 1px solid #3333; border-radius: 4px; margin-bottom: 0.3rem; background: ${bg};"><code>${name}</code></div>`;
+            }).join('')
+            : '(none)';
+    } catch (err) {
+        featuresDiv.textContent = '❌ Failed to fetch account data';
+        transformationsDiv.textContent = err.message;
+    }
+}
+
+// --------------------------------------------------------------------------
 // Login
 // --------------------------------------------------------------------------
 
@@ -945,7 +995,7 @@ export async function loginWithMetaMask()
         const result = await authRes.json();
 
         if (result.success) {
-            loginStatusDiv.innerHTML = `<p style="color: green;">✅ Authenticated as <strong>${address}</strong></p>`;
+            loginStatusDiv.innerHTML = `<p style="color: green;">✅ Authenticated as ${address}</p>`;
         }
         else {
             loginStatusDiv.innerHTML = `<p style="color: red;">❌ Authentication failed</p>`;

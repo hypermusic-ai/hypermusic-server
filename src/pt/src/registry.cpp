@@ -133,6 +133,8 @@ namespace dcn
         output_file << *parsing_result;
         output_file.close();
 
+        _owned_features[owner].emplace(feature_record.feature().name());
+
         _newest_feature[feature_record.feature().name()] = address;
         _features.at(feature_record.feature().name())
             .try_emplace(std::move(address), std::move(feature_record));
@@ -205,6 +207,8 @@ namespace dcn
 
         output_file << *parsing_result;
         output_file.close();
+
+        _owned_transformations[owner].emplace(transformation_record.transformation().name());
 
         _newest_transformation[transformation_record.transformation().name()] = address;
         _transformations.at(transformation_record.transformation().name())
@@ -290,5 +294,21 @@ namespace dcn
             co_return std::nullopt;
         }
         co_return it->second.value;
+    }
+
+    asio::awaitable<absl::flat_hash_set<std::string>> Registry::getOwnedFeatures(const evmc::address & address) const
+    {
+        co_await utils::ensureOnStrand(_strand);
+
+        if(_owned_features.contains(address) == false)co_return absl::flat_hash_set<std::string>{};
+        co_return _owned_features.at(address);
+    }
+
+    asio::awaitable<absl::flat_hash_set<std::string>> Registry::getOwnedTransformations(const evmc::address & address) const
+    {
+        co_await utils::ensureOnStrand(_strand);
+
+        if(_owned_transformations.contains(address) == false)co_return absl::flat_hash_set<std::string>{};
+        co_return _owned_transformations.at(address);
     }
 }

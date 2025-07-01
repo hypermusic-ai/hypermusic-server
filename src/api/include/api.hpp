@@ -127,6 +127,10 @@ namespace dcn
      */
     asio::awaitable<http::Response> POST_refresh(const http::Request &, std::vector<RouteArg>, AuthManager &);
 
+
+
+    asio::awaitable<http::Response> GET_accountInfo(const http::Request &, std::vector<RouteArg>, Registry & registry);
+
     /**
      * Handles OPTIONS requests by returning a response with CORS headers.
      *

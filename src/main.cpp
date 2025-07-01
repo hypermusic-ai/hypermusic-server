@@ -117,6 +117,8 @@ int main(int argc, char* argv[])
     server.addRoute({dcn::http::Method::POST, "/auth"},                dcn::POST_auth, std::ref(auth_manager));
     server.addRoute({dcn::http::Method::POST, "/refresh"},             dcn::POST_refresh, std::ref(auth_manager));
 
+    server.addRoute({dcn::http::Method::GET,    "/account/<string>"},   dcn::GET_accountInfo, std::ref(registry));
+
     server.addRoute({dcn::http::Method::OPTIONS, "/feature"},                    dcn::OPTIONS_feature);
     server.addRoute({dcn::http::Method::GET,     "/feature/<string>/<~string>"},   dcn::GET_feature, std::ref(registry), std::ref(evm));
     server.addRoute({dcn::http::Method::POST,    "/feature"},                    dcn::POST_feature, std::ref(auth_manager), std::ref(registry), std::ref(evm));

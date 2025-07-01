@@ -94,7 +94,6 @@ button:hover {
 }
 
 .response-code {
-    flex: 1;
     background: #333;
     color: #fff;
     padding: 0.5rem;
@@ -103,7 +102,10 @@ button:hover {
     max-width: 100px;
 }
 
-.response-body {
+.response-body 
+{
+    display: block;
+
     flex: 3;
     background: #333;
     color: #fff;
@@ -140,19 +142,7 @@ hr {
     border: 1px solid #333;
     margin: 2rem 0;
 }
-#login {
-    padding: 0.8rem;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    background-color: #1e90ff;
-    color: #fff;
-    border: none;
-}
 
-#login:hover {
-    background-color: #0f66c0;
-}
 #treeContainer {
     overflow: visible; /* critical */
     position: relative;
@@ -178,4 +168,29 @@ hr {
 
 #midi-visualiser-section {
     background-color: white;
+
+    background-color: white;
+    border: 1px solid #ccc;       /* light gray border */
+    border-radius: 8px;             /* rounded corners */
+    padding: 1rem;                  /* optional: add spacing inside */
+    text-align: left;
+}
+
+#midiPlayer
+{
+    width: 100%;
+    color: #333;
+}
+
+#pianoVis
+{
+    padding: 0.3rem;
+    border: 1px solid #333; 
+    border-radius: 8px;
+    width: 100%;
+}
+
+#staffVis
+{
+    width: 100%;
 }

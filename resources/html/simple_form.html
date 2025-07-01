@@ -39,7 +39,9 @@
 
             updateTransformationPreview,
             sendStructuredTransformation,
-            getTransformation
+            getTransformation,
+
+            fetchAccountResources
         } from '/js/simple_form.js';
 
         fetchVersionInfo();
@@ -66,6 +68,9 @@
         document.getElementById('POST_transformationCode').addEventListener('input', updateTransformationPreview);
         document.getElementById('btn_sendStructuredTransformation').addEventListener('click', sendStructuredTransformation);
         document.getElementById('btn_getTransformation').addEventListener('click', getTransformation);
+
+        document.getElementById('btn_fetchAccountData').addEventListener('click', fetchAccountResources);
+
     </script>
     <link rel="stylesheet" href="styles/simple_form.css">
 
@@ -78,14 +83,46 @@
     <h1>Decentralised Art Server</h1>
     <p style="text-align:center; max-width:600px">Interact with the API endpoints directly from your browser.</p>
 
+    <hr>
     <div class="row">
         <div class="column">
-            <div class="response-row">
-                <button id="login" style="flex: 1; min-width: 200px;">Login with MetaMask</button>
-                <div id="loginStatus" class="response-body" style="flex: 3;">Status...</div>
+            <h2>MetaMask login</h2>
+
+            <div class="response-row" style="display: flex; gap: 1rem; align-items: flex-end;">
+                <button id="login" style="min-width: 200px;">Login</button>
+                
+                <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
+                    <label>Status</label>
+                    <div id="loginStatus" class="response-body">Waiting...</div>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="row">
+      <div class="column">
+        <h2>Account Overview</h2>
+        <div class="response-row" style="display: flex; gap: 1rem; align-items: flex-end;">
+            <button id="btn_fetchAccountData" style="min-width: 200px;">Fetch Account Data</button>
+            
+            <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
+                <label>Address</label>
+                <input type="text" id="accountAddressInput" class="response-body" placeholder="0x..." style="flex: 3;">
+            </div>
+        </div>
+        <div class="response-row">
+            <div class="column">
+                <h3>Owned Features</h3>
+                <div id="accountFeaturesList" class="response-body">Waiting...</div>
+            </div>
+            <div class="column">
+                <h3>Owned Transformations</h3>
+                <div id="accountTransformationsList" class="response-body">Waiting...</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
 
     <hr>
 
@@ -132,7 +169,7 @@
                 </div>
                 <div style="flex: 1; min-width: 120px;">
                     <label style="visibility:hidden;">Execute</label>
-                    <button id="btn_execute">Execute</button>
+                    <button id="btn_execute">🔒 Execute</button>
                 </div>
             </div>
             <div class="response-row">
@@ -196,7 +233,7 @@
             <div class="request-row">
                 <div id="POST_featureRequestBody" class="request-body"></div>
             </div>
-            <button id="btn_sendStructuredFeature">Send</button>
+            <button id="btn_sendStructuredFeature">🔒 Send</button>
 
             <div class="response-row">
                 <div id="POST_featureResponseCode" class="response-code">-</div>
@@ -237,7 +274,7 @@
                 <div id="POST_transformationRequestBody" class="request-body"></div>
             </div>
             
-            <button id="btn_sendStructuredTransformation">Send</button>
+            <button id="btn_sendStructuredTransformation">🔒 Send</button>
             
             <div class="response-row">
                 <div id="POST_transformationResponseCode" class="response-code">-</div>

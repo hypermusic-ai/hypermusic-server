@@ -180,6 +180,9 @@ namespace dcn
              */
             asio::awaitable<bool> checkIfSubFeaturesExist(const Feature & feature) const;
 
+            asio::awaitable<absl::flat_hash_set<std::string>> getOwnedFeatures(const evmc::address & address) const;
+            asio::awaitable<absl::flat_hash_set<std::string>> getOwnedTransformations(const evmc::address & address) const;
+
         protected:
 
             /**
@@ -272,5 +275,10 @@ namespace dcn
             absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, FeatureRecord>> _features;
             absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, TransformationRecord>> _transformations;
             absl::flat_hash_map<std::string, absl::flat_hash_map<evmc::address, Node<Condition>>> _conditions;
+
+
+            absl::flat_hash_map<evmc::address, absl::flat_hash_set<std::string>> _owned_features;
+            absl::flat_hash_map<evmc::address, absl::flat_hash_set<std::string>> _owned_transformations;
+            absl::flat_hash_map<evmc::address, absl::flat_hash_set<std::string>> _owned_conditions;
     };
 }
