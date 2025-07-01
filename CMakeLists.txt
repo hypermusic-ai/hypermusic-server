@@ -18,6 +18,7 @@ option(DECENTRALISED_ART_BUILD_TESTS "Build tests" OFF)
 option(DECENTRALISED_ART_USE_SUBMODULE_PT "Use submodule PT" OFF)
 
 # --------------------------------------------------------------------------
+set(CMAKE_INSTALL_MESSAGE "LAZY")
 message(STATUS "Install directory ${CMAKE_INSTALL_PREFIX}")
 set(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
 set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")

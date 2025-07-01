@@ -39,27 +39,27 @@ namespace dcn
         return BIN_PATH.parent_path() / PT_REPO;
     }
 
-    std::optional<std::string> loadSimpleForm()
+    std::optional<std::string> loadTextFile(std::filesystem::path path)
     {
-        const auto simple_form_path = getResourcesPath() / "html" / "simple_form.html";
-        if(std::filesystem::exists(simple_form_path) == false)
+        const auto full_path = getResourcesPath() / path;
+        if(std::filesystem::exists(full_path) == false)
         {
-            spdlog::error("Cannot find simple_form.html in the resources directory.");
+            spdlog::error(std::format("Cannot find {} in the resources directory.", path.string()));
             return std::nullopt;
         }
         
-        std::ifstream simple_form_file(simple_form_path, std::ios::in);
+        std::ifstream file(full_path, std::ios::in);
 
-        if(simple_form_file.good() == false)
+        if(file.good() == false)
         {  
-            spdlog::error("Failed to open simple_form.html");
+            spdlog::error(std::format("Failed to open file {}", path.string()));
             return std::nullopt;
         }
 
-        const std::string simple_form = std::string((std::istreambuf_iterator<char>(simple_form_file)), std::istreambuf_iterator<char>());
+        const std::string file_content = std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
-        simple_form_file.close();
+        file.close();
 
-        return simple_form;
+        return file_content;
     }
 }

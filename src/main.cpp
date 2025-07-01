@@ -92,12 +92,18 @@ int main(int argc, char* argv[])
 
     server.setIdleInterval(5000ms);
     
-    const auto simple_form = dcn::loadSimpleForm();
-    if(simple_form)
+    const auto simple_form = dcn::loadTextFile(std::filesystem::path{"html"} / "simple_form.html");
+    const auto simple_form_js = dcn::loadTextFile(std::filesystem::path{"js"} / "simple_form.js");
+
+    if(simple_form && simple_form_js)
     {
-        server.addRoute({dcn::http::Method::HEAD, "/"},          dcn::HEAD_SimpleForm);
-        server.addRoute({dcn::http::Method::OPTIONS, "/"},       dcn::OPTIONS_SimpleForm);
-        server.addRoute({dcn::http::Method::GET, "/"},           dcn::GET_SimpleForm, std::cref(simple_form.value()));
+        server.addRoute({dcn::http::Method::HEAD, "/"},          dcn::HEAD_ServeFile);
+        server.addRoute({dcn::http::Method::OPTIONS, "/"},       dcn::OPTIONS_ServeFile);
+        server.addRoute({dcn::http::Method::GET, "/"},           dcn::GET_ServeFile, "text/html; charset=utf-8", std::cref(simple_form.value()));
+
+        server.addRoute({dcn::http::Method::HEAD, "/js/simple_form.js"},          dcn::HEAD_ServeFile);
+        server.addRoute({dcn::http::Method::OPTIONS, "/js/simple_form.js"},       dcn::OPTIONS_ServeFile);
+        server.addRoute({dcn::http::Method::GET, "/js/simple_form.js"},           dcn::GET_ServeFile, "text/javascript; charset=utf-8", std::cref(simple_form_js.value()));
     }
     
     server.addRoute({dcn::http::Method::GET, "/version"},       dcn::GET_version, std::cref(build_timestamp));

@@ -31,7 +31,7 @@ namespace dcn
      * @param routeArgs Route arguments (not used in this implementation)
      * @return An HTTP response with CORS headers for the simple form
      */
-    asio::awaitable<http::Response> HEAD_SimpleForm(const http::Request &, std::vector<RouteArg>);
+    asio::awaitable<http::Response> HEAD_ServeFile(const http::Request &, std::vector<RouteArg>);
 
     /**
      * Handles OPTIONS requests for a simple form by returning a response with CORS headers.
@@ -40,7 +40,7 @@ namespace dcn
      * @param routeArgs Route arguments (not used in this implementation)
      * @return An HTTP response with CORS headers for the simple form
      */
-    asio::awaitable<http::Response> OPTIONS_SimpleForm(const http::Request &, std::vector<RouteArg>);
+    asio::awaitable<http::Response> OPTIONS_ServeFile(const http::Request &, std::vector<RouteArg>);
 
     /**
      * Handles GET requests for a simple form by returning the form content.
@@ -50,7 +50,7 @@ namespace dcn
      * @param simple_form The content of the simple form to be returned
      * @return An HTTP response with the simple form content
      */
-    asio::awaitable<http::Response> GET_SimpleForm(const http::Request &, std::vector<RouteArg>, const std::string & simple_form);
+    asio::awaitable<http::Response> GET_ServeFile(const http::Request &, std::vector<RouteArg>, const std::string mime_type, const std::string & file_content);
 
     /**
      * @brief Handle a GET request to /auth/nonce

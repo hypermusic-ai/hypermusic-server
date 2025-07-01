@@ -23,5 +23,5 @@ namespace dcn
     std::filesystem::path getPTPath();
 
 
-    std::optional<std::string> loadSimpleForm();
+    std::optional<std::string> loadTextFile(std::filesystem::path path);
 }
