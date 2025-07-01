@@ -2,7 +2,7 @@
 
 namespace dcn
 {
-    asio::awaitable<http::Response> OPTIONS_transformation(const http::Request &, std::vector<RouteArg>)
+    asio::awaitable<http::Response> OPTIONS_transformation(const http::Request &, std::vector<RouteArg>, QueryArgsList)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
@@ -16,7 +16,7 @@ namespace dcn
         co_return response;
     }
 
-    asio::awaitable<http::Response> GET_transformation(const http::Request & request, std::vector<RouteArg> args, Registry & registry, EVM & evm)
+    asio::awaitable<http::Response> GET_transformation(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, Registry & registry, EVM & evm)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
@@ -150,7 +150,7 @@ namespace dcn
         co_return std::move(response);
     }
 
-    asio::awaitable<http::Response> POST_transformation(const http::Request & request, std::vector<RouteArg> args, AuthManager & auth_manager, Registry & registry, EVM & evm)
+    asio::awaitable<http::Response> POST_transformation(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, AuthManager & auth_manager, Registry & registry, EVM & evm)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");

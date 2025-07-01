@@ -41,7 +41,11 @@
             sendStructuredTransformation,
             getTransformation,
 
-            fetchAccountResources
+            fetchAccountResources,
+            nextPage,
+            prevPage,
+
+            copyTextFromElement
         } from '/js/simple_form.js';
 
         fetchVersionInfo();
@@ -52,24 +56,29 @@
         document.getElementById('btn_saveInstanceEdit').addEventListener('click', saveInstanceEdit);
         document.getElementById('btn_closePopup').addEventListener('click', closePopup);
         document.getElementById('btn_execute').addEventListener('click', execute);
+        document.getElementById('btn_executeCopyResponse').addEventListener('click', () => copyTextFromElement('executeBody'));
 
         document.getElementById('btn_addMIDIMappingChannel').addEventListener('click', addMIDIMappingChannel);
         document.getElementById('btn_showMIDICanvas').addEventListener('click', showMIDICanvas);
         document.getElementById('btn_hideMIDICanvas').addEventListener('click', hideMIDICanvas);
         document.getElementById('btn_downloadMIDI').addEventListener('click', downloadMIDI);
 
-        document.getElementById('POST_featureName').addEventListener('input', updateFeatureRequestPreview);
+        document.getElementById('in_featureName').addEventListener('input', updateFeatureRequestPreview);
         document.getElementById('btn_addDimension').addEventListener('click', addDimension);
         document.getElementById('btn_clearDimensions').addEventListener('click', clearDimensions);
         document.getElementById('btn_sendStructuredFeature').addEventListener('click', sendStructuredFeature);
         document.getElementById('btn_getFeature').addEventListener('click', getFeature);
+        document.getElementById('btn_featureCopyRequest').addEventListener('click', () => copyTextFromElement('POST_featureRequestBody'));
 
-        document.getElementById('POST_transformationName').addEventListener('input', updateTransformationPreview);
+        document.getElementById('in_transformationName').addEventListener('input', updateTransformationPreview);
         document.getElementById('POST_transformationCode').addEventListener('input', updateTransformationPreview);
         document.getElementById('btn_sendStructuredTransformation').addEventListener('click', sendStructuredTransformation);
         document.getElementById('btn_getTransformation').addEventListener('click', getTransformation);
+        document.getElementById('btn_transformationCopyRequest').addEventListener('click', () => copyTextFromElement('POST_transformationRequestBody'));
 
         document.getElementById('btn_fetchAccountData').addEventListener('click', fetchAccountResources);
+        document.getElementById('btn_prevAccountPage').addEventListener('click', prevPage);
+        document.getElementById('btn_nextAccountPage').addEventListener('click', nextPage);
 
     </script>
     <link rel="stylesheet" href="styles/simple_form.css">
@@ -119,6 +128,11 @@
                 <h3>Owned Transformations</h3>
                 <div id="accountTransformationsList" class="response-body">Waiting...</div>
             </div>
+        </div>
+        <div style="text-align: center; margin-top: 1rem;">
+            <button id="btn_prevAccountPage">⬅ Prev</button>
+            <span id="accountPageLabel" style="margin: 0 1rem;">Page 1</span>
+            <button id="btn_nextAccountPage">Next ➡</button>
         </div>
       </div>
     </div>
@@ -174,7 +188,10 @@
             </div>
             <div class="response-row">
                 <div id="executeCode" class="response-code">-</div>
-                <div id="executeBody" class="response-body">Waiting...</div>
+                <div class="response-wrapper">
+                    <button id="btn_executeCopyResponse" class="copy-button">📋</button>
+                    <pre id="executeBody" class="response-body">Waiting...</pre>
+                </div>
             </div>
         </div>
         <div class="column">
@@ -217,11 +234,13 @@
     <hr>
 
     <div class="row">
+        <h2>Features</h2>
+        <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
+            <label>Name</label>
+            <input type="text" id="in_featureName" placeholder="melody">
+        </div>
+        <div class="row">
         <div class="column">
-            <h2>Send Feature</h2>
-            <label>Feature Name</label>
-            <input type="text" id="POST_featureName" placeholder="melody">
-            
             <div id="dimensionsContainer"></div>
 
             <div class="button-row">
@@ -231,7 +250,10 @@
 
             <label>Request body</label>
             <div class="request-row">
-                <div id="POST_featureRequestBody" class="request-body"></div>
+                <div class="response-wrapper">
+                    <button id="btn_featureCopyRequest" class="copy-button">📋</button>
+                    <pre id="POST_featureRequestBody" class="request-body">...</pre>
+                </div>
             </div>
             <button id="btn_sendStructuredFeature">🔒 Send</button>
 
@@ -241,9 +263,6 @@
             </div>
         </div>
         <div class="column">
-            <h2>Fetch Feature</h2>
-            <label>Name</label>
-            <input id="GET_featureName" type="text" placeholder="pitch">
             <label>Address (optional)</label>
             <input id="GET_featureAddress" type="text" placeholder="0x0...">
             <button id="btn_getFeature">Fetch</button>
@@ -253,15 +272,18 @@
             </div>
         </div>
     </div>
+    </div>
 
     <hr>
 
     <div class="row">
+        <h2>Transformations</h2>
+        <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
+            <label>Name</label>
+            <input type="text" id="in_transformationName" placeholder="add">
+        </div>
+        <div class="row">
         <div class="column">
-            <h2>Send Transformation</h2>
-            <label>Transformation Name</label>
-            <input type="text" id="POST_transformationName" placeholder="add">
-
             <div class="column">
                 <label>Solidity Code</label>
                 <div class="request-body">function run(uint32 x, uint32 [] calldata args) view external returns (uint32){</div>
@@ -271,7 +293,10 @@
 
             <label style="margin:1rem;" >Request body</label>
             <div class="request-row">
-                <div id="POST_transformationRequestBody" class="request-body"></div>
+                <div class="response-wrapper">
+                    <button id="btn_transformationCopyRequest" class="copy-button">📋</button>
+                    <pre id="POST_transformationRequestBody" class="request-body">...</pre>
+                </div>
             </div>
             
             <button id="btn_sendStructuredTransformation">🔒 Send</button>
@@ -282,9 +307,6 @@
             </div>
         </div>
         <div class="column">
-            <h2>Fetch Transformation</h2>
-            <label>Name</label>
-            <input id="GET_transformationName" type="text" placeholder="add">
             <label>Address (optional)</label>
             <input id="GET_transformationAddress" type="text" placeholder="0x0...">
             <button id="btn_getTransformation">Fetch</button>
@@ -292,6 +314,7 @@
                 <div id="GET_transformationResponseCode" class="response-code">-</div>
                 <div id="GET_transformationResponseBody" class="response-body">Waiting...</div>
             </div>
+        </div>
         </div>
     </div>
 </body>

@@ -2,7 +2,7 @@
 
 namespace dcn
 {
-    asio::awaitable<http::Response> GET_execute(const http::Request & request, std::vector<RouteArg> args, const AuthManager & auth_manager, const Registry & registry, EVM & evm)
+    asio::awaitable<http::Response> GET_execute(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, const AuthManager & auth_manager, const Registry & registry, EVM & evm)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");

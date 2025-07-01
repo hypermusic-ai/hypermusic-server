@@ -4,6 +4,8 @@
 #include <string>
 #include <variant>
 
+#include <absl/container/flat_hash_map.h>
+
 #include "http.hpp"
 #include "route_arg.hpp"
 
@@ -42,11 +44,14 @@ namespace dcn
              */
             const std::vector<std::variant<std::string, RouteArgDef>> & getPathInfoDef() const;
 
+            const absl::flat_hash_map<std::string, std::variant<std::string, RouteArgDef>> & getQueryDef() const;
+
         private:
             http::Method _method;
             http::URL _url;
 
             std::vector<std::variant<std::string, RouteArgDef>> _path_info_segments;
+            absl::flat_hash_map<std::string, std::variant<std::string, RouteArgDef>> _query_segments;
     };
 
     /**

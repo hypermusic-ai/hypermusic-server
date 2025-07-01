@@ -21,7 +21,7 @@ namespace dcn
     /**
      * @brief Type representing a route handler function.
      */
-    using HandlerDefinition = std::function<asio::awaitable<dcn::http::Response>(const dcn::http::Request &, std::vector<RouteArg>)>;
+    using HandlerDefinition = std::function<asio::awaitable<dcn::http::Response>(const dcn::http::Request &, std::vector<RouteArg>, QueryArgsList)>;
 
     // TODO: Add a concept to check if the handler is callable with the expected arguments
     // template<class F, class ... Args>
@@ -80,7 +80,7 @@ namespace dcn
             {
                 _router.addRoute(std::move(route), RouteHandlerFunc(
                     HandlerDefinition(
-                        std::bind(handler, _1, _2, std::forward<Args>(binded_args)...)
+                        std::bind(handler, _1, _2, _3, std::forward<Args>(binded_args)...)
                     )
                 ));
             }

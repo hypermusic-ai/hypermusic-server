@@ -31,7 +31,7 @@ namespace dcn
         co_return verification_res.value();
     }
 
-    asio::awaitable<http::Response> GET_version(const http::Request &, std::vector<RouteArg>, const std::string & build_timestamp)
+    asio::awaitable<http::Response> GET_version(const http::Request &, std::vector<RouteArg>, QueryArgsList, const std::string & build_timestamp)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");

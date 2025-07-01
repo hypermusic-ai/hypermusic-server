@@ -129,13 +129,13 @@ namespace dcn
 
             spdlog::debug("Received request:\n{}", full_request_data);
 
-            auto [handler, route_args] = _router.findRoute(request);
+            auto [handler, route_args, query_args] = _router.findRoute(request);
 
             if (handler) 
             {
                 try
                 {
-                    response = co_await (*handler)(const_request, std::move(route_args));
+                    response = co_await (*handler)(const_request, std::move(route_args), std::move(query_args));
                 }
                 catch(...)
                 {

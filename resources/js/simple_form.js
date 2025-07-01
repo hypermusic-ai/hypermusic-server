@@ -673,7 +673,7 @@ export async function execute() {
 // Feature
 // --------------------------------------------------------------------------
 export async function updateFeatureRequestPreview() {
-    const json = await constructStructuredFeature();
+    const json = constructStructuredFeature();
     document.getElementById('POST_featureRequestBody').textContent = json;
 }
 
@@ -693,10 +693,22 @@ export function addDimension() {
     const fieldset = document.createElement('fieldset');
     fieldset.style.border = '1px solid #555';
     fieldset.style.padding = '1rem';
-    fieldset.style.marginBottom = '1rem';
+    fieldset.style.marginBottom = '0.5rem';
 
     const legend = document.createElement('legend');
     legend.textContent = `Dimension ${index + 1}`;
+
+    // Create row container
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '1rem';
+    row.style.alignItems = 'flex-start';
+
+    // Column feature name
+    const nameCol = document.createElement('div');
+    nameCol.style.flex = '1';
+    nameCol.style.marginLeft = '1rem';
+    nameCol.style.marginRight = '1rem';
 
     const label = document.createElement('label');
     label.textContent = 'Feature Name';
@@ -707,6 +719,9 @@ export function addDimension() {
     input.placeholder = 'pitch';
     input.addEventListener('input', updateFeatureRequestPreview);
 
+    nameCol.appendChild(label);
+    nameCol.appendChild(input);
+
     const transformationsDiv = document.createElement('div');
     transformationsDiv.className = 'transformations';
 
@@ -716,8 +731,11 @@ export function addDimension() {
     addBtn.addEventListener('click', () => addTransformation(addBtn));
 
     fieldset.appendChild(legend);
-    fieldset.appendChild(label);
-    fieldset.appendChild(input);
+
+    // Assemble row
+    row.appendChild(nameCol);
+    fieldset.appendChild(row);
+
     fieldset.appendChild(transformationsDiv);
     fieldset.appendChild(addBtn);
 
@@ -731,8 +749,22 @@ export function addTransformation(button) {
     const container = button.previousElementSibling;
 
     const t = document.createElement('div');
+    t.style.marginBottom = '1rem';
 
     const hr = document.createElement('hr');
+    t.appendChild(hr);
+
+    // Create row container
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '1rem';
+    row.style.alignItems = 'flex-start';
+
+    // Column 1: name
+    const nameCol = document.createElement('div');
+    nameCol.style.flex = '1';
+    nameCol.style.marginLeft = '1rem';
+    nameCol.style.marginRight = '1rem';
 
     const nameLabel = document.createElement('label');
     nameLabel.textContent = 'Transformation name';
@@ -743,6 +775,15 @@ export function addTransformation(button) {
     nameInput.placeholder = 'add';
     nameInput.addEventListener('input', updateFeatureRequestPreview);
 
+    nameCol.appendChild(nameLabel);
+    nameCol.appendChild(nameInput);
+
+    // Column 2: args
+    const argsCol = document.createElement('div');
+    argsCol.style.flex = '1';
+    argsCol.style.marginLeft = '1rem';
+    argsCol.style.marginRight = '1rem';
+
     const argsLabel = document.createElement('label');
     argsLabel.textContent = 'args (comma-separated)';
 
@@ -752,18 +793,20 @@ export function addTransformation(button) {
     argsInput.placeholder = '...';
     argsInput.addEventListener('input', updateFeatureRequestPreview);
 
-    t.appendChild(hr);
-    t.appendChild(nameLabel);
-    t.appendChild(nameInput);
-    t.appendChild(argsLabel);
-    t.appendChild(argsInput);
+    argsCol.appendChild(argsLabel);
+    argsCol.appendChild(argsInput);
+
+    // Assemble row
+    row.appendChild(nameCol);
+    row.appendChild(argsCol);
+    t.appendChild(row);
 
     container.appendChild(t);
     updateFeatureRequestPreview();
 }
 
-async function constructStructuredFeature() {
-    const name = document.getElementById('POST_featureName').value.trim();
+function constructStructuredFeature() {
+    const name = document.getElementById('in_featureName').value.trim();
     const dimensions = [];
 
     document.querySelectorAll('.dimension').forEach(dimEl => {
@@ -784,8 +827,48 @@ async function constructStructuredFeature() {
     return JSON.stringify({ name, dimensions }, null, 2);
 }
 
+function populateStructuredFeature(jsonOrObject) {
+    const data = typeof jsonOrObject === 'string' ? JSON.parse(jsonOrObject) : jsonOrObject;
+
+    // Set name field
+    document.getElementById('in_featureName').value = data.name || '';
+
+    // Clear any existing dimensions
+    clearDimensions();
+
+    const container = document.getElementById('dimensionsContainer');
+    data.dimensions?.forEach((dim, dimIndex) => {
+        addDimension(); // creates and appends a new .dimension block
+
+        const dimEl = container.children[dimIndex];
+
+        // Set feature name
+        dimEl.querySelector('.dimension-feature-name').value = dim.feature_name || '';
+
+        const transformationsDiv = dimEl.querySelector('.transformations');
+
+        dim.transformations?.forEach(t => {
+            // Add a new transformation
+            const addBtn = dimEl.querySelector('button'); // the addTransformation button
+            addTransformation(addBtn);
+
+            const tEl = transformationsDiv.lastElementChild;
+
+            // Set transformation name
+            tEl.querySelector('.transformation-name').value = t.name || '';
+
+            // Set transformation args
+            tEl.querySelector('.transformation-args').value = Array.isArray(t.args)
+                ? t.args.join(', ')
+                : '';
+        });
+    });
+
+    updateFeatureRequestPreview(); // trigger preview update
+}
+
 export async function sendStructuredFeature() {
-    const requestBody = await constructStructuredFeature();
+    const requestBody = constructStructuredFeature();
 
     const responseCodeDiv = document.getElementById('POST_featureResponseCode');
     const responseBodyDiv = document.getElementById('POST_featureResponseBody');
@@ -807,9 +890,8 @@ export async function sendStructuredFeature() {
     }
 }
 
-
 export async function getFeature() {
-    const name = document.getElementById('GET_featureName').value.trim();
+    const name = document.getElementById('in_featureName').value.trim();
     const address = document.getElementById('GET_featureAddress').value.trim();
 
     const responseCodeDiv = document.getElementById('GET_featureResponseCode');
@@ -825,6 +907,7 @@ export async function getFeature() {
         const text = await res.text();
         responseCodeDiv.textContent = res.status;
         responseBodyDiv.textContent = formatJSON(text);
+        populateStructuredFeature(JSON.parse(text));
     } catch (error) {
         responseCodeDiv.textContent = 'Error';
         responseBodyDiv.textContent = error.message;
@@ -834,7 +917,7 @@ export async function getFeature() {
 // Transformation
 // --------------------------------------------------------------------------
 export async function getTransformation() {
-    const name = document.getElementById('GET_transformationName').value.trim();
+    const name = document.getElementById('in_transformationName').value.trim();
     const address = document.getElementById('GET_transformationAddress').value.trim();
 
     const responseCodeDiv = document.getElementById('GET_transformationResponseCode');
@@ -852,6 +935,7 @@ export async function getTransformation() {
         const text = await res.text();
         responseCodeDiv.textContent = res.status;
         responseBodyDiv.textContent = formatJSON(text);
+        populateStructuredTransformation(JSON.parse(text));
     } catch (error) {
         responseCodeDiv.textContent = 'Error';
         responseBodyDiv.textContent = error.message;
@@ -859,14 +943,32 @@ export async function getTransformation() {
 }
 
 export function updateTransformationPreview() {
-    const name = document.getElementById('POST_transformationName').value.trim();
+    const name = document.getElementById('in_transformationName').value.trim();
     const sol_src = document.getElementById('POST_transformationCode').value.trim();
     const obj = { name, sol_src };
     document.getElementById('POST_transformationRequestBody').textContent = JSON.stringify(obj, null, 2);
 }
 
+export function populateStructuredTransformation(jsonOrObject) {
+    const data = typeof jsonOrObject === 'string' ? JSON.parse(jsonOrObject) : jsonOrObject;
+
+    const nameInput = document.getElementById('in_transformationName');
+    const codeInput = document.getElementById('POST_transformationCode');
+    const requestBodyDiv = document.getElementById('POST_transformationRequestBody');
+
+    if (!data || typeof data !== 'object') {
+        console.warn("Invalid transformation data:", data);
+        return;
+    }
+
+    nameInput.value = data.name || '';
+    codeInput.value = data.sol_src || '';
+
+    updateTransformationPreview(); // trigger live preview rendering
+}
+
 export async function sendStructuredTransformation() {
-    const name = document.getElementById('POST_transformationName').value.trim();
+    const name = document.getElementById('in_transformationName').value.trim();
     const sol_src = document.getElementById('POST_transformationCode').value.trim();
 
     const responseCodeDiv = document.getElementById('POST_transformationResponseCode');
@@ -914,6 +1016,28 @@ export async function fetchVersionInfo() {
 // --------------------------------------------------------------------------
 // Account
 // --------------------------------------------------------------------------
+let currentAccountPage = 0;
+const accountPageSize = 10;
+let totalAccountFeaturePages = 0;
+let totalAccountTransformationPages = 0;
+
+export function nextPage()
+{
+    if(currentAccountPage < Math.max(totalAccountFeaturePages, totalAccountTransformationPages))
+    {
+        currentAccountPage += 1;
+        fetchAccountResources();
+    }
+}
+
+export function prevPage()
+{
+    if (currentAccountPage > 0) {
+        currentAccountPage--;
+        fetchAccountResources();
+    }
+}
+
 export async function fetchAccountResources() {
     const address = document.getElementById('accountAddressInput').value.trim();
     const featuresDiv = document.getElementById('accountFeaturesList');
@@ -931,14 +1055,13 @@ export async function fetchAccountResources() {
 
     try {
         const apiBase = window.location.origin;
-        const res = await requestWithRefresh(`${apiBase}/account/${address}`, {
+        const res = await requestWithRefresh(`${apiBase}/account/${address}?limit=${accountPageSize}&page=${currentAccountPage}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
 
         const data = await res.json();
 
-        // Update dropdown source
         availableFeatureNames = data.owned_features;
         featureDropdownElements.forEach(populateFeatureDropdown);
 
@@ -955,6 +1078,20 @@ export async function fetchAccountResources() {
                 return `<div style="padding: 0.5rem; border: 1px solid #3333; border-radius: 4px; margin-bottom: 0.3rem; background: ${bg};"><code>${name}</code></div>`;
             }).join('')
             : '(none)';
+
+        // Compute total pages based on backend totals
+        totalAccountFeaturePages = Math.ceil((data.total_features ?? 0) / accountPageSize);
+        totalAccountTransformationPages = Math.ceil((data.total_transformations ?? 0) / accountPageSize);
+
+        // Show page number as: Page X of Y
+        document.getElementById('accountPageLabel').textContent =
+            `Page ${currentAccountPage + 1} of ${Math.max(totalAccountFeaturePages, totalAccountTransformationPages)}`;
+
+        // Disable next if on last page
+        const isLastPage = currentAccountPage >= Math.max(totalAccountFeaturePages, totalAccountTransformationPages) - 1;
+        document.getElementById('btn_prevAccountPage').disabled = currentAccountPage === 0;
+        document.getElementById('btn_nextAccountPage').disabled = isLastPage;
+
     } catch (err) {
         featuresDiv.textContent = '❌ Failed to fetch account data';
         transformationsDiv.textContent = err.message;
@@ -1009,6 +1146,19 @@ export async function loginWithMetaMask()
 // --------------------------------------------------------------------------
 // Utils
 // --------------------------------------------------------------------------
+
+export function copyTextFromElement(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+  
+    const text = el.innerText || el.textContent;
+    navigator.clipboard.writeText(text)
+      .then(() => {
+      })
+      .catch(err => {
+        alert("Failed to copy: " + err);
+      });
+  }
 
 function getFeatureArray(path) {
     const entry = executeResultData.find(f => f.feature_path === path);

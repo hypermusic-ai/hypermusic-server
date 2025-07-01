@@ -39,6 +39,24 @@ namespace dcn
                 _path_info_segments.emplace_back(segment);
             }
         }
+
+        const auto query_segments = http::splitQuerySegments(_url.getQuery());
+
+        for(const auto & [key, value] : query_segments)
+        {
+            auto arg_parse_result = parse::parseRouteArgDefFromString(value);
+
+            if(arg_parse_result.has_value())
+            {
+                std::variant<std::string, dcn::RouteArgDef> value_var = std::move(arg_parse_result.value());
+                _query_segments.try_emplace(std::move(key), std::move(value_var));
+            }
+            else
+            {
+                std::variant<std::string, dcn::RouteArgDef> value_var = std::move(value);
+                _query_segments.try_emplace(std::move(key), std::move(value_var));
+            }
+        }
     }
 
     bool RouteKey::operator==(const RouteKey& other) const 
@@ -54,6 +72,11 @@ namespace dcn
     const std::vector<std::variant<std::string, RouteArgDef>> & RouteKey::getPathInfoDef() const
     {
         return _path_info_segments;
+    }
+
+    const absl::flat_hash_map<std::string, std::variant<std::string, RouteArgDef>> & RouteKey::getQueryDef() const
+    {
+        return _query_segments;
     }
 
     const http::URL & RouteKey::getPath() const 

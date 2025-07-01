@@ -20,6 +20,8 @@ using namespace std::placeholders;
 
 namespace dcn
 {
+    using QueryArgsList = absl::flat_hash_map<std::string, RouteArg>;
+
     /**
      * @brief A class representing a route handler function.
      * 
@@ -85,9 +87,14 @@ namespace dcn
             
             void addRoute(RouteKey route, RouteHandlerFunc handler);
 
-            std::pair<const RouteHandlerFunc *, std::vector<RouteArg>> findRoute(const http::Request & request) const;
+            std::tuple<const RouteHandlerFunc *, std::vector<RouteArg>,  QueryArgsList> findRoute(const http::Request & request) const;
         protected:
-            std::pair<bool, std::vector<RouteArg>> doesRouteMatch(const RouteKey & route, const http::Method & request_method, const std::string & module_path, const std::vector<std::string> & request_path_info_segments) const;
+            std::tuple<bool, std::vector<RouteArg>, QueryArgsList> doesRouteMatch(
+                    const RouteKey & route,
+                    const http::Method & request_method,
+                    const std::string & module_path,
+                    const std::vector<std::string> & request_path_info_segments,
+                    const absl::flat_hash_map<std::string, std::string> request_query_segments) const;
 
         private:
             absl::flat_hash_map<RouteKey, RouteHandlerFunc> _routes;

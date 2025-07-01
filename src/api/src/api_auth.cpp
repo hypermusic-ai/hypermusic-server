@@ -2,7 +2,7 @@
 
 namespace dcn
 {
-    asio::awaitable<http::Response> GET_nonce(const http::Request & request, std::vector<RouteArg> args, AuthManager & auth_manager)
+    asio::awaitable<http::Response> GET_nonce(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, AuthManager & auth_manager)
     {
         http::Response response;
         response.setVersion("HTTP/1.1")
@@ -41,7 +41,7 @@ namespace dcn
         co_return response;
     }
 
-    asio::awaitable<http::Response> POST_auth(const http::Request & request, std::vector<RouteArg> args, AuthManager & auth_manager)
+    asio::awaitable<http::Response> POST_auth(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, AuthManager & auth_manager)
     {
         http::Response response;
         response.setVersion("HTTP/1.1")
@@ -123,7 +123,7 @@ namespace dcn
         co_return response;
     }
 
-    asio::awaitable<http::Response> POST_refresh(const http::Request & request, std::vector<RouteArg> args, AuthManager & auth_manager)
+    asio::awaitable<http::Response> POST_refresh(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, AuthManager & auth_manager)
     {
         http::Response response;
         response.setVersion("HTTP/1.1")

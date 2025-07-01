@@ -82,5 +82,29 @@ namespace dcn::http
 
         return path_parts;
     }
+
+    absl::flat_hash_map<std::string, std::string> splitQuerySegments(const std::string& query)
+    {
+        absl::flat_hash_map<std::string, std::string> query_map;
+
+        if (query.empty()) return query_map;
+
+        std::stringstream ss(query);
+        std::string segment;
+
+        while (std::getline(ss, segment, '&'))
+        {
+            auto pos = segment.find('=');
+            if (pos == std::string::npos) continue; // skip invalid segments
+
+            std::string key = segment.substr(0, pos);
+            std::string value = segment.substr(pos + 1);
+
+            if (!key.empty())
+                query_map[std::move(key)] = std::move(value);
+        }
+
+        return query_map;
+    }
 }
 

@@ -5,6 +5,8 @@
 #include <vector>
 #include <sstream>
 
+#include <absl/container/flat_hash_map.h>
+
 namespace dcn::http
 {
     class URL
@@ -66,6 +68,7 @@ namespace dcn::http
     }
 
     std::vector<std::string> splitPathSegments(const std::string path);
+    absl::flat_hash_map<std::string, std::string> splitQuerySegments(const std::string& query);
 }
 
 template <>

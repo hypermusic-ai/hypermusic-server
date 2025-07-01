@@ -2,7 +2,7 @@
 
 namespace dcn
 {
-    asio::awaitable<http::Response> HEAD_ServeFile(const http::Request &, std::vector<RouteArg>)
+    asio::awaitable<http::Response> HEAD_ServeFile(const http::Request &, std::vector<RouteArg>, QueryArgsList)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
@@ -13,7 +13,7 @@ namespace dcn
         co_return response;
     }
 
-    asio::awaitable<http::Response> OPTIONS_ServeFile(const http::Request &, std::vector<RouteArg>)
+    asio::awaitable<http::Response> OPTIONS_ServeFile(const http::Request &, std::vector<RouteArg>, QueryArgsList)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
@@ -28,7 +28,7 @@ namespace dcn
         co_return response;
     }
 
-    asio::awaitable<http::Response> GET_ServeFile(const http::Request &, std::vector<RouteArg>, const std::string mime_type, const std::string & file_content)
+    asio::awaitable<http::Response> GET_ServeFile(const http::Request &, std::vector<RouteArg>, QueryArgsList, const std::string mime_type, const std::string & file_content)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
