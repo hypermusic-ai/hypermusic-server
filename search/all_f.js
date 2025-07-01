@@ -8,7 +8,7 @@ var searchData=
   ['operator_3d_3d_5',['operator==',['../classdcn_1_1http_1_1URL.html#a121543551fa83295091ed936e474a730',1,'dcn::http::URL::operator==()'],['../classdcn_1_1RouteKey.html#a77c78ada7e557574988641e66e2f90ec',1,'dcn::RouteKey::operator==()']]],
   ['optional_6',['optional',['../namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d',1,'dcn']]],
   ['options_7',['OPTIONS',['../namespacedcn_1_1http.html#a4f682cd7b59ded888fa0d767b29cf172a164dd62adb30ca051b5289672a572f9b',1,'dcn::http']]],
-  ['options_5ffeature_8',['OPTIONS_feature',['../namespacedcn.html#a112a61a4922f6c7dc256016e72561b7d',1,'dcn']]],
-  ['options_5fservefile_9',['OPTIONS_ServeFile',['../namespacedcn.html#af25caf53a2512f0b2d2ea0339856ca2e',1,'dcn']]],
-  ['options_5ftransformation_10',['OPTIONS_transformation',['../namespacedcn.html#afcf0e0fcb9332c361fdb8882a768c760',1,'dcn']]]
+  ['options_5ffeature_8',['OPTIONS_feature',['../namespacedcn.html#adf506cc04516235e776bb889f3857006',1,'dcn']]],
+  ['options_5fservefile_9',['OPTIONS_ServeFile',['../namespacedcn.html#a169de1d6bbe37ad5491bdd0fdc4b6cc9',1,'dcn']]],
+  ['options_5ftransformation_10',['OPTIONS_transformation',['../namespacedcn.html#a0cd0a51dfd6dd01d6a2b45f91e537a7c',1,'dcn']]]
 ];

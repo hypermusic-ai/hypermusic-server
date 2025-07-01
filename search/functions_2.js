@@ -8,5 +8,5 @@ var searchData=
   ['derive_5fcreate2_5faddress_5',['derive_create2_address',['../classdcn_1_1EVMStorage.html#a0c5bd7c965c81fee38b3b12f31c7e5a5',1,'dcn::EVMStorage']]],
   ['derive_5fcreate_5faddress_6',['derive_create_address',['../classdcn_1_1EVMStorage.html#ac07643a91c9bb090674c0b94969d0347',1,'dcn::EVMStorage']]],
   ['destroysession_7',['destroySession',['../classdcn_1_1SessionManager.html#a9d5bb5aa14731a595df511423ca17381',1,'dcn::SessionManager']]],
-  ['doesroutematch_8',['doesRouteMatch',['../classdcn_1_1Router.html#a9029105d7899d9598faa3110063793c6',1,'dcn::Router']]]
+  ['doesroutematch_8',['doesRouteMatch',['../classdcn_1_1Router.html#ac9ac9c7b871d15ef80cdf1771dd345ab',1,'dcn::Router']]]
 ];

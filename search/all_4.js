@@ -23,5 +23,5 @@ var searchData=
   ['derive_5fcreate_5faddress_20',['derive_create_address',['../classdcn_1_1EVMStorage.html#ac07643a91c9bb090674c0b94969d0347',1,'dcn::EVMStorage']]],
   ['desc_21',['desc',['../structdcn_1_1cmd_1_1CommandLineArgDef.html#a737fff6e4bec8f16b6e7d649a73d9903',1,'dcn::cmd::CommandLineArgDef']]],
   ['destroysession_22',['destroySession',['../classdcn_1_1SessionManager.html#a9d5bb5aa14731a595df511423ca17381',1,'dcn::SessionManager']]],
-  ['doesroutematch_23',['doesRouteMatch',['../classdcn_1_1Router.html#a9029105d7899d9598faa3110063793c6',1,'dcn::Router']]]
+  ['doesroutematch_23',['doesRouteMatch',['../classdcn_1_1Router.html#ac9ac9c7b871d15ef80cdf1771dd345ab',1,'dcn::Router']]]
 ];

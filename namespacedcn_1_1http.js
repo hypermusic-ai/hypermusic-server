@@ -43,5 +43,6 @@ var namespacedcn_1_1http =
       [ "OPTIONS", "namespacedcn_1_1http.html#a4f682cd7b59ded888fa0d767b29cf172a164dd62adb30ca051b5289672a572f9b", null ]
     ] ],
     [ "AbslHashValue", "namespacedcn_1_1http.html#a4d4ef55987cee8d245619f8a76483417", null ],
-    [ "splitPathSegments", "namespacedcn_1_1http.html#a7911d5fb827bacf47f1317d95ec8dcc7", null ]
+    [ "splitPathSegments", "namespacedcn_1_1http.html#a7911d5fb827bacf47f1317d95ec8dcc7", null ],
+    [ "splitQuerySegments", "namespacedcn_1_1http.html#a924ed9d23c53a106dd3e0655962d151f", null ]
 ];

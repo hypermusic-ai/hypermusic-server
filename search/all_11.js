@@ -1,25 +1,4 @@
 var searchData=
 [
-  ['readdata_0',['readData',['../classdcn_1_1Server.html#afaf5148ff9335769016a0a59ad3d8539',1,'dcn::Server']]],
-  ['registry_1',['registry',['../classdcn_1_1Registry.html',1,'dcn::Registry'],['../classdcn_1_1Registry.html#ac80f75a3aa78b35480e66a7c9d2e59a7',1,'dcn::Registry::Registry(const Registry &amp;)=delete'],['../classdcn_1_1Registry.html#a5cbf66c16b7729f1707a00e6b2d5e19c',1,'dcn::Registry::Registry(asio::io_context &amp;io_context)'],['../classdcn_1_1Registry.html#a9f24b7e5f5cc835a1ebd0e93aca66d8d',1,'dcn::Registry::Registry()=delete']]],
-  ['registry_2ecpp_2',['registry.cpp',['../registry_8cpp.html',1,'']]],
-  ['registry_2ehpp_3',['registry.hpp',['../registry_8hpp.html',1,'']]],
-  ['request_4',['request',['../classdcn_1_1http_1_1Request.html',1,'dcn::http::Request'],['../classdcn_1_1http_1_1Request.html#ac2b7ed4fdebb06d3bdd02de9d98043df',1,'dcn::http::Request::Request(const Request &amp;other)=delete'],['../classdcn_1_1http_1_1Request.html#a007e6559fe7fc636bef9829a6857730c',1,'dcn::http::Request::Request(Request &amp;&amp;other)=default'],['../classdcn_1_1http_1_1Request.html#acc24cfcc3223af87cce0840a7f385a6a',1,'dcn::http::Request::Request()=default']]],
-  ['required_5',['required',['../namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844baac67ede5a84eb5a1add7ff4440e9a485',1,'dcn']]],
-  ['requirement_6',['requirement',['../structdcn_1_1RouteArgDef.html#a4b9a5791edea41ea61e44460208b3808',1,'dcn::RouteArgDef']]],
-  ['response_7',['response',['../classdcn_1_1http_1_1Response.html#aea1f36d346acf9c8fa0e353ee466b75b',1,'dcn::http::Response::Response(const Response &amp;other)=delete'],['../classdcn_1_1http_1_1Response.html#a294bce01e2c3458dcd4c953589d76b61',1,'dcn::http::Response::Response(Response &amp;&amp;other)=default'],['../classdcn_1_1http_1_1Response.html#a521fd976adc1e283ae2573c113591db2',1,'dcn::http::Response::Response()=default'],['../classdcn_1_1http_1_1Response.html',1,'dcn::http::Response']]],
-  ['route_2ecpp_8',['route.cpp',['../route_8cpp.html',1,'']]],
-  ['route_2ehpp_9',['route.hpp',['../route_8hpp.html',1,'']]],
-  ['route_5farg_2ecpp_10',['route_arg.cpp',['../route__arg_8cpp.html',1,'']]],
-  ['route_5farg_2ehpp_11',['route_arg.hpp',['../route__arg_8hpp.html',1,'']]],
-  ['route_5fkey_2ecpp_12',['route_key.cpp',['../route__key_8cpp.html',1,'']]],
-  ['route_5fkey_2ehpp_13',['route_key.hpp',['../route__key_8hpp.html',1,'']]],
-  ['routearg_14',['routearg',['../classdcn_1_1RouteArg.html',1,'dcn::RouteArg'],['../classdcn_1_1RouteArg.html#a1f1f7e72c85378c59026d86286b095ee',1,'dcn::RouteArg::RouteArg()']]],
-  ['routeargdef_15',['routeargdef',['../structdcn_1_1RouteArgDef.html',1,'dcn::RouteArgDef'],['../structdcn_1_1RouteArgDef.html#a8c195087dc94a4048224466feb596371',1,'dcn::RouteArgDef::RouteArgDef(RouteArgDef &amp;&amp;other) noexcept'],['../structdcn_1_1RouteArgDef.html#a63e4497d156cb55bc39373b68174aa0c',1,'dcn::RouteArgDef::RouteArgDef(const RouteArgDef &amp;other)'],['../structdcn_1_1RouteArgDef.html#afebe29dce67a88b644bd642d0f26636f',1,'dcn::RouteArgDef::RouteArgDef(RouteArgType type, RouteArgRequirement requirement, std::vector&lt; std::unique_ptr&lt; RouteArgDef &gt; &gt; children)'],['../structdcn_1_1RouteArgDef.html#ae1b29ca6cab61a5097eca19dd46b6ed9',1,'dcn::RouteArgDef::RouteArgDef(RouteArgType type, RouteArgRequirement requirement)']]],
-  ['routeargrequirement_16',['RouteArgRequirement',['../namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844b',1,'dcn']]],
-  ['routeargtype_17',['RouteArgType',['../namespacedcn.html#a73f6cd1f34fc64548d4b6b8749ed6f68',1,'dcn']]],
-  ['routehandlerfunc_18',['routehandlerfunc',['../classdcn_1_1RouteHandlerFunc.html',1,'dcn::RouteHandlerFunc'],['../classdcn_1_1RouteHandlerFunc.html#a9d430c12c02c52a2477fe7e5b375c85e',1,'dcn::RouteHandlerFunc::RouteHandlerFunc(std::function&lt; asio::awaitable&lt; http::Response &gt;(Args...)&gt; func)'],['../classdcn_1_1RouteHandlerFunc.html#afeb067bd14f926df2d673625fba3e3d6',1,'dcn::RouteHandlerFunc::RouteHandlerFunc(RouteHandlerFunc &amp;&amp;other)=default']]],
-  ['routekey_19',['routekey',['../classdcn_1_1RouteKey.html',1,'dcn::RouteKey'],['../classdcn_1_1RouteKey.html#a17bbfc799f237946b4e3b46ff9834473',1,'dcn::RouteKey::RouteKey()']]],
-  ['router_20',['router',['../classdcn_1_1Router.html#ac465fde6f3c58d7c383fceec89aea4f1',1,'dcn::Router::Router()'],['../classdcn_1_1Router.html',1,'dcn::Router']]],
-  ['runprocess_21',['runProcess',['../namespacedcn_1_1native.html#a969c7a0469fb2cd69b6a559bd8455d5a',1,'dcn::native']]]
+  ['queryargslist_0',['QueryArgsList',['../namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7',1,'dcn']]]
 ];

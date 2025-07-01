@@ -159,9 +159,11 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a95cbb2c96065bd6b4d712e346a0436f8" id="r_a95cbb2c96065bd6b4d712e346a0436f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a95cbb2c96065bd6b4d712e346a0436f8">HandlerDefinition</a> = std::function&lt; asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">dcn::http::Response</a> &gt;(<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">dcn::http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;)&gt;</td></tr>
-<tr class="memdesc:a95cbb2c96065bd6b4d712e346a0436f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type representing a route handler function.  <br /></td></tr>
-<tr class="separator:a95cbb2c96065bd6b4d712e346a0436f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9688ae9214c78e0cd672bc0fdd50c6e7" id="r_a9688ae9214c78e0cd672bc0fdd50c6e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a> = absl::flat_hash_map&lt; std::string, <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;</td></tr>
+<tr class="separator:a9688ae9214c78e0cd672bc0fdd50c6e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0e29d26497dbd2dd65c634051978701" id="r_ac0e29d26497dbd2dd65c634051978701"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#ac0e29d26497dbd2dd65c634051978701">HandlerDefinition</a> = std::function&lt; asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">dcn::http::Response</a> &gt;(<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">dcn::http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>)&gt;</td></tr>
+<tr class="memdesc:ac0e29d26497dbd2dd65c634051978701"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type representing a route handler function.  <br /></td></tr>
+<tr class="separator:ac0e29d26497dbd2dd65c634051978701"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ec4f1fe3877205c6aa2dd06002ef5bd" id="r_a1ec4f1fe3877205c6aa2dd06002ef5bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a1ec4f1fe3877205c6aa2dd06002ef5bd">SessionID</a> = std::string</td></tr>
 <tr class="separator:a1ec4f1fe3877205c6aa2dd06002ef5bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3767673641ef901bff3ac0abdd31224" id="r_ae3767673641ef901bff3ac0abdd31224"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#ae3767673641ef901bff3ac0abdd31224">UserID</a> = std::string</td></tr>
@@ -206,41 +208,41 @@ Enumerations</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a0cc939f20e80cff8764d9d1eb853edc1" id="r_a0cc939f20e80cff8764d9d1eb853edc1"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; std::expected&lt; evmc::address, <a class="el" href="namespacedcn.html#af3418672c6c7daf5f09a7155aaf54d10">AuthenticationError</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a0cc939f20e80cff8764d9d1eb853edc1">authenticate</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">request</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">auth_manager</a>)</td></tr>
 <tr class="separator:a0cc939f20e80cff8764d9d1eb853edc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afed3b262cea12515ca285269fc7ea0b1" id="r_afed3b262cea12515ca285269fc7ea0b1"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#afed3b262cea12515ca285269fc7ea0b1">GET_version</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">build_timestamp</a>)</td></tr>
-<tr class="separator:afed3b262cea12515ca285269fc7ea0b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a5f9805ac17d8069443629731cb44a2" id="r_a3a5f9805ac17d8069443629731cb44a2"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a3a5f9805ac17d8069443629731cb44a2">HEAD_ServeFile</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;)</td></tr>
-<tr class="separator:a3a5f9805ac17d8069443629731cb44a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af25caf53a2512f0b2d2ea0339856ca2e" id="r_af25caf53a2512f0b2d2ea0339856ca2e"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#af25caf53a2512f0b2d2ea0339856ca2e">OPTIONS_ServeFile</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;)</td></tr>
-<tr class="separator:af25caf53a2512f0b2d2ea0339856ca2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a895f1601c1e072da0147834f72024d39" id="r_a895f1601c1e072da0147834f72024d39"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a895f1601c1e072da0147834f72024d39">GET_ServeFile</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">mime_type</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">file_content</a>)</td></tr>
-<tr class="separator:a895f1601c1e072da0147834f72024d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3751c4b02df4c86c564697360400c7e" id="r_ac3751c4b02df4c86c564697360400c7e"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#ac3751c4b02df4c86c564697360400c7e">GET_nonce</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;)</td></tr>
-<tr class="memdesc:ac3751c4b02df4c86c564697360400c7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a GET request to /auth/nonce.  <br /></td></tr>
-<tr class="separator:ac3751c4b02df4c86c564697360400c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b01c305af180e2e18bf5c9f88409bc1" id="r_a7b01c305af180e2e18bf5c9f88409bc1"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a7b01c305af180e2e18bf5c9f88409bc1">POST_auth</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;)</td></tr>
-<tr class="memdesc:a7b01c305af180e2e18bf5c9f88409bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a POST request to /auth.  <br /></td></tr>
-<tr class="separator:a7b01c305af180e2e18bf5c9f88409bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a001262759f7cebe268aab7b60436f555" id="r_a001262759f7cebe268aab7b60436f555"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a001262759f7cebe268aab7b60436f555">POST_refresh</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;)</td></tr>
-<tr class="memdesc:a001262759f7cebe268aab7b60436f555"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a POST request to /auth/refresh.  <br /></td></tr>
-<tr class="separator:a001262759f7cebe268aab7b60436f555"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a4b0999356fb08f760c67a4e031a63a" id="r_a0a4b0999356fb08f760c67a4e031a63a"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a0a4b0999356fb08f760c67a4e031a63a">GET_accountInfo</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>)</td></tr>
-<tr class="separator:a0a4b0999356fb08f760c67a4e031a63a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a112a61a4922f6c7dc256016e72561b7d" id="r_a112a61a4922f6c7dc256016e72561b7d"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a112a61a4922f6c7dc256016e72561b7d">OPTIONS_feature</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;)</td></tr>
-<tr class="separator:a112a61a4922f6c7dc256016e72561b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae839348cd866c04081b43b59410ffda5" id="r_ae839348cd866c04081b43b59410ffda5"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#ae839348cd866c04081b43b59410ffda5">GET_feature</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
-<tr class="memdesc:ae839348cd866c04081b43b59410ffda5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the newest feature by name or a specific feature by name and id if the id is provided in the url.  <br /></td></tr>
-<tr class="separator:ae839348cd866c04081b43b59410ffda5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a540c661bdcf23b0e54861f199a30b098" id="r_a540c661bdcf23b0e54861f199a30b098"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a540c661bdcf23b0e54861f199a30b098">POST_feature</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">auth_manager</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
-<tr class="memdesc:a540c661bdcf23b0e54861f199a30b098"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a POST request to /features.  <br /></td></tr>
-<tr class="separator:a540c661bdcf23b0e54861f199a30b098"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcf0e0fcb9332c361fdb8882a768c760" id="r_afcf0e0fcb9332c361fdb8882a768c760"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#afcf0e0fcb9332c361fdb8882a768c760">OPTIONS_transformation</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;)</td></tr>
-<tr class="separator:afcf0e0fcb9332c361fdb8882a768c760"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeca50bef36a4b8d8e19ae013decb34f7" id="r_aeca50bef36a4b8d8e19ae013decb34f7"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#aeca50bef36a4b8d8e19ae013decb34f7">GET_transformation</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">args</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
-<tr class="separator:aeca50bef36a4b8d8e19ae013decb34f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e3b30c2922ac53a9157eb4f86cc6fa5" id="r_a5e3b30c2922ac53a9157eb4f86cc6fa5"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a5e3b30c2922ac53a9157eb4f86cc6fa5">POST_transformation</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">args</a>, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">auth_manager</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
-<tr class="separator:a5e3b30c2922ac53a9157eb4f86cc6fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43fa656e7a21322ec32d97de3e5c0a11" id="r_a43fa656e7a21322ec32d97de3e5c0a11"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a43fa656e7a21322ec32d97de3e5c0a11">GET_execute</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">request</a>, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">args</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">auth_manager</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
-<tr class="separator:a43fa656e7a21322ec32d97de3e5c0a11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9afdb680b90dcbf522fb1c9dbcb10ee7" id="r_a9afdb680b90dcbf522fb1c9dbcb10ee7"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a9afdb680b90dcbf522fb1c9dbcb10ee7">GET_version</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">build_timestamp</a>)</td></tr>
+<tr class="separator:a9afdb680b90dcbf522fb1c9dbcb10ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a694185ff87e7188d317ede5d6d531d38" id="r_a694185ff87e7188d317ede5d6d531d38"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a694185ff87e7188d317ede5d6d531d38">HEAD_ServeFile</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>)</td></tr>
+<tr class="separator:a694185ff87e7188d317ede5d6d531d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a169de1d6bbe37ad5491bdd0fdc4b6cc9" id="r_a169de1d6bbe37ad5491bdd0fdc4b6cc9"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a169de1d6bbe37ad5491bdd0fdc4b6cc9">OPTIONS_ServeFile</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>)</td></tr>
+<tr class="separator:a169de1d6bbe37ad5491bdd0fdc4b6cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dcf32a02decf79f8333df7e0c4ae6b9" id="r_a8dcf32a02decf79f8333df7e0c4ae6b9"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a8dcf32a02decf79f8333df7e0c4ae6b9">GET_ServeFile</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">mime_type</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">file_content</a>)</td></tr>
+<tr class="separator:a8dcf32a02decf79f8333df7e0c4ae6b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79cc64abb4bd32ff00ec869f9403b09c" id="r_a79cc64abb4bd32ff00ec869f9403b09c"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a79cc64abb4bd32ff00ec869f9403b09c">GET_nonce</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;)</td></tr>
+<tr class="memdesc:a79cc64abb4bd32ff00ec869f9403b09c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a GET request to /auth/nonce.  <br /></td></tr>
+<tr class="separator:a79cc64abb4bd32ff00ec869f9403b09c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b60e23faa85df67ef4aea31993f72dd" id="r_a5b60e23faa85df67ef4aea31993f72dd"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a5b60e23faa85df67ef4aea31993f72dd">POST_auth</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;)</td></tr>
+<tr class="memdesc:a5b60e23faa85df67ef4aea31993f72dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a POST request to /auth.  <br /></td></tr>
+<tr class="separator:a5b60e23faa85df67ef4aea31993f72dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a644aba960439f3ffd59ad6783e47bcbd" id="r_a644aba960439f3ffd59ad6783e47bcbd"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a644aba960439f3ffd59ad6783e47bcbd">POST_refresh</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;)</td></tr>
+<tr class="memdesc:a644aba960439f3ffd59ad6783e47bcbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a POST request to /auth/refresh.  <br /></td></tr>
+<tr class="separator:a644aba960439f3ffd59ad6783e47bcbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ddcaee985172bfec58d415f4da7e6d5" id="r_a8ddcaee985172bfec58d415f4da7e6d5"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a8ddcaee985172bfec58d415f4da7e6d5">GET_accountInfo</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>)</td></tr>
+<tr class="separator:a8ddcaee985172bfec58d415f4da7e6d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf506cc04516235e776bb889f3857006" id="r_adf506cc04516235e776bb889f3857006"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#adf506cc04516235e776bb889f3857006">OPTIONS_feature</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>)</td></tr>
+<tr class="separator:adf506cc04516235e776bb889f3857006"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5566493ade1100643aee0699ea78918" id="r_ab5566493ade1100643aee0699ea78918"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#ab5566493ade1100643aee0699ea78918">GET_feature</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
+<tr class="memdesc:ab5566493ade1100643aee0699ea78918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the newest feature by name or a specific feature by name and id if the id is provided in the url.  <br /></td></tr>
+<tr class="separator:ab5566493ade1100643aee0699ea78918"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73b9bd4c0182c3883669daca356d504b" id="r_a73b9bd4c0182c3883669daca356d504b"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a73b9bd4c0182c3883669daca356d504b">POST_feature</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">auth_manager</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
+<tr class="memdesc:a73b9bd4c0182c3883669daca356d504b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a POST request to /features.  <br /></td></tr>
+<tr class="separator:a73b9bd4c0182c3883669daca356d504b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cd0a51dfd6dd01d6a2b45f91e537a7c" id="r_a0cd0a51dfd6dd01d6a2b45f91e537a7c"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a0cd0a51dfd6dd01d6a2b45f91e537a7c">OPTIONS_transformation</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>)</td></tr>
+<tr class="separator:a0cd0a51dfd6dd01d6a2b45f91e537a7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f580c34be5b34418821f01b39b2eb89" id="r_a8f580c34be5b34418821f01b39b2eb89"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a8f580c34be5b34418821f01b39b2eb89">GET_transformation</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">args</a>, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
+<tr class="separator:a8f580c34be5b34418821f01b39b2eb89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3068250f81a32e89e4028890e5e4eca1" id="r_a3068250f81a32e89e4028890e5e4eca1"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a3068250f81a32e89e4028890e5e4eca1">POST_transformation</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">args</a>, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">auth_manager</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
+<tr class="separator:a3068250f81a32e89e4028890e5e4eca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a834cebe3d88908022b2ba14338639c01" id="r_a834cebe3d88908022b2ba14338639c01"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a834cebe3d88908022b2ba14338639c01">GET_execute</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">request</a>, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">args</a>, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1AuthManager.html">AuthManager</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">auth_manager</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>)</td></tr>
+<tr class="separator:a834cebe3d88908022b2ba14338639c01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7967198d63932ef2419d1790533f253" id="r_ab7967198d63932ef2419d1790533f253"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#ab7967198d63932ef2419d1790533f253">GET_condition</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;)</td></tr>
 <tr class="separator:ab7967198d63932ef2419d1790533f253"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62631f4d69b7296a19c87f41beb5be88" id="r_a62631f4d69b7296a19c87f41beb5be88"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a62631f4d69b7296a19c87f41beb5be88">POST_condition</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;)</td></tr>
@@ -321,6 +323,10 @@ Functions</h2></td></tr>
 <tr class="separator:aa1a07a14a33d9256af41675dff3c332d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53ed53e655b709f80e15a6d73ab3061f" id="r_a53ed53e655b709f80e15a6d73ab3061f"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a53ed53e655b709f80e15a6d73ab3061f">loadTextFile</a> (std::filesystem::path path)</td></tr>
 <tr class="separator:a53ed53e655b709f80e15a6d73ab3061f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84954d808f5be0e88401158d160fa72f" id="r_a84954d808f5be0e88401158d160fa72f"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a84954d808f5be0e88401158d160fa72f">loadBinaryFile</a> (std::filesystem::path path)</td></tr>
+<tr class="separator:a84954d808f5be0e88401158d160fa72f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a896d52b9531040f3ea02097398730967" id="r_a896d52b9531040f3ea02097398730967"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::vector&lt; std::byte &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a896d52b9531040f3ea02097398730967">loadBinaryFile</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::filesystem::path &amp;path)</td></tr>
+<tr class="separator:a896d52b9531040f3ea02097398730967"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ea389fa7f30b246f0381c3147f24a91" id="r_a9ea389fa7f30b246f0381c3147f24a91"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a9ea389fa7f30b246f0381c3147f24a91">deployFeature</a> (<a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">FeatureRecord</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">feature</a>)</td></tr>
 <tr class="separator:a9ea389fa7f30b246f0381c3147f24a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a694eb7386d94395667075687784120a2" id="r_a694eb7386d94395667075687784120a2"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a694eb7386d94395667075687784120a2">deployTransformation</a> (<a class="el" href="classdcn_1_1EVM.html">EVM</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">evm</a>, <a class="el" href="classdcn_1_1Registry.html">Registry</a> &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">registry</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">TransformationRecord</a> <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">transformation</a>)</td></tr>
@@ -372,19 +378,33 @@ Variables</h2></td></tr>
 <tr class="separator:a97b781d3fe9573a23ed6606389674f3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="a95cbb2c96065bd6b4d712e346a0436f8" name="a95cbb2c96065bd6b4d712e346a0436f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95cbb2c96065bd6b4d712e346a0436f8">&#9670;&#160;</a></span>HandlerDefinition</h2>
+<a id="ac0e29d26497dbd2dd65c634051978701" name="ac0e29d26497dbd2dd65c634051978701"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0e29d26497dbd2dd65c634051978701">&#9670;&#160;</a></span>HandlerDefinition</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">using</a> <a class="el" href="namespacedcn.html#a95cbb2c96065bd6b4d712e346a0436f8">dcn::HandlerDefinition</a> = <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">typedef</a> std::function&lt;asio::awaitable&lt;<a class="el" href="classdcn_1_1http_1_1Response.html">dcn::http::Response</a>&gt;(<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">dcn::http::Request</a> &amp;, std::vector&lt;<a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a>&gt;)&gt;</td>
+          <td class="memname"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">using</a> <a class="el" href="namespacedcn.html#ac0e29d26497dbd2dd65c634051978701">dcn::HandlerDefinition</a> = <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">typedef</a> std::function&lt;asio::awaitable&lt;<a class="el" href="classdcn_1_1http_1_1Response.html">dcn::http::Response</a>&gt;(<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">dcn::http::Request</a> &amp;, std::vector&lt;<a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a>&gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Type representing a route handler function. </p>
+
+</div>
+</div>
+<a id="a9688ae9214c78e0cd672bc0fdd50c6e7" name="a9688ae9214c78e0cd672bc0fdd50c6e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9688ae9214c78e0cd672bc0fdd50c6e7">&#9670;&#160;</a></span>QueryArgsList</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">using</a> <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">dcn::QueryArgsList</a> = <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">typedef</a> absl::flat_hash_map&lt;std::string, <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1414,8 +1434,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a0a4b0999356fb08f760c67a4e031a63a" name="a0a4b0999356fb08f760c67a4e031a63a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a4b0999356fb08f760c67a4e031a63a">&#9670;&#160;</a></span>GET_accountInfo()</h2>
+<a id="a8ddcaee985172bfec58d415f4da7e6d5" name="a8ddcaee985172bfec58d415f4da7e6d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ddcaee985172bfec58d415f4da7e6d5">&#9670;&#160;</a></span>GET_accountInfo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1431,6 +1451,12 @@ template&lt;&gt; </div>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
           <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
+          <td class="paramname"><em>query_args</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1466,8 +1492,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a43fa656e7a21322ec32d97de3e5c0a11" name="a43fa656e7a21322ec32d97de3e5c0a11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43fa656e7a21322ec32d97de3e5c0a11">&#9670;&#160;</a></span>GET_execute()</h2>
+<a id="a834cebe3d88908022b2ba14338639c01" name="a834cebe3d88908022b2ba14338639c01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a834cebe3d88908022b2ba14338639c01">&#9670;&#160;</a></span>GET_execute()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1483,6 +1509,12 @@ template&lt;&gt; </div>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
           <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1512,8 +1544,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="ae839348cd866c04081b43b59410ffda5" name="ae839348cd866c04081b43b59410ffda5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae839348cd866c04081b43b59410ffda5">&#9670;&#160;</a></span>GET_feature()</h2>
+<a id="ab5566493ade1100643aee0699ea78918" name="ab5566493ade1100643aee0699ea78918"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5566493ade1100643aee0699ea78918">&#9670;&#160;</a></span>GET_feature()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1529,6 +1561,12 @@ template&lt;&gt; </div>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
           <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1559,8 +1597,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="ac3751c4b02df4c86c564697360400c7e" name="ac3751c4b02df4c86c564697360400c7e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3751c4b02df4c86c564697360400c7e">&#9670;&#160;</a></span>GET_nonce()</h2>
+<a id="a79cc64abb4bd32ff00ec869f9403b09c" name="a79cc64abb4bd32ff00ec869f9403b09c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79cc64abb4bd32ff00ec869f9403b09c">&#9670;&#160;</a></span>GET_nonce()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1576,6 +1614,12 @@ template&lt;&gt; </div>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
           <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1602,8 +1646,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a895f1601c1e072da0147834f72024d39" name="a895f1601c1e072da0147834f72024d39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a895f1601c1e072da0147834f72024d39">&#9670;&#160;</a></span>GET_ServeFile()</h2>
+<a id="a8dcf32a02decf79f8333df7e0c4ae6b9" name="a8dcf32a02decf79f8333df7e0c4ae6b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8dcf32a02decf79f8333df7e0c4ae6b9">&#9670;&#160;</a></span>GET_ServeFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1618,6 +1662,12 @@ template&lt;&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -1652,8 +1702,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="aeca50bef36a4b8d8e19ae013decb34f7" name="aeca50bef36a4b8d8e19ae013decb34f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeca50bef36a4b8d8e19ae013decb34f7">&#9670;&#160;</a></span>GET_transformation()</h2>
+<a id="a8f580c34be5b34418821f01b39b2eb89" name="a8f580c34be5b34418821f01b39b2eb89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f580c34be5b34418821f01b39b2eb89">&#9670;&#160;</a></span>GET_transformation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1669,6 +1719,12 @@ template&lt;&gt; </div>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
           <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1703,8 +1759,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="afed3b262cea12515ca285269fc7ea0b1" name="afed3b262cea12515ca285269fc7ea0b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afed3b262cea12515ca285269fc7ea0b1">&#9670;&#160;</a></span>GET_version()</h2>
+<a id="a9afdb680b90dcbf522fb1c9dbcb10ee7" name="a9afdb680b90dcbf522fb1c9dbcb10ee7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9afdb680b90dcbf522fb1c9dbcb10ee7">&#9670;&#160;</a></span>GET_version()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1719,6 +1775,12 @@ template&lt;&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -1822,8 +1884,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a3a5f9805ac17d8069443629731cb44a2" name="a3a5f9805ac17d8069443629731cb44a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a5f9805ac17d8069443629731cb44a2">&#9670;&#160;</a></span>HEAD_ServeFile()</h2>
+<a id="a694185ff87e7188d317ede5d6d531d38" name="a694185ff87e7188d317ede5d6d531d38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a694185ff87e7188d317ede5d6d531d38">&#9670;&#160;</a></span>HEAD_ServeFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1838,6 +1900,12 @@ template&lt;&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -1856,6 +1924,42 @@ template&lt;&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An HTTP response with CORS headers for the simple form </dd></dl>
+
+</div>
+</div>
+<a id="a896d52b9531040f3ea02097398730967" name="a896d52b9531040f3ea02097398730967"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a896d52b9531040f3ea02097398730967">&#9670;&#160;</a></span>loadBinaryFile() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::vector&lt; std::byte &gt; &gt; dcn::loadBinaryFile </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a84954d808f5be0e88401158d160fa72f" name="a84954d808f5be0e88401158d160fa72f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84954d808f5be0e88401158d160fa72f">&#9670;&#160;</a></span>loadBinaryFile() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::string &gt; dcn::loadBinaryFile </td>
+          <td>(</td>
+          <td class="paramtype">std::filesystem::path&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1933,8 +2037,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a112a61a4922f6c7dc256016e72561b7d" name="a112a61a4922f6c7dc256016e72561b7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a112a61a4922f6c7dc256016e72561b7d">&#9670;&#160;</a></span>OPTIONS_feature()</h2>
+<a id="adf506cc04516235e776bb889f3857006" name="adf506cc04516235e776bb889f3857006"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf506cc04516235e776bb889f3857006">&#9670;&#160;</a></span>OPTIONS_feature()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1949,6 +2053,12 @@ template&lt;&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -1970,8 +2080,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="af25caf53a2512f0b2d2ea0339856ca2e" name="af25caf53a2512f0b2d2ea0339856ca2e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af25caf53a2512f0b2d2ea0339856ca2e">&#9670;&#160;</a></span>OPTIONS_ServeFile()</h2>
+<a id="a169de1d6bbe37ad5491bdd0fdc4b6cc9" name="a169de1d6bbe37ad5491bdd0fdc4b6cc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a169de1d6bbe37ad5491bdd0fdc4b6cc9">&#9670;&#160;</a></span>OPTIONS_ServeFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1986,6 +2096,12 @@ template&lt;&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -2007,8 +2123,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="afcf0e0fcb9332c361fdb8882a768c760" name="afcf0e0fcb9332c361fdb8882a768c760"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcf0e0fcb9332c361fdb8882a768c760">&#9670;&#160;</a></span>OPTIONS_transformation()</h2>
+<a id="a0cd0a51dfd6dd01d6a2b45f91e537a7c" name="a0cd0a51dfd6dd01d6a2b45f91e537a7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cd0a51dfd6dd01d6a2b45f91e537a7c">&#9670;&#160;</a></span>OPTIONS_transformation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2023,6 +2139,12 @@ template&lt;&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -2044,8 +2166,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a7b01c305af180e2e18bf5c9f88409bc1" name="a7b01c305af180e2e18bf5c9f88409bc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b01c305af180e2e18bf5c9f88409bc1">&#9670;&#160;</a></span>POST_auth()</h2>
+<a id="a5b60e23faa85df67ef4aea31993f72dd" name="a5b60e23faa85df67ef4aea31993f72dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b60e23faa85df67ef4aea31993f72dd">&#9670;&#160;</a></span>POST_auth()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2061,6 +2183,12 @@ template&lt;&gt; </div>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
           <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2116,8 +2244,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a540c661bdcf23b0e54861f199a30b098" name="a540c661bdcf23b0e54861f199a30b098"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a540c661bdcf23b0e54861f199a30b098">&#9670;&#160;</a></span>POST_feature()</h2>
+<a id="a73b9bd4c0182c3883669daca356d504b" name="a73b9bd4c0182c3883669daca356d504b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73b9bd4c0182c3883669daca356d504b">&#9670;&#160;</a></span>POST_feature()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2133,6 +2261,12 @@ template&lt;&gt; </div>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
           <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2172,8 +2306,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a001262759f7cebe268aab7b60436f555" name="a001262759f7cebe268aab7b60436f555"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a001262759f7cebe268aab7b60436f555">&#9670;&#160;</a></span>POST_refresh()</h2>
+<a id="a644aba960439f3ffd59ad6783e47bcbd" name="a644aba960439f3ffd59ad6783e47bcbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a644aba960439f3ffd59ad6783e47bcbd">&#9670;&#160;</a></span>POST_refresh()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2189,6 +2323,12 @@ template&lt;&gt; </div>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
           <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2226,8 +2366,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a5e3b30c2922ac53a9157eb4f86cc6fa5" name="a5e3b30c2922ac53a9157eb4f86cc6fa5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e3b30c2922ac53a9157eb4f86cc6fa5">&#9670;&#160;</a></span>POST_transformation()</h2>
+<a id="a3068250f81a32e89e4028890e5e4eca1" name="a3068250f81a32e89e4028890e5e4eca1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3068250f81a32e89e4028890e5e4eca1">&#9670;&#160;</a></span>POST_transformation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2243,6 +2383,12 @@ template&lt;&gt; </div>
           <td></td>
           <td class="paramtype">std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;&#160;</td>
           <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
