@@ -94,8 +94,9 @@ int main(int argc, char* argv[])
     
     const auto simple_form = dcn::loadTextFile(std::filesystem::path{"html"} / "simple_form.html");
     const auto simple_form_js = dcn::loadTextFile(std::filesystem::path{"js"} / "simple_form.js");
+    const auto simple_form_css = dcn::loadTextFile(std::filesystem::path{"styles"} / "simple_form.css");
 
-    if(simple_form && simple_form_js)
+    if(simple_form && simple_form_js && simple_form_css)
     {
         server.addRoute({dcn::http::Method::HEAD, "/"},          dcn::HEAD_ServeFile);
         server.addRoute({dcn::http::Method::OPTIONS, "/"},       dcn::OPTIONS_ServeFile);
@@ -104,6 +105,10 @@ int main(int argc, char* argv[])
         server.addRoute({dcn::http::Method::HEAD, "/js/simple_form.js"},          dcn::HEAD_ServeFile);
         server.addRoute({dcn::http::Method::OPTIONS, "/js/simple_form.js"},       dcn::OPTIONS_ServeFile);
         server.addRoute({dcn::http::Method::GET, "/js/simple_form.js"},           dcn::GET_ServeFile, "text/javascript; charset=utf-8", std::cref(simple_form_js.value()));
+    
+        server.addRoute({dcn::http::Method::HEAD, "/styles/simple_form.css"},          dcn::HEAD_ServeFile);
+        server.addRoute({dcn::http::Method::OPTIONS, "/styles/simple_form.css"},       dcn::OPTIONS_ServeFile);
+        server.addRoute({dcn::http::Method::GET, "/styles/simple_form.css"},           dcn::GET_ServeFile, "text/css; charset=utf-8", std::cref(simple_form_css.value()));
     }
     
     server.addRoute({dcn::http::Method::GET, "/version"},       dcn::GET_version, std::cref(build_timestamp));
