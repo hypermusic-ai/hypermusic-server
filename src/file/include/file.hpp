@@ -25,5 +25,5 @@ namespace dcn
 
     std::optional<std::string> loadTextFile(std::filesystem::path path);
 
-    std::optional<std::string> loadBinaryFile(std::filesystem::path path);
+    std::optional<std::vector<std::byte>> loadBinaryFile(std::filesystem::path path);
 }

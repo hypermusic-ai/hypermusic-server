@@ -40,4 +40,16 @@ namespace dcn
 
         co_return response;
     }
+
+    asio::awaitable<http::Response> GET_ServeBinaryFile(const http::Request &, std::vector<RouteArg>, QueryArgsList, const std::string mime_type, const std::vector<std::byte> & file_content)
+    {
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+        response.setHeader(http::Header::Connection, "keep-alive");
+        response.setHeader(http::Header::ContentType, mime_type);
+        response.setCode(dcn::http::Code::OK);
+        response.setBodyWithContentLength( std::string(reinterpret_cast<const char*>(file_content.data()), file_content.size()));
+        co_return response;
+    }
 }

@@ -63,7 +63,7 @@ namespace dcn
         return file_content;
     }
 
-    std::optional<std::vector<std::byte>> loadBinaryFile(const std::filesystem::path& path)
+    std::optional<std::vector<std::byte>> loadBinaryFile(std::filesystem::path path)
     {
         const auto full_path = getResourcesPath() / path;
     
