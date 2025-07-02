@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Decentralised Art Server: src/api/src/api_simple_form.cpp File Reference</title>
+<title>Decentralised Art Server: src/api/src/api_file.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
-  <td id="projectlogo"><img alt="Logo" src="pt_logo.ico"/></td>
   <td id="projectalign">
    <div id="projectname">Decentralised Art Server
    </div>
@@ -71,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('api__simple__form_8cpp.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('api__file_8cpp.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -100,7 +99,7 @@ $(document).ready(function(){initNavTree('api__simple__form_8cpp.html',''); init
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">api_simple_form.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">api_file.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="api_8hpp_source.html">api.hpp</a>&quot;</code><br />
@@ -118,13 +117,15 @@ Functions</h2></td></tr>
 <tr class="separator:a169de1d6bbe37ad5491bdd0fdc4b6cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8dcf32a02decf79f8333df7e0c4ae6b9" id="r_a8dcf32a02decf79f8333df7e0c4ae6b9"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a8dcf32a02decf79f8333df7e0c4ae6b9">dcn::GET_ServeFile</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">mime_type</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">file_content</a>)</td></tr>
 <tr class="separator:a8dcf32a02decf79f8333df7e0c4ae6b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cfb9a3629b945f2b0437acba2f13a2a" id="r_a0cfb9a3629b945f2b0437acba2f13a2a"><td class="memItemLeft" align="right" valign="top">asio::awaitable&lt; <a class="el" href="classdcn_1_1http_1_1Response.html">http::Response</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedcn.html#a0cfb9a3629b945f2b0437acba2f13a2a">dcn::GET_ServeBinaryFile</a> (<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> <a class="el" href="classdcn_1_1http_1_1Request.html">http::Request</a> &amp;, std::vector&lt; <a class="el" href="classdcn_1_1RouteArg.html">RouteArg</a> &gt;, <a class="el" href="namespacedcn.html#a9688ae9214c78e0cd672bc0fdd50c6e7">QueryArgsList</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::string <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">mime_type</a>, <a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">const</a> std::vector&lt; std::byte &gt; &amp;<a class="el" href="namespacedcn.html#a48f2ecb6c65ec7f533dea1d2354b844bad57c24f3fe52d16e7169b912dd647f0d">file_content</a>)</td></tr>
+<tr class="separator:a0cfb9a3629b945f2b0437acba2f13a2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_da61e3e9a357748887e3ca8d7c5a0c16.html">api</a></li><li class="navelem"><a class="el" href="dir_279cbe7663829d487e97774a2345ea4e.html">src</a></li><li class="navelem"><a class="el" href="api__simple__form_8cpp.html">api_simple_form.cpp</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_da61e3e9a357748887e3ca8d7c5a0c16.html">api</a></li><li class="navelem"><a class="el" href="dir_279cbe7663829d487e97774a2345ea4e.html">src</a></li><li class="navelem"><a class="el" href="api__file_8cpp.html">api_file.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

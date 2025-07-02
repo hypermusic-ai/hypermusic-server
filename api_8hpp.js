@@ -5,6 +5,7 @@ var api_8hpp =
     [ "GET_execute", "api_8hpp.html#a834cebe3d88908022b2ba14338639c01", null ],
     [ "GET_feature", "api_8hpp.html#ab5566493ade1100643aee0699ea78918", null ],
     [ "GET_nonce", "api_8hpp.html#a79cc64abb4bd32ff00ec869f9403b09c", null ],
+    [ "GET_ServeBinaryFile", "api_8hpp.html#a0cfb9a3629b945f2b0437acba2f13a2a", null ],
     [ "GET_ServeFile", "api_8hpp.html#a8dcf32a02decf79f8333df7e0c4ae6b9", null ],
     [ "GET_transformation", "api_8hpp.html#a8f580c34be5b34418821f01b39b2eb89", null ],
     [ "GET_version", "api_8hpp.html#a9afdb680b90dcbf522fb1c9dbcb10ee7", null ],

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['listen_0',['listen',['../classdcn_1_1Server.html#ad4374a764f8f7d64ee30de7484b5f720',1,'dcn::Server']]],
-  ['loadbinaryfile_1',['loadbinaryfile',['../namespacedcn.html#a84954d808f5be0e88401158d160fa72f',1,'dcn::loadBinaryFile(std::filesystem::path path)'],['../namespacedcn.html#a896d52b9531040f3ea02097398730967',1,'dcn::loadBinaryFile(const std::filesystem::path &amp;path)']]],
+  ['loadbinaryfile_1',['loadBinaryFile',['../namespacedcn.html#a530cf80062b80b6e40df99bdb1301d22',1,'dcn']]],
   ['loadbuildtimestamp_2',['loadBuildTimestamp',['../namespacedcn_1_1utils.html#afe5529604b645836efa07f3d4d662540',1,'dcn::utils']]],
   ['loader_2ecpp_3',['loader.cpp',['../loader_8cpp.html',1,'']]],
   ['loader_2ehpp_4',['loader.hpp',['../loader_8hpp.html',1,'']]],
