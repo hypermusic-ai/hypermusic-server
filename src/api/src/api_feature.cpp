@@ -23,12 +23,18 @@ namespace dcn
         co_return response;
     }
 
-    asio::awaitable<http::Response> GET_feature(const http::Request &, std::vector<RouteArg> args, QueryArgsList, Registry & registry, EVM & evm)
+    asio::awaitable<http::Response> GET_feature(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, Registry & registry, EVM & evm)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::Connection, "close");
-        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
 
         if(args.size() > 2 || args.size() == 0)
         {
@@ -162,7 +168,13 @@ namespace dcn
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
-        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
 
         const auto auth_result = co_await authenticate(request, auth_manager);
 

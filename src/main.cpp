@@ -130,20 +130,20 @@ int main(int argc, char* argv[])
     server.addRoute({dcn::http::Method::OPTIONS, "/refresh"},             dcn::OPTIONS_refresh);
     server.addRoute({dcn::http::Method::POST, "/refresh"},             dcn::POST_refresh, std::ref(auth_manager));
 
-    server.addRoute({dcn::http::Method::OPTIONS, "/account"},             dcn::OPTIONS_accountInfo);
+    server.addRoute({dcn::http::Method::OPTIONS, "/account/<string>?limit=<uint>&page=<uint>"},             dcn::OPTIONS_accountInfo);
     server.addRoute({dcn::http::Method::GET,    "/account/<string>?limit=<uint>&page=<uint>"},   dcn::GET_accountInfo, std::ref(registry));
 
-    server.addRoute({dcn::http::Method::OPTIONS, "/feature"},                    dcn::OPTIONS_feature);
+    server.addRoute({dcn::http::Method::OPTIONS, "/feature/<string>/<~string>"},                    dcn::OPTIONS_feature);
     server.addRoute({dcn::http::Method::GET,     "/feature/<string>/<~string>"},   dcn::GET_feature, std::ref(registry), std::ref(evm));
     server.addRoute({dcn::http::Method::POST,    "/feature"},                    dcn::POST_feature, std::ref(auth_manager), std::ref(registry), std::ref(evm));
 
-    server.addRoute({dcn::http::Method::OPTIONS, "/transformation"},                     dcn::OPTIONS_transformation);
+    server.addRoute({dcn::http::Method::OPTIONS, "/transformation/<string>/<~string>"},                     dcn::OPTIONS_transformation);
     server.addRoute({dcn::http::Method::GET,     "/transformation/<string>/<~string>"},    dcn::GET_transformation, std::ref(registry), std::ref(evm));
     server.addRoute({dcn::http::Method::POST,    "/transformation"},                     dcn::POST_transformation, std::ref(auth_manager), std::ref(registry), std::ref(evm));
 
     //server.addRoute({dcn::http::Method::GET, "/condition"},                          dcn::GET_condition);
     //server.addRoute({dcn::http::Method::POST, "/condition"},                         dcn::POST_condition);
-    
+    server.addRoute({dcn::http::Method::OPTIONS, "/execute/<string>/<uint>/<~[<(<uint>;<uint>)>]>"},                dcn::OPTIONS_execute);
     server.addRoute({dcn::http::Method::GET, "/execute/<string>/<uint>/<~[<(<uint>;<uint>)>]>"},                dcn::GET_execute, std::cref(auth_manager), std::cref(registry), std::ref(evm));
 
     asio::co_spawn(io_context, dcn::loadStoredTransformations(evm, registry), 

@@ -2,12 +2,39 @@
 
 namespace dcn
 {
+    asio::awaitable<http::Response> OPTIONS_execute(const http::Request & request, std::vector<RouteArg>, QueryArgsList)
+    {
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
+
+        response.setHeader(http::Header::AccessControlAllowMethods, "GET, POST, OPTIONS");
+        response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::ContentType, "text/plain");
+        response.setCode(http::Code::OK);
+        response.setBodyWithContentLength("OK");
+        co_return response;
+    }
+
     asio::awaitable<http::Response> GET_execute(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, const AuthManager & auth_manager, const Registry & registry, EVM & evm)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::Connection, "close");
-        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+        
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
 
         if(args.size() != 2 && args.size() != 3)
         {

@@ -2,12 +2,19 @@
 
 namespace dcn
 {
-    asio::awaitable<http::Response> HEAD_ServeFile(const http::Request &, std::vector<RouteArg>, QueryArgsList)
+    asio::awaitable<http::Response> HEAD_ServeFile(const http::Request & request, std::vector<RouteArg>, QueryArgsList)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::Connection, "close");
-        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
+
         response.setCode(dcn::http::Code::OK);
         response.setBodyWithContentLength("OK");
         co_return response;
@@ -35,11 +42,18 @@ namespace dcn
         co_return response;
     }
 
-    asio::awaitable<http::Response> GET_ServeFile(const http::Request &, std::vector<RouteArg>, QueryArgsList, const std::string mime_type, const std::string & file_content)
+    asio::awaitable<http::Response> GET_ServeFile(const http::Request & request, std::vector<RouteArg>, QueryArgsList, const std::string mime_type, const std::string & file_content)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
-        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
+
         response.setHeader(http::Header::Connection, "keep-alive");
         response.setHeader(http::Header::ContentType, mime_type);
         response.setCode(dcn::http::Code::OK);
@@ -48,11 +62,18 @@ namespace dcn
         co_return response;
     }
 
-    asio::awaitable<http::Response> GET_ServeBinaryFile(const http::Request &, std::vector<RouteArg>, QueryArgsList, const std::string mime_type, const std::vector<std::byte> & file_content)
+    asio::awaitable<http::Response> GET_ServeBinaryFile(const http::Request & request, std::vector<RouteArg>, QueryArgsList, const std::string mime_type, const std::vector<std::byte> & file_content)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
-        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+        
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
+
         response.setHeader(http::Header::Connection, "keep-alive");
         response.setHeader(http::Header::ContentType, mime_type);
         response.setCode(dcn::http::Code::OK);

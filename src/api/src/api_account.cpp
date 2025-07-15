@@ -27,8 +27,14 @@ namespace dcn
     {
         http::Response response;
         response.setVersion("HTTP/1.1")
-                .setHeader(http::Header::Connection, "close")
-                .setHeader(http::Header::AccessControlAllowOrigin, "*");
+                .setHeader(http::Header::Connection, "close");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
 
         if(args.size() != 1 || query_args.size() != 2)
         {

@@ -6,8 +6,14 @@ namespace dcn
     {
         http::Response response;
         response.setVersion("HTTP/1.1")
-                .setHeader(http::Header::Connection, "close")
-                .setHeader(http::Header::AccessControlAllowOrigin, "*");
+                .setHeader(http::Header::Connection, "close");
+        
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
 
         if(args.size() != 1)
         {
@@ -66,8 +72,14 @@ namespace dcn
     {
         http::Response response;
         response.setVersion("HTTP/1.1")
-                .setHeader(http::Header::Connection, "close")
-                .setHeader(http::Header::AccessControlAllowOrigin, "*");
+                .setHeader(http::Header::Connection, "close");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
 
         if(args.size() != 0)
         {
@@ -168,8 +180,14 @@ namespace dcn
     asio::awaitable<http::Response> POST_refresh(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, AuthManager & auth_manager)
     {
         http::Response response;
-        response.setVersion("HTTP/1.1")
-                .setHeader(http::Header::AccessControlAllowOrigin, "*");
+        response.setVersion("HTTP/1.1");
+    
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
 
         auto cookie_res = request.getHeader(http::Header::Cookie);
         if(cookie_res.empty())

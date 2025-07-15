@@ -54,12 +54,19 @@ namespace dcn
         co_return verification_res.value();
     }
 
-    asio::awaitable<http::Response> GET_version(const http::Request &, std::vector<RouteArg>, QueryArgsList, const std::string & build_timestamp)
+    asio::awaitable<http::Response> GET_version(const http::Request & request, std::vector<RouteArg>, QueryArgsList, const std::string & build_timestamp)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::Connection, "close");
-        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
+
         response.setHeader(http::Header::ContentType, "application/json");
         response.setCode(http::Code::OK);
         

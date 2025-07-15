@@ -223,5 +223,6 @@ namespace dcn
 
     //asio::awaitable<http::Response> POST_condition(const http::Request &);
 
+    asio::awaitable<http::Response> OPTIONS_execute(const http::Request &, std::vector<RouteArg>, QueryArgsList);
     asio::awaitable<http::Response> GET_execute(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, const AuthManager & auth_manager, const Registry & registry, EVM & evm);
 }
