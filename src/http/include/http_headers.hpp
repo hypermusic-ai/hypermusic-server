@@ -17,9 +17,12 @@ namespace dcn::http
         Unknown = 0,
 
         Accept,
+
         AccessControlAllowOrigin,
         AccessControlAllowMethods,
         AccessControlAllowHeaders,
+        AccessControlAllowCredentials,
+
         Authorization,
 
         Connection,
@@ -30,6 +33,8 @@ namespace dcn::http
         Cookie,
         Date,
         Expect,
+
+        Origin,
 
         SetCookie
     };
@@ -58,30 +63,33 @@ struct std::formatter<dcn::http::Header> : std::formatter<std::string> {
     switch(header)
     {
         // A
-        case dcn::http::Header::Accept:                      return formatter<string>::format("Accept", ctx);
-        case dcn::http::Header::AccessControlAllowOrigin:    return formatter<string>::format("Access-Control-Allow-Origin", ctx);
-        case dcn::http::Header::AccessControlAllowMethods:   return formatter<string>::format("Access-Control-Allow-Methods", ctx);
-        case dcn::http::Header::AccessControlAllowHeaders:   return formatter<string>::format("Access-Control-Allow-Headers", ctx);
-        case dcn::http::Header::Authorization:               return formatter<string>::format("Authorization", ctx);
+        case dcn::http::Header::Accept:                         return formatter<string>::format("Accept", ctx);
+        case dcn::http::Header::AccessControlAllowOrigin:       return formatter<string>::format("Access-Control-Allow-Origin", ctx);
+        case dcn::http::Header::AccessControlAllowMethods:      return formatter<string>::format("Access-Control-Allow-Methods", ctx);
+        case dcn::http::Header::AccessControlAllowHeaders:      return formatter<string>::format("Access-Control-Allow-Headers", ctx);
+        case dcn::http::Header::AccessControlAllowCredentials:  return formatter<string>::format("Access-Control-Allow-Credentials", ctx);
+        case dcn::http::Header::Authorization:                  return formatter<string>::format("Authorization", ctx);
 
         // B
 
         // C
-        case dcn::http::Header::Connection:                  return formatter<string>::format("Connection", ctx);
-        case dcn::http::Header::ContentEncoding:             return formatter<string>::format("Content-Encoding", ctx);
-        case dcn::http::Header::ContentLength:               return formatter<string>::format("Content-Length", ctx);
-        case dcn::http::Header::ContentType:                 return formatter<string>::format("Content-Type", ctx);
-        case dcn::http::Header::Cookie:                      return formatter<string>::format("Cookie", ctx);
+        case dcn::http::Header::Connection:         return formatter<string>::format("Connection", ctx);
+        case dcn::http::Header::ContentEncoding:    return formatter<string>::format("Content-Encoding", ctx);
+        case dcn::http::Header::ContentLength:      return formatter<string>::format("Content-Length", ctx);
+        case dcn::http::Header::ContentType:        return formatter<string>::format("Content-Type", ctx);
+        case dcn::http::Header::Cookie:             return formatter<string>::format("Cookie", ctx);
 
         // D
-        case dcn::http::Header::Date:                        return formatter<string>::format("Date", ctx);
+        case dcn::http::Header::Date:   return formatter<string>::format("Date", ctx);
+
+        // O
+        case dcn::http::Header::Origin: return formatter<string>::format("Origin", ctx);
 
         // S
-        case dcn::http::Header::SetCookie:                        return formatter<string>::format("Set-Cookie", ctx);
-
+        case dcn::http::Header::SetCookie:  return formatter<string>::format("Set-Cookie", ctx);
 
         // Unknown
-        case dcn::http::Header::Unknown:                     return formatter<string>::format("Unknown", ctx);
+        case dcn::http::Header::Unknown:    return formatter<string>::format("Unknown", ctx);
     }
     return formatter<string>::format("", ctx);
   }

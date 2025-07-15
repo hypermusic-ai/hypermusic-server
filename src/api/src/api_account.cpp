@@ -2,6 +2,27 @@
 
 namespace dcn
 {
+    asio::awaitable<http::Response> OPTIONS_accountInfo(const http::Request & request, std::vector<RouteArg>, QueryArgsList)
+    {
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
+
+        response.setHeader(http::Header::AccessControlAllowMethods, "GET, OPTIONS");
+        response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::ContentType, "text/plain");
+        response.setCode(http::Code::OK);
+        response.setBodyWithContentLength("OK");
+        co_return response;
+    }
+
     asio::awaitable<http::Response> GET_accountInfo(const http::Request & request, std::vector<RouteArg> args, QueryArgsList query_args, Registry & registry)
     {
         http::Response response;

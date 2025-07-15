@@ -13,11 +13,18 @@ namespace dcn
         co_return response;
     }
 
-    asio::awaitable<http::Response> OPTIONS_ServeFile(const http::Request &, std::vector<RouteArg>, QueryArgsList)
+    asio::awaitable<http::Response> OPTIONS_ServeFile(const http::Request & request, std::vector<RouteArg>, QueryArgsList)
     {
         http::Response response;
         response.setVersion("HTTP/1.1");
-        response.setHeader(http::Header::AccessControlAllowOrigin, "*");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
+
         response.setHeader(http::Header::AccessControlAllowMethods, "GET, OPTIONS");
         response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
         response.setHeader(http::Header::Connection, "close");

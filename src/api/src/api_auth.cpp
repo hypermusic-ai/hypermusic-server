@@ -41,6 +41,27 @@ namespace dcn
         co_return response;
     }
 
+    asio::awaitable<http::Response> OPTIONS_auth(const http::Request & request, std::vector<RouteArg>, QueryArgsList)
+    {
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
+
+        response.setHeader(http::Header::AccessControlAllowMethods, "POST, OPTIONS");
+        response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::ContentType, "text/plain");
+        response.setCode(http::Code::OK);
+        response.setBodyWithContentLength("OK");
+        co_return response;
+    }
+
     asio::awaitable<http::Response> POST_auth(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, AuthManager & auth_manager)
     {
         http::Response response;
@@ -120,6 +141,27 @@ namespace dcn
 
         response.setCode(http::Code::OK).setBodyWithContentLength(auth_response.dump());
 
+        co_return response;
+    }
+
+    asio::awaitable<http::Response> OPTIONS_refresh(const http::Request & request, std::vector<RouteArg>, QueryArgsList)
+    {
+        http::Response response;
+        response.setVersion("HTTP/1.1");
+
+        const auto origin_header = request.getHeader(http::Header::Origin);
+        if(origin_header.empty())
+        {
+            co_return response;
+        }
+        setCORSHeaders(response, origin_header.at(0));
+
+        response.setHeader(http::Header::AccessControlAllowMethods, "POST, OPTIONS");
+        response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
+        response.setHeader(http::Header::Connection, "close");
+        response.setHeader(http::Header::ContentType, "text/plain");
+        response.setCode(http::Code::OK);
+        response.setBodyWithContentLength("OK");
         co_return response;
     }
 

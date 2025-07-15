@@ -2,6 +2,29 @@
 
 namespace dcn
 {
+    void setCORSHeadersTrusted(http::Response& response, const std::optional<std::string>& origin_header)
+    {
+        static const std::set<std::string> allowed = {
+            "http://localhost",
+            "https://decentralised.art"
+        };
+
+        if (origin_header && allowed.contains(*origin_header))
+        {
+            response.setHeader(http::Header::AccessControlAllowOrigin, *origin_header);
+            response.setHeader(http::Header::AccessControlAllowCredentials, "true");
+        }
+    }
+
+    void setCORSHeaders(http::Response& response, const std::optional<std::string>& origin_header)
+    {
+        if (origin_header)
+        {
+            response.setHeader(http::Header::AccessControlAllowOrigin, *origin_header);
+            response.setHeader(http::Header::AccessControlAllowCredentials, "true");
+        }
+    }
+
     asio::awaitable<std::expected<evmc::address, AuthenticationError>> authenticate(const http::Request & request, const AuthManager & auth_manager)
     {
         auto cookie_res = request.getHeader(http::Header::Cookie);

@@ -21,6 +21,10 @@ using namespace asio::experimental::awaitable_operators;
 
 namespace dcn
 {
+
+    void setCORSHeadersTrusted(http::Response& response, const std::optional<std::string>& origin_header);
+    void setCORSHeaders(http::Response& response, const std::optional<std::string>& origin_header);
+
     asio::awaitable<std::expected<evmc::address, AuthenticationError>> authenticate(const http::Request & request, const AuthManager & auth_manager);
 
     asio::awaitable<http::Response> GET_version(const http::Request &, std::vector<RouteArg>, QueryArgsList, const std::string & build_timestamp);
@@ -73,6 +77,8 @@ namespace dcn
      */
     asio::awaitable<http::Response> GET_nonce(const http::Request &, std::vector<RouteArg>, QueryArgsList, AuthManager &);
 
+
+    asio::awaitable<http::Response> OPTIONS_auth(const http::Request &, std::vector<RouteArg>, QueryArgsList);
     /**
      * @brief Handles a POST request to /auth
      * 
@@ -103,6 +109,8 @@ namespace dcn
      */
     asio::awaitable<http::Response> POST_auth(const http::Request &, std::vector<RouteArg>, QueryArgsList, AuthManager &);
 
+
+    asio::awaitable<http::Response> OPTIONS_refresh(const http::Request &, std::vector<RouteArg>, QueryArgsList);
     /**
      * @brief Handles a POST request to /auth/refresh
      * 
@@ -132,7 +140,7 @@ namespace dcn
     asio::awaitable<http::Response> POST_refresh(const http::Request &, std::vector<RouteArg>, QueryArgsList, AuthManager &);
 
 
-
+    asio::awaitable<http::Response> OPTIONS_accountInfo(const http::Request & request, std::vector<RouteArg>, QueryArgsList);
     asio::awaitable<http::Response> GET_accountInfo(const http::Request &, std::vector<RouteArg>, QueryArgsList, Registry & registry);
 
     /**

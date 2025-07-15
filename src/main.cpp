@@ -123,9 +123,14 @@ int main(int argc, char* argv[])
     server.addRoute({dcn::http::Method::GET, "/version"},       dcn::GET_version, std::cref(build_timestamp));
 
     server.addRoute({dcn::http::Method::GET, "/nonce/<string>"},       dcn::GET_nonce, std::ref(auth_manager));
+
+    server.addRoute({dcn::http::Method::OPTIONS, "/auth"},             dcn::OPTIONS_auth);
     server.addRoute({dcn::http::Method::POST, "/auth"},                dcn::POST_auth, std::ref(auth_manager));
+
+    server.addRoute({dcn::http::Method::OPTIONS, "/refresh"},             dcn::OPTIONS_refresh);
     server.addRoute({dcn::http::Method::POST, "/refresh"},             dcn::POST_refresh, std::ref(auth_manager));
 
+    server.addRoute({dcn::http::Method::OPTIONS, "/account"},             dcn::OPTIONS_accountInfo);
     server.addRoute({dcn::http::Method::GET,    "/account/<string>?limit=<uint>&page=<uint>"},   dcn::GET_accountInfo, std::ref(registry));
 
     server.addRoute({dcn::http::Method::OPTIONS, "/feature"},                    dcn::OPTIONS_feature);
