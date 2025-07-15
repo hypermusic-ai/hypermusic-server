@@ -48,7 +48,7 @@ namespace dcn::parse
 
     std::string parseAccessTokenToCookieHeader(const std::string & token_str)
     {
-        return ACCESS_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=Strict; Path=/;";
+        return ACCESS_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=None; Path=/;";
     }
 
     static const std::string REFRESH_TOKEN_PREFIX = "refresh_token=";  
@@ -70,7 +70,7 @@ namespace dcn::parse
 
     std::string parseRefreshTokenToCookieHeader(const std::string & token_str)
     {
-        return REFRESH_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=Strict; Path=/refresh;";
+        return REFRESH_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=None; Path=/refresh;";
     }
 }
 
