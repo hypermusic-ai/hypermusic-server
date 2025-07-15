@@ -12,6 +12,7 @@ var api_8hpp =
     [ "HEAD_ServeFile", "api_8hpp.html#a694185ff87e7188d317ede5d6d531d38", null ],
     [ "OPTIONS_accountInfo", "api_8hpp.html#a46864b91a10a67d4aaa163759e70c15f", null ],
     [ "OPTIONS_auth", "api_8hpp.html#a13e40f196d3fa5986200475a79c1a959", null ],
+    [ "OPTIONS_execute", "api_8hpp.html#a587c4bf527a51a2426e7afd800bf4848", null ],
     [ "OPTIONS_feature", "api_8hpp.html#adf506cc04516235e776bb889f3857006", null ],
     [ "OPTIONS_refresh", "api_8hpp.html#a18091a75ab819075ebc601cc0b1d12e5", null ],
     [ "OPTIONS_ServeFile", "api_8hpp.html#a169de1d6bbe37ad5491bdd0fdc4b6cc9", null ],

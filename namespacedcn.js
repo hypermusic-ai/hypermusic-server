@@ -109,6 +109,7 @@ var namespacedcn =
     [ "loadTextFile", "namespacedcn.html#a53ed53e655b709f80e15a6d73ab3061f", null ],
     [ "OPTIONS_accountInfo", "namespacedcn.html#a46864b91a10a67d4aaa163759e70c15f", null ],
     [ "OPTIONS_auth", "namespacedcn.html#a13e40f196d3fa5986200475a79c1a959", null ],
+    [ "OPTIONS_execute", "namespacedcn.html#a587c4bf527a51a2426e7afd800bf4848", null ],
     [ "OPTIONS_feature", "namespacedcn.html#adf506cc04516235e776bb889f3857006", null ],
     [ "OPTIONS_refresh", "namespacedcn.html#a18091a75ab819075ebc601cc0b1d12e5", null ],
     [ "OPTIONS_ServeFile", "namespacedcn.html#a169de1d6bbe37ad5491bdd0fdc4b6cc9", null ],
