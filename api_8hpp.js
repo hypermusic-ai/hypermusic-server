@@ -10,11 +10,16 @@ var api_8hpp =
     [ "GET_transformation", "api_8hpp.html#a8f580c34be5b34418821f01b39b2eb89", null ],
     [ "GET_version", "api_8hpp.html#a9afdb680b90dcbf522fb1c9dbcb10ee7", null ],
     [ "HEAD_ServeFile", "api_8hpp.html#a694185ff87e7188d317ede5d6d531d38", null ],
+    [ "OPTIONS_accountInfo", "api_8hpp.html#a46864b91a10a67d4aaa163759e70c15f", null ],
+    [ "OPTIONS_auth", "api_8hpp.html#a13e40f196d3fa5986200475a79c1a959", null ],
     [ "OPTIONS_feature", "api_8hpp.html#adf506cc04516235e776bb889f3857006", null ],
+    [ "OPTIONS_refresh", "api_8hpp.html#a18091a75ab819075ebc601cc0b1d12e5", null ],
     [ "OPTIONS_ServeFile", "api_8hpp.html#a169de1d6bbe37ad5491bdd0fdc4b6cc9", null ],
     [ "OPTIONS_transformation", "api_8hpp.html#a0cd0a51dfd6dd01d6a2b45f91e537a7c", null ],
     [ "POST_auth", "api_8hpp.html#a5b60e23faa85df67ef4aea31993f72dd", null ],
     [ "POST_feature", "api_8hpp.html#a73b9bd4c0182c3883669daca356d504b", null ],
     [ "POST_refresh", "api_8hpp.html#a644aba960439f3ffd59ad6783e47bcbd", null ],
-    [ "POST_transformation", "api_8hpp.html#a3068250f81a32e89e4028890e5e4eca1", null ]
+    [ "POST_transformation", "api_8hpp.html#a3068250f81a32e89e4028890e5e4eca1", null ],
+    [ "setCORSHeaders", "api_8hpp.html#a3c2a85eb8e7213b98f6ddb40fe15f232", null ],
+    [ "setCORSHeadersTrusted", "api_8hpp.html#a52c6a8ec0e4289faf00d05bb98966033", null ]
 ];

@@ -23,6 +23,7 @@ var namespacedcn_1_1http =
       [ "AccessControlAllowOrigin", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9abbf70f4130c22de6b46dd3d053bfbf7d", null ],
       [ "AccessControlAllowMethods", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a3b2d53ac5f0d8b406e5297d82b61ce8d", null ],
       [ "AccessControlAllowHeaders", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9ac75e58fa03efd4a144123513dabd4c6a", null ],
+      [ "AccessControlAllowCredentials", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9ae52e605fe101fb00778715dbe2378e98", null ],
       [ "Authorization", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a9cd8a2455b1839ff98ef70c05b9b5983", null ],
       [ "Connection", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9ac2cc7082a89c1ad6631a2f66af5f00c0", null ],
       [ "ContentEncoding", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a94b393cfdfb356ba5e95a9f0f552e5f4", null ],
@@ -31,6 +32,7 @@ var namespacedcn_1_1http =
       [ "Cookie", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a706f10887bbeb729378c706eee126fa7", null ],
       [ "Date", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a44749712dbec183e983dcd78a7736c41", null ],
       [ "Expect", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a7f036407d75c774176a7effbe959366b", null ],
+      [ "Origin", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a3edf8ca26a1ec14dd6e91dd277ae1de6", null ],
       [ "SetCookie", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a2b6a91a2252e822b24c4aca7c30af865", null ]
     ] ],
     [ "Method", "namespacedcn_1_1http.html#a4f682cd7b59ded888fa0d767b29cf172", [
