@@ -65,7 +65,7 @@ var NAVTREEINDEX =
 "classdcn_1_1RouteArg.html",
 "dir_962de2ccb4479aa68c277d1e9ca6b0b1.html",
 "namespacedcn.html#a62631f4d69b7296a19c87f41beb5be88",
-"session__manager_8hpp_source.html"
+"session__manager_8hpp.html#ae3767673641ef901bff3ac0abdd31224"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

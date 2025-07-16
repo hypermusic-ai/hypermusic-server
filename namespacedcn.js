@@ -9,6 +9,7 @@ var namespacedcn =
     [ "utils", "namespacedcn_1_1utils.html", [
       [ "currentTimestamp", "namespacedcn_1_1utils.html#a07545fa1ab2d1ccc349667eae8ba746f", null ],
       [ "ensureOnStrand", "namespacedcn_1_1utils.html#aae9b2c4db93b9f4d05974a60179eb86a", null ],
+      [ "equalsIgnoreCase", "namespacedcn_1_1utils.html#ac5be949d9e1bfe957e75587b3ef85c4e", null ],
       [ "escapeSolSrcQuotes", "namespacedcn_1_1utils.html#ad50838f255d0cc53abf48456e8a1ec8c", null ],
       [ "getAsciiLogo", "namespacedcn_1_1utils.html#ae27ec98b2a1acbfae234ac07af90679f", null ],
       [ "loadBuildTimestamp", "namespacedcn_1_1utils.html#afe5529604b645836efa07f3d4d662540", null ],
