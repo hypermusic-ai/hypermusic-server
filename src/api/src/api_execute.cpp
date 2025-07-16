@@ -13,6 +13,7 @@ namespace dcn
         response.setHeader(http::Header::AccessControlAllowHeaders, "authorization, content-type");
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
+        response.setHeader(http::Header::AccessControlAllowCredentials, "true");
         response.setCode(http::Code::OK);
         response.setBodyWithContentLength("OK");
         co_return response;

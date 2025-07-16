@@ -91,4 +91,5 @@ namespace dcn::utils
         return sorted;
     }
 
+    bool equalsIgnoreCase(const std::string& a, const std::string& b);
 }

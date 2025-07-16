@@ -1,8 +1,13 @@
 #pragma once
 
+#include <algorithm>
 #include <format>
 #include <string>
 #include <vector>
+#include <string>
+#include <cctype>
+
+#include "utils.hpp"
 
 namespace dcn::http
 {
