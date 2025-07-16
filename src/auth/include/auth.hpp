@@ -29,16 +29,55 @@ using namespace asio::experimental::awaitable_operators;
 
 #include "utils.hpp"
 #include "keccak256.hpp"
+#include "http.hpp"
 
 namespace dcn::parse
 {
     std::string parseNonceFromMessage(const std::string & msg);
 
-    std::optional<std::string> parseAccessTokenFromCookieHeader(const std::string & cookie_str);
-    std::string parseAccessTokenToCookieHeader(const std::string & token_str);
+    // access token
 
-    std::optional<std::string> parseRefreshTokenFromCookieHeader(const std::string & cookie_str);
-    std::string parseRefreshTokenToCookieHeader(const std::string & token_str);
+    // from header
+    template<http::Header HeaderType>
+    std::optional<std::string> parseAccessTokenFrom(const std::string & header_str);
+    
+    template<>
+    std::optional<std::string> parseAccessTokenFrom<http::Header::Cookie>(const std::string& header_str);
+
+    template<>
+    std::optional<std::string> parseAccessTokenFrom<http::Header::Authorization>(const std::string& header_str);
+
+    // to header
+    template<http::Header HeaderType>
+    std::string parseAccessTokenTo(const std::string & token_str);
+
+    template<>
+    std::string parseAccessTokenTo<http::Header::SetCookie>(const std::string & token_str);
+
+    template<>
+    std::string parseAccessTokenTo<http::Header::Authorization>(const std::string & token_str);
+
+    // refresh token
+
+    // from header
+    template<http::Header HeaderType>
+    std::optional<std::string> parseRefreshTokenFrom(const std::string & header_str);
+
+    template<>
+    std::optional<std::string> parseRefreshTokenFrom<http::Header::Cookie>(const std::string & header_str);
+
+    template<>
+    std::optional<std::string> parseRefreshTokenFrom<http::Header::XRefreshToken>(const std::string & header_str);
+
+    // to header
+    template<http::Header HeaderType>
+    std::string parseRefreshTokenTo(const std::string & token_str);
+
+    template<>
+    std::string parseRefreshTokenTo<http::Header::SetCookie>(const std::string & token_str);
+
+    template<>
+    std::string parseRefreshTokenTo<http::Header::XRefreshToken>(const std::string & token_str);
 }
 
 namespace dcn

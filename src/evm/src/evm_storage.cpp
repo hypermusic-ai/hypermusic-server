@@ -10,14 +10,11 @@ namespace dcn
 
     bool EVMStorage::account_exists(const evmc::address& addr) const noexcept
     {
-        bool val =  _accounts.find(to_key(addr)) != _accounts.end();
-        spdlog::debug(std::format("account_exists [{}]: Account {}", val, addr));
-        return val;
+        return _accounts.find(to_key(addr)) != _accounts.end();
     }
 
     evmc::bytes32 EVMStorage::get_storage(const evmc::address& addr, const evmc::bytes32& key) const noexcept
     {
-        spdlog::debug(std::format("get_storage : Account {}, key {}", addr, key));
         if(account_exists(addr) == false) 
         {
             spdlog::error(std::format("get_storage : Account {} does not exist", addr));
@@ -29,7 +26,6 @@ namespace dcn
 
     evmc_storage_status EVMStorage::set_storage(const evmc::address& address, const evmc::bytes32& key, const evmc::bytes32& value) noexcept
     {
-        spdlog::debug(std::format("set_storage : Account {}, key {}, value {}", address, key, value));
         _accounts[to_key(address)].storage[key] = value;
         return EVMC_STORAGE_MODIFIED;
     }
@@ -41,7 +37,6 @@ namespace dcn
             spdlog::error(std::format("get_balance : Account {} does not exist", addr));
             return {};
         }
-        spdlog::debug(std::format("get_balance : Account {}", addr));
         return evmc::uint256be{_accounts.at(to_key(addr)).balance};
     }
 
@@ -132,8 +127,6 @@ namespace dcn
         }
         else if (msg.kind == EVMC_CREATE || msg.kind == EVMC_CREATE2)
         {
-            spdlog::info(std::format("EVMC create from {}", actual_sender));
-
             assert(msg.recipient == evmc::address{});
             evmc_message patched_msg = msg;
 
@@ -178,7 +171,7 @@ namespace dcn
 
             result.create_address = new_address;
             
-            spdlog::debug(std::format("create call from {} to {} ended", actual_sender, new_address));
+            spdlog::debug(std::format("EVMC create call from {} to {} ended", actual_sender, new_address));
             return result;
         }
 

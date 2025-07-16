@@ -19,6 +19,7 @@ namespace dcn::parse
         if (header_str == std::format("{}", http::Header::Expect))return http::Header::Expect;
         if (header_str == std::format("{}", http::Header::Origin))return http::Header::Origin;
         if (header_str == std::format("{}", http::Header::SetCookie))return http::Header::SetCookie;
+        if (header_str == std::format("{}", http::Header::XRefreshToken))return http::Header::XRefreshToken;
 
         return http::Header::Unknown;
     }

@@ -8,12 +8,7 @@ namespace dcn
         response.setVersion("HTTP/1.1");
         response.setHeader(http::Header::Connection, "close");
 
-        const auto origin_header = request.getHeader(http::Header::Origin);
-        if(origin_header.empty())
-        {
-            co_return response;
-        }
-        setCORSHeaders(response, origin_header.at(0));
+        setCORSHeaders(request, response);
 
         response.setCode(dcn::http::Code::OK);
         response.setBodyWithContentLength("OK");
@@ -25,15 +20,10 @@ namespace dcn
         http::Response response;
         response.setVersion("HTTP/1.1");
 
-        const auto origin_header = request.getHeader(http::Header::Origin);
-        if(origin_header.empty())
-        {
-            co_return response;
-        }
-        setCORSHeaders(response, origin_header.at(0));
+        setCORSHeaders(request, response);
 
         response.setHeader(http::Header::AccessControlAllowMethods, "GET, OPTIONS");
-        response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
+        response.setHeader(http::Header::AccessControlAllowHeaders, "authorization, content-type");
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
         response.setCode(dcn::http::Code::OK);
@@ -47,12 +37,7 @@ namespace dcn
         http::Response response;
         response.setVersion("HTTP/1.1");
 
-        const auto origin_header = request.getHeader(http::Header::Origin);
-        if(origin_header.empty())
-        {
-            co_return response;
-        }
-        setCORSHeaders(response, origin_header.at(0));
+        setCORSHeaders(request, response);
 
         response.setHeader(http::Header::Connection, "keep-alive");
         response.setHeader(http::Header::ContentType, mime_type);
@@ -67,12 +52,7 @@ namespace dcn
         http::Response response;
         response.setVersion("HTTP/1.1");
         
-        const auto origin_header = request.getHeader(http::Header::Origin);
-        if(origin_header.empty())
-        {
-            co_return response;
-        }
-        setCORSHeaders(response, origin_header.at(0));
+        setCORSHeaders(request, response);
 
         response.setHeader(http::Header::Connection, "keep-alive");
         response.setHeader(http::Header::ContentType, mime_type);

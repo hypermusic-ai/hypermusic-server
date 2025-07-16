@@ -3,6 +3,7 @@ add_module(NAME "Auth"
         "${PROJECT_PREFIX}::Utils"
         "${PROJECT_PREFIX}::Native"
         "${PROJECT_PREFIX}::Crypto"
+        "${PROJECT_PREFIX}::HTTP"
         spdlog::spdlog
         asio
         absl::hash

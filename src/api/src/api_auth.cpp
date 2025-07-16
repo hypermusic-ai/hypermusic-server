@@ -2,18 +2,54 @@
 
 namespace dcn
 {
+    asio::awaitable<std::expected<evmc::address, AuthenticationError>> authenticate(const http::Request & request, const AuthManager & auth_manager)
+    {
+        std::optional<std::string> token_res;
+
+        // firstly try to obtain token from authorization header
+        const auto auth_res = request.getHeader(http::Header::Authorization);
+        if(auth_res.empty() == false)
+        {
+            const std::string auth_header = std::accumulate(auth_res.begin(), auth_res.end(), std::string(""));
+            token_res = parse::parseAccessTokenFrom<http::Header::Authorization>(auth_header);
+        }
+        else 
+        {
+            // if authorization header is empty, try to obtain token from cookie header
+            auto cookie_res = request.getHeader(http::Header::Cookie);
+            if(cookie_res.empty() == false)
+            {
+                const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
+                token_res = parse::parseAccessTokenFrom<http::Header::Cookie>(cookie_header);
+            }
+        }
+
+        if (token_res.has_value() == false) 
+        {
+            spdlog::error("Failed to parse token");
+            co_return std::unexpected(AuthenticationError::InvalidToken);
+        }
+
+        const std::string & token = token_res.value();
+
+        auto verification_res = co_await auth_manager.verifyAccessToken(token);
+
+        if(verification_res.has_value() == false)
+        {
+            spdlog::error("Failed to verify token");
+            co_return std::unexpected(verification_res.error());
+        }
+
+        co_return verification_res.value();
+    }
+
     asio::awaitable<http::Response> GET_nonce(const http::Request & request, std::vector<RouteArg> args, QueryArgsList, AuthManager & auth_manager)
     {
         http::Response response;
         response.setVersion("HTTP/1.1")
                 .setHeader(http::Header::Connection, "close");
         
-        const auto origin_header = request.getHeader(http::Header::Origin);
-        if(origin_header.empty())
-        {
-            co_return response;
-        }
-        setCORSHeaders(response, origin_header.at(0));
+        setCORSHeaders(request, response);
 
         if(args.size() != 1)
         {
@@ -52,15 +88,10 @@ namespace dcn
         http::Response response;
         response.setVersion("HTTP/1.1");
 
-        const auto origin_header = request.getHeader(http::Header::Origin);
-        if(origin_header.empty())
-        {
-            co_return response;
-        }
-        setCORSHeaders(response, origin_header.at(0));
+        setCORSHeaders(request, response);
 
         response.setHeader(http::Header::AccessControlAllowMethods, "POST, OPTIONS");
-        response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
+        response.setHeader(http::Header::AccessControlAllowHeaders, "authorization, content-type");
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
         response.setCode(http::Code::OK);
@@ -74,12 +105,7 @@ namespace dcn
         response.setVersion("HTTP/1.1")
                 .setHeader(http::Header::Connection, "close");
 
-        const auto origin_header = request.getHeader(http::Header::Origin);
-        if(origin_header.empty())
-        {
-            co_return response;
-        }
-        setCORSHeaders(response, origin_header.at(0));
+        setCORSHeaders(request, response);
 
         if(args.size() != 0)
         {
@@ -133,23 +159,23 @@ namespace dcn
             co_return response;
         }
 
-        json auth_response({{"success", false}});
-        
-        response.setHeader(http::Header::ContentType, "application/json");
-
         if(co_await auth_manager.verifySignature(address, signature, message) == false)
         {
-            response.setCode(http::Code::BadRequest).setBodyWithContentLength(auth_response.dump());
+            response.setCode(http::Code::BadRequest).setBodyWithContentLength("Invalid signature");
             co_return response;
         }
 
-        auth_response["success"] = true;
-
         const std::string access_token = co_await auth_manager.generateAccessToken(address);
         const std::string refresh_token = co_await auth_manager.generateRefreshToken(address);
+        
+        response.setHeader(http::Header::ContentType, "application/json");
 
-        response.addHeader(http::Header::SetCookie, parse::parseAccessTokenToCookieHeader(access_token));
-        response.addHeader(http::Header::SetCookie, parse::parseRefreshTokenToCookieHeader(refresh_token));
+        json auth_response;
+        auth_response["access_token"] = access_token;
+        auth_response["refresh_token"] = refresh_token;
+
+        response.addHeader(http::Header::SetCookie, parse::parseAccessTokenTo<http::Header::SetCookie>(access_token));
+        response.addHeader(http::Header::SetCookie, parse::parseRefreshTokenTo<http::Header::SetCookie>(refresh_token));
 
         response.setCode(http::Code::OK).setBodyWithContentLength(auth_response.dump());
 
@@ -161,15 +187,10 @@ namespace dcn
         http::Response response;
         response.setVersion("HTTP/1.1");
 
-        const auto origin_header = request.getHeader(http::Header::Origin);
-        if(origin_header.empty())
-        {
-            co_return response;
-        }
-        setCORSHeaders(response, origin_header.at(0));
+        setCORSHeaders(request, response);
 
         response.setHeader(http::Header::AccessControlAllowMethods, "POST, OPTIONS");
-        response.setHeader(http::Header::AccessControlAllowHeaders, "Content-Type");
+        response.setHeader(http::Header::AccessControlAllowHeaders, "authorization, content-type");
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
         response.setCode(http::Code::OK);
@@ -182,12 +203,7 @@ namespace dcn
         http::Response response;
         response.setVersion("HTTP/1.1");
     
-        const auto origin_header = request.getHeader(http::Header::Origin);
-        if(origin_header.empty())
-        {
-            co_return response;
-        }
-        setCORSHeaders(response, origin_header.at(0));
+        setCORSHeaders(request, response);
 
         auto cookie_res = request.getHeader(http::Header::Cookie);
         if(cookie_res.empty())
@@ -200,7 +216,26 @@ namespace dcn
         }
         const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
 
-        const auto refresh_token_res = parse::parseRefreshTokenFromCookieHeader(cookie_header);
+
+        std::optional<std::string> refresh_token_res;
+        // firstly try to obtain refresh token from XRefreshToken header
+        const auto xRefreshToken_res = request.getHeader(http::Header::XRefreshToken);
+        if(xRefreshToken_res.empty() == false)
+        {
+            const std::string xRefreshToken_header = std::accumulate(xRefreshToken_res.begin(), xRefreshToken_res.end(), std::string(""));
+            refresh_token_res = parse::parseRefreshTokenFrom<http::Header::XRefreshToken>(xRefreshToken_header);
+        }
+        else 
+        {
+            // if XRefreshToken header is empty, try to obtain token from cookie header
+            auto cookie_res = request.getHeader(http::Header::Cookie);
+            if(cookie_res.empty() == false)
+            {
+                const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
+                refresh_token_res = parse::parseRefreshTokenFrom<http::Header::Cookie>(cookie_header);
+            }
+        }       
+        
         if (refresh_token_res.has_value() == false) {
             response.setCode(dcn::http::Code::Unauthorized)
                     .setHeader(http::Header::Connection, "close")
@@ -221,10 +256,30 @@ namespace dcn
         }
         spdlog::debug(std::format("refresh token verified: {}", refresh_verification_res.value()));
 
+
         // Verify if access token matches old one for that address
         // since it probably expired we does not strictly verify it
         // only compare it
-        const auto access_token_res = parse::parseAccessTokenFromCookieHeader(cookie_header);
+        std::optional<std::string> access_token_res;
+
+        // firstly try to obtain token from authorization header
+        const auto auth_res = request.getHeader(http::Header::Authorization);
+        if(auth_res.empty() == false)
+        {
+            const std::string auth_header = std::accumulate(auth_res.begin(), auth_res.end(), std::string(""));
+            access_token_res = parse::parseAccessTokenFrom<http::Header::Authorization>(auth_header);
+        }
+        else 
+        {
+            // if authorization header is empty, try to obtain token from cookie header
+            auto cookie_res = request.getHeader(http::Header::Cookie);
+            if(cookie_res.empty() == false)
+            {
+                const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
+                access_token_res = parse::parseAccessTokenFrom<http::Header::Cookie>(cookie_header);
+            }
+        }
+
         if (access_token_res.has_value() == false) {
             response.setCode(dcn::http::Code::Unauthorized)
                     .setHeader(http::Header::Connection, "close")
@@ -232,10 +287,11 @@ namespace dcn
                     .setBodyWithContentLength("missing access token");
             co_return std::move(response);
         }
+        const std::string & access_token = access_token_res.value();
 
         const evmc::address & address = refresh_verification_res.value();
 
-        if(co_await auth_manager.compareAccessToken(address, access_token_res.value()) == false)
+        if(co_await auth_manager.compareAccessToken(address, access_token) == false)
         {
             response.setCode(dcn::http::Code::Unauthorized)
                     .setHeader(http::Header::Connection, "close")
@@ -250,10 +306,15 @@ namespace dcn
         const std::string new_access_token = co_await auth_manager.generateAccessToken(address);
         const std::string new_refresh_token = co_await auth_manager.generateRefreshToken(address);
 
-        response.addHeader(http::Header::SetCookie, parse::parseAccessTokenToCookieHeader(new_access_token));
-        response.addHeader(http::Header::SetCookie, parse::parseRefreshTokenToCookieHeader(new_refresh_token));
+        json refresh_response;
 
-        response.setCode(http::Code::OK).setBodyWithContentLength("OK");
+        refresh_response["access_token"] = new_access_token;
+        refresh_response["refresh_token"] = new_refresh_token;
+
+        response.addHeader(http::Header::SetCookie, parse::parseAccessTokenTo<http::Header::SetCookie>(new_access_token));
+        response.addHeader(http::Header::SetCookie, parse::parseRefreshTokenTo<http::Header::SetCookie>(new_refresh_token));
+
+        response.setCode(http::Code::OK).setBodyWithContentLength(refresh_response.dump());
 
         co_return response;
     }

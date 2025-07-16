@@ -36,7 +36,9 @@ namespace dcn::http
 
         Origin,
 
-        SetCookie
+        SetCookie,
+
+        XRefreshToken
     };
 
     /**
@@ -87,6 +89,9 @@ struct std::formatter<dcn::http::Header> : std::formatter<std::string> {
 
         // S
         case dcn::http::Header::SetCookie:  return formatter<string>::format("Set-Cookie", ctx);
+
+        //X
+        case dcn::http::Header::XRefreshToken:  return formatter<string>::format("X-Refresh-Token", ctx);
 
         // Unknown
         case dcn::http::Header::Unknown:    return formatter<string>::format("Unknown", ctx);

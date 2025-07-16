@@ -1131,7 +1131,7 @@ export async function loginWithMetaMask()
 
         const result = await authRes.json();
 
-        if (result.success) {
+        if (result.access_token) {
             loginStatusDiv.innerHTML = `<p style="color: green;">✅ Authenticated as ${address}</p>`;
         }
         else {

@@ -31,7 +31,8 @@ namespace dcn::parse
 
     static const std::string ACCESS_TOKEN_PREFIX = "access_token=";  
 
-    std::optional<std::string> parseAccessTokenFromCookieHeader(const std::string& cookie_str) 
+    template<>
+    std::optional<std::string> parseAccessTokenFrom<http::Header::Cookie>(const std::string& cookie_str) 
     {
         static const std::regex token_regex(ACCESS_TOKEN_PREFIX+"([^;]+)");
         // Check if the cookie string is empty
@@ -46,14 +47,40 @@ namespace dcn::parse
         return match[1].str();
     }
 
-    std::string parseAccessTokenToCookieHeader(const std::string & token_str)
+    template<>
+    std::optional<std::string> parseAccessTokenFrom<http::Header::Authorization>(const std::string& header_str) 
+    {
+        static const std::regex token_regex(R"(Bearer\s+([^\s]+))");
+
+        if (header_str.empty()) {
+            return {};
+        }
+
+        std::smatch match;
+        if (std::regex_search(header_str, match, token_regex) == false) {
+            return {};
+        }
+
+        return match[1].str();
+    }
+
+    template<>
+    std::string parseAccessTokenTo<http::Header::SetCookie>(const std::string & token_str)
     {
         return ACCESS_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=None; Path=/;";
     }
 
+    template<>
+    std::string parseAccessTokenTo<http::Header::Authorization>(const std::string & token_str)
+    {
+        return "Bearer " + token_str;
+    }
+
+
     static const std::string REFRESH_TOKEN_PREFIX = "refresh_token=";  
 
-    std::optional<std::string> parseRefreshTokenFromCookieHeader(const std::string& cookie_str) 
+    template<>
+    std::optional<std::string> parseRefreshTokenFrom<http::Header::Cookie>(const std::string& cookie_str) 
     {
         static const std::regex token_regex(REFRESH_TOKEN_PREFIX+"([^;]+)");
         // Check if the cookie string is empty
@@ -68,9 +95,34 @@ namespace dcn::parse
         return match[1].str();
     }
 
-    std::string parseRefreshTokenToCookieHeader(const std::string & token_str)
+    template<>
+    std::optional<std::string> parseRefreshTokenFrom<http::Header::XRefreshToken>(const std::string& header_str)
+    {
+        if (header_str.empty()) {
+            return {};
+        }
+
+        // Optionally, trim whitespace
+        auto start = header_str.find_first_not_of(" \t");
+        auto end = header_str.find_last_not_of(" \t");
+
+        if (start == std::string::npos || end == std::string::npos) {
+            return {};
+        }
+
+        return header_str.substr(start, end - start + 1);
+    }
+
+    template<>
+    std::string parseRefreshTokenTo<http::Header::SetCookie>(const std::string & token_str)
     {
         return REFRESH_TOKEN_PREFIX + token_str + "; HttpOnly; Secure; SameSite=None; Path=/refresh;";
+    }
+
+    template<>
+    std::string parseRefreshTokenTo<http::Header::XRefreshToken>(const std::string & token_str)
+    {
+        return token_str;
     }
 }
 

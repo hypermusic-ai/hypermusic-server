@@ -22,8 +22,7 @@ using namespace asio::experimental::awaitable_operators;
 namespace dcn
 {
 
-    void setCORSHeadersTrusted(http::Response& response, const std::optional<std::string>& origin_header);
-    void setCORSHeaders(http::Response& response, const std::optional<std::string>& origin_header);
+    void setCORSHeaders(const http::Request & request, http::Response& response);
 
     asio::awaitable<std::expected<evmc::address, AuthenticationError>> authenticate(const http::Request & request, const AuthManager & auth_manager);
 
