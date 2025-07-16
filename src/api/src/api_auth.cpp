@@ -191,7 +191,7 @@ namespace dcn
         setCORSHeaders(request, response);
 
         response.setHeader(http::Header::AccessControlAllowMethods, "POST, OPTIONS");
-        response.setHeader(http::Header::AccessControlAllowHeaders, "authorization, content-type");
+        response.setHeader(http::Header::AccessControlAllowHeaders, "authorization, content-type, x-refresh-token");
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "text/plain");
         response.setHeader(http::Header::AccessControlAllowCredentials, "true");
