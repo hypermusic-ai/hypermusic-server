@@ -21,6 +21,5 @@ var api_8hpp =
     [ "POST_feature", "api_8hpp.html#a73b9bd4c0182c3883669daca356d504b", null ],
     [ "POST_refresh", "api_8hpp.html#a644aba960439f3ffd59ad6783e47bcbd", null ],
     [ "POST_transformation", "api_8hpp.html#a3068250f81a32e89e4028890e5e4eca1", null ],
-    [ "setCORSHeaders", "api_8hpp.html#a3c2a85eb8e7213b98f6ddb40fe15f232", null ],
-    [ "setCORSHeadersTrusted", "api_8hpp.html#a52c6a8ec0e4289faf00d05bb98966033", null ]
+    [ "setCORSHeaders", "api_8hpp.html#a8eb997e707a12cc1254162b0fb9c111f", null ]
 ];

@@ -33,7 +33,8 @@ var namespacedcn_1_1http =
       [ "Date", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a44749712dbec183e983dcd78a7736c41", null ],
       [ "Expect", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a7f036407d75c774176a7effbe959366b", null ],
       [ "Origin", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a3edf8ca26a1ec14dd6e91dd277ae1de6", null ],
-      [ "SetCookie", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a2b6a91a2252e822b24c4aca7c30af865", null ]
+      [ "SetCookie", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9a2b6a91a2252e822b24c4aca7c30af865", null ],
+      [ "XRefreshToken", "namespacedcn_1_1http.html#aad74d4f2478c6cc863561ebcf03699a9abf6d592fabee2a2de7f07b6dfa287ecc", null ]
     ] ],
     [ "Method", "namespacedcn_1_1http.html#a4f682cd7b59ded888fa0d767b29cf172", [
       [ "Unknown", "namespacedcn_1_1http.html#a4f682cd7b59ded888fa0d767b29cf172a88183b946cc5f0e8c96b2e66e1c74a7e", null ],

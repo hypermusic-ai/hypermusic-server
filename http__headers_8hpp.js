@@ -19,7 +19,8 @@ var http__headers_8hpp =
       [ "Date", "http__headers_8hpp.html#aad74d4f2478c6cc863561ebcf03699a9a44749712dbec183e983dcd78a7736c41", null ],
       [ "Expect", "http__headers_8hpp.html#aad74d4f2478c6cc863561ebcf03699a9a7f036407d75c774176a7effbe959366b", null ],
       [ "Origin", "http__headers_8hpp.html#aad74d4f2478c6cc863561ebcf03699a9a3edf8ca26a1ec14dd6e91dd277ae1de6", null ],
-      [ "SetCookie", "http__headers_8hpp.html#aad74d4f2478c6cc863561ebcf03699a9a2b6a91a2252e822b24c4aca7c30af865", null ]
+      [ "SetCookie", "http__headers_8hpp.html#aad74d4f2478c6cc863561ebcf03699a9a2b6a91a2252e822b24c4aca7c30af865", null ],
+      [ "XRefreshToken", "http__headers_8hpp.html#aad74d4f2478c6cc863561ebcf03699a9abf6d592fabee2a2de7f07b6dfa287ecc", null ]
     ] ],
     [ "parseHeaderFromString", "http__headers_8hpp.html#a23b7828fd641751e92aefd8569c06b88", null ]
 ];
