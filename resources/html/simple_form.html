@@ -11,12 +11,6 @@
     <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
     <link href="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
 
-    <script src="https://cdn.jsdelivr.net/npm/jzz"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jzz-midi-smf"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
-
     <script type="module">
         import {
             loginWithMetaMask,
@@ -27,11 +21,6 @@
             closePopup,
 
             execute,
-
-            addMIDIMappingChannel,
-            showMIDICanvas,
-            hideMIDICanvas,
-            downloadMIDI,
 
             updateFeatureRequestPreview,
             addDimension,
@@ -59,11 +48,6 @@
         document.getElementById('btn_closePopup').addEventListener('click', closePopup);
         document.getElementById('btn_execute').addEventListener('click', execute);
         document.getElementById('btn_executeCopyResponse').addEventListener('click', () => copyTextFromElement('executeBody'));
-
-        document.getElementById('btn_addMIDIMappingChannel').addEventListener('click', addMIDIMappingChannel);
-        document.getElementById('btn_showMIDICanvas').addEventListener('click', showMIDICanvas);
-        document.getElementById('btn_hideMIDICanvas').addEventListener('click', hideMIDICanvas);
-        document.getElementById('btn_downloadMIDI').addEventListener('click', downloadMIDI);
 
         document.getElementById('in_featureName').addEventListener('input', updateFeatureRequestPreview);
         document.getElementById('btn_addDimension').addEventListener('click', addDimension);
@@ -195,41 +179,6 @@
                     <pre id="executeBody" class="response-body">Waiting...</pre>
                 </div>
             </div>
-        </div>
-        <div class="column">
-            <h2>MIDI Export</h2>
-            <button id="btn_addMIDIMappingChannel">➕ Add Channel</button>
-            <div id="midiMapper"></div> 
-            <div class="row" style="display: flex; gap: 1rem; align-items: flex-end;">
-                <div style="flex: 1; min-width: 120px; margin-right: 1rem;">
-                    <label>Ticks per beat</label>
-                    <input id="midiTicksPerBeat" type="number" placeholder="480" value="480">
-                </div>
-                <div style="flex: 1; min-width: 120px;">
-                    <label style="visibility:hidden;">Visualize MIDI</label>
-                    <button id="btn_showMIDICanvas">🎹 Visualize MIDI</button>
-                </div>
-            </div>
-            <div id="midiCanvasWrapper" style="display: none; width: 100%;">
-                <div style="display: flex; justify-content: flex-end;">
-                  <button id="btn_hideMIDICanvas" style="
-                    background: #444;
-                    color: #fff;
-                    border: none;
-                    border-radius: 4px;
-                    padding: 4px 10px;
-                    margin-bottom: 0.5rem;
-                    cursor: pointer;
-                  ">✖ Hide</button>
-                </div>
-                
-                <section id="midi-visualiser-section" style="margin-bottom: 0.5rem;">
-                    <midi-player id="midiPlayer" sound-font visualizer="#pianoVis"></midi-player>
-                    <midi-visualizer id="pianoVis" type="piano-roll"></midi-visualizer>
-                    <midi-visualizer id="staffVis" type="staff"></midi-visualizer>
-                </section>
-                <button id="btn_downloadMIDI" style="display:none;">💾 Download MIDI</button>
-              </div>
         </div>
     </div>
 
