@@ -207,18 +207,6 @@ namespace dcn
     
         setCORSHeaders(request, response);
 
-        auto cookie_res = request.getHeader(http::Header::Cookie);
-        if(cookie_res.empty())
-        {
-            response.setCode(dcn::http::Code::Unauthorized)
-                .setHeader(http::Header::Connection, "close")
-                .setHeader(http::Header::ContentType, "text/plain")
-                .setBodyWithContentLength("missing cookie");
-            co_return std::move(response);
-        }
-        const std::string cookie_header = std::accumulate(cookie_res.begin(), cookie_res.end(), std::string(""));
-
-
         std::optional<std::string> refresh_token_res;
         // firstly try to obtain refresh token from XRefreshToken header
         const auto xRefreshToken_res = request.getHeader(http::Header::XRefreshToken);
@@ -307,6 +295,8 @@ namespace dcn
 
         const std::string new_access_token = co_await auth_manager.generateAccessToken(address);
         const std::string new_refresh_token = co_await auth_manager.generateRefreshToken(address);
+
+        response.setHeader(http::Header::ContentType, "application/json");
 
         json refresh_response;
 
