@@ -29,31 +29,55 @@ namespace dcn
 
         if(args.size() != 1 || query_args.size() != 2)
         {
-            response.setCode(http::Code::BadRequest)
-                    .setBodyWithContentLength("Invalid number of arguments.");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid number of arguments";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         auto address_arg = parse::parseRouteArgAs<std::string>(args.at(0));
 
         if(!address_arg)
         {
-            response.setCode(http::Code::BadRequest)
-                    .setBodyWithContentLength("Invalid argument");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid address argument";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
         if(query_args.contains("limit") == false || query_args.contains("page") == false)
         {
-            response.setCode(http::Code::BadRequest)
-                    .setBodyWithContentLength("Invalid argument");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Missing arguments limit or page";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
         std::optional<evmc::address> address_res = evmc::from_hex<evmc::address>(address_arg.value());
         if(!address_res)
         {
-            response.setCode(http::Code::BadRequest)
-                    .setBodyWithContentLength("Invalid argument");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid address";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         const auto & address = address_res.value();
@@ -64,8 +88,14 @@ namespace dcn
 
         if(!limit_res || !page_res)
         {
-            response.setCode(http::Code::BadRequest)
-                    .setBodyWithContentLength("Invalid argument");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid arguments limit or page";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 

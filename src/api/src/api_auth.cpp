@@ -53,24 +53,42 @@ namespace dcn
 
         if(args.size() != 1)
         {
-            response.setCode(http::Code::BadRequest)
-                    .setBodyWithContentLength("Invalid number of arguments. Expected 1 argument.");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid number of arguments. Expected 1 argument.";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         auto address_arg = parse::parseRouteArgAs<std::string>(args.at(0));
 
         if(!address_arg)
         {
-            response.setCode(http::Code::BadRequest)
-                    .setBodyWithContentLength("Invalid argument");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid address argument";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
         std::optional<evmc::address> address_res = evmc::from_hex<evmc::address>(address_arg.value());
         if(!address_res)
         {
-            response.setCode(http::Code::BadRequest)
-                    .setBodyWithContentLength("Invalid argument");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid address argument";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         
@@ -110,8 +128,14 @@ namespace dcn
 
         if(args.size() != 0)
         {
-            response.setCode(http::Code::BadRequest)
-                    .setBodyWithContentLength("Invalid number of arguments. Expected 1 argument.");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid number of arguments. Expected 1 argument.";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
@@ -119,19 +143,40 @@ namespace dcn
 
         if(auth_request.contains("address") == false)
         {
-            response.setCode(http::Code::BadRequest).setBodyWithContentLength("Missing address");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Missing address";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
         if(auth_request.contains("signature") == false)
         {
-            response.setCode(http::Code::BadRequest).setBodyWithContentLength("Missing signature");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Missing signature";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
         if(auth_request.contains("message") == false)
         {
-            response.setCode(http::Code::BadRequest).setBodyWithContentLength("Missing message");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Missing message";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
@@ -142,27 +187,56 @@ namespace dcn
 
         if(request_nonce.length() == 0)
         {
-            response.setCode(http::Code::BadRequest).setBodyWithContentLength("Invalid message");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid message";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
         auto address_res = evmc::from_hex<evmc::address>(address_str);
         if(address_res.has_value() == false)
         {
-            response.setCode(http::Code::BadRequest).setBodyWithContentLength("Invalid address");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid address";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         const evmc::address & address = address_res.value();
 
         if(co_await auth_manager.verifyNonce(address, request_nonce) == false)
         {
-            response.setCode(http::Code::BadRequest).setBodyWithContentLength("Invalid nonce");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid nonce";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
         if(co_await auth_manager.verifySignature(address, signature, message) == false)
         {
-            response.setCode(http::Code::BadRequest).setBodyWithContentLength("Invalid signature");
+            response.setCode(http::Code::BadRequest);
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid signature";
+            response.setBodyWithContentLength(error_output.dump());
+
+
             co_return response;
         }
 
@@ -229,8 +303,13 @@ namespace dcn
         if (refresh_token_res.has_value() == false) {
             response.setCode(dcn::http::Code::Unauthorized)
                     .setHeader(http::Header::Connection, "close")
-                    .setHeader(http::Header::ContentType, "text/plain")
-                    .setBodyWithContentLength("missing refresh token");
+                    .setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Missing refresh token";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
         const std::string & refresh_token = refresh_token_res.value();
@@ -240,8 +319,13 @@ namespace dcn
         {
             response.setCode(dcn::http::Code::Unauthorized)
                     .setHeader(http::Header::Connection, "close")
-                    .setHeader(http::Header::ContentType, "text/plain")
-                    .setBodyWithContentLength(std::format("Error: {}", refresh_verification_res.error()));
+                    .setHeader(http::Header::ContentType, "text/plain");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = std::format("Error: {}", refresh_verification_res.error());
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
         spdlog::debug(std::format("refresh token verified: {}", refresh_verification_res.value()));
@@ -273,8 +357,13 @@ namespace dcn
         if (access_token_res.has_value() == false) {
             response.setCode(dcn::http::Code::Unauthorized)
                     .setHeader(http::Header::Connection, "close")
-                    .setHeader(http::Header::ContentType, "text/plain")
-                    .setBodyWithContentLength("missing access token");
+                    .setHeader(http::Header::ContentType, "text/plain");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Missing access token";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
         const std::string & access_token = access_token_res.value();
@@ -285,8 +374,13 @@ namespace dcn
         {
             response.setCode(dcn::http::Code::Unauthorized)
                     .setHeader(http::Header::Connection, "close")
-                    .setHeader(http::Header::ContentType, "text/plain")
-                    .setBodyWithContentLength("invalid access token");
+                    .setHeader(http::Header::ContentType, "text/plain");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid access token";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
         spdlog::debug("access token verified");

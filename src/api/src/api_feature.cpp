@@ -29,9 +29,14 @@ namespace dcn
 
         if(args.size() > 2 || args.size() == 0)
         {
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("invalid url");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid url";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
@@ -39,9 +44,14 @@ namespace dcn
 
         if(!feature_name_result)
         {
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("invalid url");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid url";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         const auto & feature_name = feature_name_result.value();
@@ -54,9 +64,14 @@ namespace dcn
 
             if(!feature_address_arg)
             {
-                response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBodyWithContentLength("invalid url");
+                response.setHeader(http::Header::ContentType, "application/json");
+
+                json error_output;
+                error_output["error"] = std::format("{}", response.getCode());
+                error_output["message"] = "Invalid feature address";
+                response.setBodyWithContentLength(error_output.dump());
+
                 co_return response;
             }
 
@@ -64,9 +79,14 @@ namespace dcn
 
             if(!feature_address_result)
             {
-                response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBodyWithContentLength("invalid url");
+                response.setHeader(http::Header::ContentType, "application/json");
+
+                json error_output;
+                error_output["error"] = std::format("{}", response.getCode());
+                error_output["message"] = "Invalid feature address";
+                response.setBodyWithContentLength(error_output.dump());
+
                 co_return response;
             }
 
@@ -79,9 +99,14 @@ namespace dcn
 
         if(!feature_res) 
         {
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::NotFound);
-            response.setBodyWithContentLength("feature not found");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Feature not found";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         
@@ -89,9 +114,14 @@ namespace dcn
 
         if(!json_res)
         {
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength("internal server error");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Parsing response to json failed";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
@@ -125,9 +155,14 @@ namespace dcn
         {
             spdlog::error("Failed to fetch feature {}", exec_result.error());
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength(std::format("Failed to fetch feature : {}", exec_result.error()));
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = std::format("Failed to fetch feature : {}", exec_result.error());
+            response.setBodyWithContentLength(error_output.dump());
+            
             co_return std::move(response);
         }
 
@@ -137,9 +172,14 @@ namespace dcn
         {
             spdlog::error("Failed to fetch owner {}", owner_result.error());
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength(std::format("Failed to fetch owner : {}", owner_result.error()));
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = std::format("Failed to fetch owner : {}", owner_result.error());
+            response.setBodyWithContentLength(error_output.dump());
+            
             co_return std::move(response);
         }
 
@@ -167,9 +207,14 @@ namespace dcn
         if(auth_result.has_value() == false)
         {
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::Unauthorized);
-            response.setBodyWithContentLength(std::format("Error: {}", auth_result.error()));
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = std::format("Error: {}", auth_result.error());
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
         const auto & address = auth_result.value();
@@ -182,9 +227,14 @@ namespace dcn
         if(!feature_res) 
         {
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("Failed to parse feature");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Failed to parse feature";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
 
@@ -198,9 +248,14 @@ namespace dcn
         if(!co_await deployFeature(evm, registry, feature_record))
         {
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("Failed to deploy feature");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Failed to deploy feature";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
 

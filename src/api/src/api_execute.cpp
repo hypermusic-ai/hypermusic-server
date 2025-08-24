@@ -29,9 +29,14 @@ namespace dcn
 
         if(args.size() != 2 && args.size() != 3)
         {
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("invalid url");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "invalid url";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
@@ -40,9 +45,14 @@ namespace dcn
         if(auth_result.has_value() == false)
         {
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::Unauthorized);
-            response.setBodyWithContentLength(std::format("Error: {}", auth_result.error()));
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = std::format("Error: {}", auth_result.error());
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
         const auto & address = auth_result.value();
@@ -54,9 +64,14 @@ namespace dcn
         if(!feature_name_result)
         {
             spdlog::error("invalid feature name");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("invalid feature name");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "invalid feature name";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         const auto & feature_name = feature_name_result.value();
@@ -66,9 +81,14 @@ namespace dcn
         if(!N_result)
         {
             spdlog::error("invalid number of samples");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("invalid number of samples");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "invalid number of samples";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         const std::uint32_t & N = N_result.value();
@@ -81,9 +101,14 @@ namespace dcn
             if(!running_instances_result)
             {
                 spdlog::error("invalid running instaces");
-                response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBodyWithContentLength("invalid running instaces");
+                response.setHeader(http::Header::ContentType, "application/json");
+
+                json error_output;
+                error_output["error"] = std::format("{}", response.getCode());
+                error_output["message"] = "invalid running instaces";
+                response.setBodyWithContentLength(error_output.dump());
+
                 co_return response;
             }
             running_instances = running_instances_result.value();
@@ -132,9 +157,14 @@ namespace dcn
         {
             spdlog::error("Failed to execute code {}", exec_result.error());
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength(std::format("Failed to execute code : {}", exec_result.error()));
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = std::format("Failed to execute code : {}", exec_result.error());
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
 
@@ -143,7 +173,7 @@ namespace dcn
         json json_output = parse::parseToJson(samples, parse::use_json);
         response.setHeader(http::Header::Connection, "close");
         response.setHeader(http::Header::ContentType, "application/json");
-        response.setCode(http::Code::Created);
+        response.setCode(http::Code::OK);
         response.setBodyWithContentLength(json_output.dump());
         co_return std::move(response);
     }

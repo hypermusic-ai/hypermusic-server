@@ -29,9 +29,14 @@ namespace dcn
 
         if(args.size() > 2 || args.size() == 0)
         {
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("invalid url");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid url";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
@@ -39,9 +44,14 @@ namespace dcn
 
         if(!transformation_name_result)
         {
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("invalid url");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Invalid url";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         const auto & transformation_name = transformation_name_result.value();
@@ -54,9 +64,14 @@ namespace dcn
 
             if(!transformation_address_arg)
             {
-                response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBodyWithContentLength("invalid url");
+                response.setHeader(http::Header::ContentType, "application/json");
+
+                json error_output;
+                error_output["error"] = std::format("{}", response.getCode());
+                error_output["message"] = "Invalid url";
+                response.setBodyWithContentLength(error_output.dump());
+
                 co_return response;
             }
 
@@ -64,9 +79,14 @@ namespace dcn
 
             if(!transformation_address_result)
             {
-                response.setHeader(http::Header::ContentType, "text/plain");
                 response.setCode(http::Code::BadRequest);
-                response.setBodyWithContentLength("invalid url");
+                response.setHeader(http::Header::ContentType, "application/json");
+
+                json error_output;
+                error_output["error"] = std::format("{}", response.getCode());
+                error_output["message"] = "Invalid url";
+                response.setBodyWithContentLength(error_output.dump());
+
                 co_return response;
             }
 
@@ -79,18 +99,28 @@ namespace dcn
 
         if(!transformation_res) 
         {
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::NotFound);
-            response.setBodyWithContentLength("transformation not found");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Transformation not found";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
         auto json_res = parse::parseToJson(*transformation_res, parse::use_json);
 
         if(!json_res)
         {
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength("internal server error");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Internal server error";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return response;
         }
 
@@ -124,9 +154,14 @@ namespace dcn
         {
             spdlog::error("Failed to fetch transformation {}", exec_result.error());
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength(std::format("Failed to fetch transformation : {}", exec_result.error()));
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = std::format("Failed to fetch transformation : {}", exec_result.error());
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
 
@@ -136,9 +171,14 @@ namespace dcn
         {
             spdlog::error("Failed to fetch owner {}", owner_result.error());
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::InternalServerError);
-            response.setBodyWithContentLength(std::format("Failed to fetch owner : {}", owner_result.error()));
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = std::format("Failed to fetch owner : {}", owner_result.error());
+            response.setBodyWithContentLength(error_output.dump());
+            
             co_return std::move(response);
         }
 
@@ -166,9 +206,14 @@ namespace dcn
         if(auth_result.has_value() == false)
         {
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::Unauthorized);
-            response.setBodyWithContentLength(std::format("Error: {}", auth_result.error()));
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = std::format("Error: {}", auth_result.error());
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
         const auto & address = auth_result.value();
@@ -182,9 +227,14 @@ namespace dcn
         {
             spdlog::error("Failed to parse transformation");
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("Failed to parse transformation");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Failed to parse transformation";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
 
@@ -199,9 +249,14 @@ namespace dcn
         {
             spdlog::error("Failed to deploy transformation");
             response.setHeader(http::Header::Connection, "close");
-            response.setHeader(http::Header::ContentType, "text/plain");
             response.setCode(http::Code::BadRequest);
-            response.setBodyWithContentLength("Failed to deploy transformation");
+            response.setHeader(http::Header::ContentType, "application/json");
+
+            json error_output;
+            error_output["error"] = std::format("{}", response.getCode());
+            error_output["message"] = "Failed to deploy transformation";
+            response.setBodyWithContentLength(error_output.dump());
+
             co_return std::move(response);
         }
 
